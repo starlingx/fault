@@ -40,9 +40,9 @@
     name: flock-devstack-fault
     parent: flock-devstack-base-min
     required-projects:
-      - name: openstack/stx-config
-      - name: openstack/stx-integ
-      - name: openstack/stx-update
+      - name: starlingx/config
+      - name: starlingx/integ
+      - name: starlingx/update
     vars:
       tox_envlist: functional
       devstack_services:
