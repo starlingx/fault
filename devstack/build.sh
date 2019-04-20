@@ -33,7 +33,7 @@ function is_service_enabled {
 }
 
 # Get the build functions
-source $PLUGIN_DIR/devstack/lib/stx-fault
+source $PLUGIN_DIR/devstack/lib/fault
 
 # Call builds
 build_fm_common

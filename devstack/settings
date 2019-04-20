@@ -8,7 +8,7 @@
 # Devstack settings
 
 # Services
-# stx-fault - Overall enable for this plugin
+# fault - Overall enable for this plugin
 # fm-client
 # fm-common
 # fm-api
@@ -18,27 +18,27 @@
 # Defaults
 # --------
 
-STX_FAULT_NAME=stx-fault
+STX_FAULT_NAME=fault
 
 ######### Plugin Specific ##########
 enable_service $STX_FAULT_NAME
 
 # This must not use any variables to work properly in OpenStack's DevStack playbook
-define_plugin stx-fault
+define_plugin fault
 # This works for Zuul jobs using OpenStack's DevStack roles
-plugin_requires stx-fault stx-update
+plugin_requires fault update
 
 # Circular dependencies are fun!
-# fm-rest-api has an undeclared dependency on cgtsclient from stx-config
+# fm-rest-api has an undeclared dependency on cgtsclient from config
 # so if that is not present we can't install it
-if ! is_service_enabled stx-config; then
+if ! is_service_enabled config; then
     disable_service fm-rest-api
 fi
 # but fm-rest-api has its own (declared!) external dependencies too
 if is_service_enabled fm-rest-api; then
-    # stx-update
+    # update
     enable_service tsconfig
 fi
 
 # Initial source of lib script
-source $DEST/stx-fault/devstack/lib/stx-fault
+source $DEST/fault/devstack/lib/fault

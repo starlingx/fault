@@ -4,12 +4,12 @@
 #
 # Copyright (C) 2019 Intel Corporation
 #
-# lib/stx-fault
+# lib/fault
 # Functions to control the configuration and operation of the **fault** service
 
 # Dependencies:
 #
-# - The stx-update plugin must be enabled
+# - The update plugin must be enabled
 
 # ``stack.sh`` calls the entry points in this order:
 #
@@ -191,7 +191,7 @@ function cleanup_fm_rest_api {
 }
 
 function configure_fault {
-    if is_service_enabled fm-rest-api; then
+    if is_service_enabled fm-mgr || is_service_enabled fm-rest-api; then
         configure_fm_rest_api
         create_fault_user_group
         create_fault_accounts
@@ -257,7 +257,7 @@ function create_fault_user_group {
 function init_fault {
     create_fault_cache_dir
 
-    if is_service_enabled fm-rest-api && is_service_enabled stx-config; then
+    if is_service_enabled fm-rest-api && is_service_enabled config; then
         init_rest_api
     fi
 }
@@ -281,7 +281,7 @@ function install_fault {
     if is_service_enabled fm-mgr; then
         install_fm_mgr
     fi
-    if is_service_enabled fm-rest-api && is_service_enabled stx-config; then
+    if is_service_enabled fm-rest-api && is_service_enabled config; then
         install_fm_rest_api
     fi
 }

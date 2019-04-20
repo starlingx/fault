@@ -1,5 +1,5 @@
-=========
-stx-fault
-=========
+=====
+fault
+=====
 
 StarlingX Fault Management
