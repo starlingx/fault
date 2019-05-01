@@ -65,9 +65,6 @@ install -p -D -m 755 scripts/fm-api %{buildroot}%{local_initddir}/fm-api
 install -d -m 755 %{buildroot}%{local_etc_pmond}
 install -p -D -m 644 fm-api-pmond.conf %{buildroot}%{local_etc_pmond}/fm-api.conf
 
-# Install sql migration stuff that wasn't installed by setup.py
-install -m 640 fm/db/sqlalchemy/migrate_repo/migrate.cfg %{buildroot}%{pythonroot}/fm/db/sqlalchemy/migrate_repo/migrate.cfg
-
 # install default config files
 cd %{_builddir}/%{name}-%{version} && oslo-config-generator --config-file fm/config-generator.conf --output-file %{_builddir}/%{name}-%{version}/fm.conf.sample
 install -p -D -m 644 %{_builddir}/%{name}-%{version}/fm.conf.sample %{buildroot}%{_sysconfdir}/fm/fm.conf

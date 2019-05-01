@@ -29,7 +29,7 @@ setup(
     platforms=['any'],
     provides=['fm'],
     packages=find_packages(),
-    package_data={},
+    package_data={'fm': ['db/sqlalchemy/migrate_repo/migrate.cfg'], },
     include_package_data=False,
     entry_points={
         'fm.database.migration_backend': [
