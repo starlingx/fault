@@ -79,10 +79,10 @@ class EventLog(base.APIBase):
     proposed_repair_action = wtypes.text
     "The action to clear the alarm"
 
-    service_affecting = wtypes.text
+    service_affecting = bool
     "Whether the log affects the service"
 
-    suppression = wtypes.text
+    suppression = bool
     "'allowed' or 'not-allowed'"
 
     suppression_status = wtypes.text
@@ -107,8 +107,8 @@ class EventLog(base.APIBase):
             ievent_log = rpc_event_log
             suppress_status = rpc_event_log.suppression_status
 
-        ievent_log['service_affecting'] = str(ievent_log['service_affecting'])
-        ievent_log['suppression'] = str(ievent_log['suppression'])
+        ievent_log['service_affecting'] = ievent_log['service_affecting']
+        ievent_log['suppression'] = ievent_log['suppression']
 
         ilog = EventLog(**ievent_log.as_dict())
         if not expand:

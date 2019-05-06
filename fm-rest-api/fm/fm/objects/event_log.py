@@ -33,8 +33,8 @@ class EventLog(base.FmObject):
         'event_log_type': utils.str_or_none,
         'probable_cause': utils.str_or_none,
         'proposed_repair_action': utils.str_or_none,
-        'service_affecting': utils.str_or_none,
-        'suppression': utils.str_or_none,
+        'service_affecting': utils.bool_or_none,
+        'suppression': utils.bool_or_none,
         'suppression_status': utils.str_or_none,
     }
 

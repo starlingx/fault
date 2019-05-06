@@ -50,6 +50,16 @@ def datetime_or_str_or_none(val):
     return datetime_or_none(val)
 
 
+def bool_or_none(val):
+    """Attempt to parse an boolean value, or None."""
+    if val is None:
+        return False
+    elif isinstance(val, six.string_types):
+        return bool(val.lower() in ['y', 'n', 'yes', 'no', 'true', 'false'])
+    else:
+        return bool(int(val) != 0)
+
+
 def int_or_none(val):
     """Attempt to parse an integer value, or None."""
     if val is None:

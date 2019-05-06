@@ -78,10 +78,10 @@ class Alarm(base.APIBase):
     proposed_repair_action = wtypes.text
     "The action to clear the alarm"
 
-    service_affecting = wtypes.text
+    service_affecting = bool
     "Whether the alarm affects the service"
 
-    suppression = wtypes.text
+    suppression = bool
     "'allowed' or 'not-allowed'"
 
     suppression_status = wtypes.text
@@ -114,8 +114,8 @@ class Alarm(base.APIBase):
             mgmt_affecting = rpc_ialarm.mgmt_affecting
             degrade_affecting = rpc_ialarm.degrade_affecting
 
-        alarms['service_affecting'] = str(alarms['service_affecting'])
-        alarms['suppression'] = str(alarms['suppression'])
+        alarms['service_affecting'] = alarms['service_affecting']
+        alarms['suppression'] = alarms['suppression']
 
         alm = Alarm(**alarms.as_dict())
         if not expand:
