@@ -8,7 +8,7 @@ Packager: Wind River <info@windriver.com>
 URL: unknown
 Source0: %{name}-%{version}.tar.gz
 
-
+BuildRequires: python-devel
 BuildRequires: python-setuptools
 BuildRequires: python2-pip
 BuildRequires: python2-wheel
