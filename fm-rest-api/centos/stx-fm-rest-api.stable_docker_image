@@ -17,7 +17,8 @@ PIP_PACKAGES="
         oslo.log \
         oslo.middleware \
         oslo.policy \
-        oslo.versionedobjects
+        oslo.versionedobjects \
+        PyMySQL \
         python_neutronclient \
         pecan \
         tsconfig \
