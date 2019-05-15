@@ -113,6 +113,15 @@ class Connection(object):
         """
 
     @abc.abstractmethod
+    def event_log_create(self, values):
+        """Create a new event_log.
+
+        :param values: A dict containing several items used to identify
+                       and track the event_log.
+        :returns: An event_log.
+        """
+
+    @abc.abstractmethod
     def event_log_get(self, uuid):
         """Return an event_log.
 

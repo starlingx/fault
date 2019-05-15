@@ -6,12 +6,14 @@
 
 
 import datetime
+import json
 import pecan
 from pecan import rest
 
 import wsme
 from wsme import types as wtypes
 import wsmeext.pecan as wsme_pecan
+from oslo_utils._i18n import _
 from oslo_log import log
 
 from fm_api import fm_api
@@ -132,7 +134,8 @@ class Alarm(base.APIBase):
             not fm_api.FaultAPIs.alarm_allowed(alm.severity, mgmt_affecting))
 
         alm.degrade_affecting = str(
-            not fm_api.FaultAPIs.alarm_allowed(alm.severity, degrade_affecting))
+            not fm_api.FaultAPIs.alarm_allowed(alm.severity,
+                                               degrade_affecting))
 
         return alm
 
@@ -275,6 +278,28 @@ class AlarmController(rest.RestController):
                                                   sort_key=sort_key,
                                                   sort_dir=sort_dir)
 
+    def _get_event_log_data(self, alarm_dict):
+        """ Retrive a dictionary to create an event_log object
+
+        :param alarm_dict: Dictionary obtained from an alarm object.
+        """
+        event_log_dict = {}
+        for key in alarm_dict.keys():
+            if key == 'alarm_id':
+                event_log_dict['event_log_id'] = alarm_dict[key]
+            elif key == 'alarm_state':
+                event_log_dict['state'] = alarm_dict[key]
+            elif key == 'alarm_type':
+                event_log_dict['event_log_type'] = alarm_dict[key]
+            elif (
+                key == 'inhibit_alarms' or key == 'inhibit_alarms' or
+                key == 'updated_at' or key == 'updated_at' or key == 'masked'
+            ):
+                continue
+            else:
+                event_log_dict[key] = alarm_dict[key]
+        return event_log_dict
+
     @wsme_pecan.wsexpose(AlarmCollection, [Query],
                          types.uuid, int, wtypes.text, wtypes.text, bool, bool)
     def get_all(self, q=[], marker=None, limit=None, sort_key='id',
@@ -332,7 +357,13 @@ class AlarmController(rest.RestController):
 
         :param id: uuid of an alarm.
         """
+        data = pecan.request.dbapi.alarm_get(id)
+        if data is None:
+            raise wsme.exc.ClientSideError(_("can not find record to clear!"))
         pecan.request.dbapi.alarm_destroy(id)
+        alarm_state = fm_constants.FM_ALARM_STATE_CLEAR
+        tmp_dict = data.as_dict()
+        self._alarm_save2event_log(tmp_dict, alarm_state, empty_uuid=True)
 
     @wsme_pecan.wsexpose(AlarmSummary, bool)
     def summary(self, include_suppress=False):
@@ -341,3 +372,77 @@ class AlarmController(rest.RestController):
         :param include_suppress: filter on suppressed alarms. Default: False
         """
         return self._get_alarm_summary(include_suppress)
+
+    def _alarm_save2event_log(self, data_dict, fm_state, empty_uuid=False):
+        event_log_data = self._get_event_log_data(data_dict)
+        event_log_data['state'] = fm_state
+        event_log_data['id'] = None
+        if empty_uuid is True:
+            event_log_data['uuid'] = None
+        if (event_log_data['timestamp'] is None or
+                fm_state == fm_constants.FM_ALARM_STATE_CLEAR):
+            event_log_data['timestamp'] = datetime.datetime.utcnow()
+        event_data = pecan.request.dbapi.event_log_create(event_log_data)
+        return event_data
+
+    @wsme_pecan.wsexpose(wtypes.text, body=Alarm)
+    def post(self, alarm_data):
+        """Create an alarm/event log.
+        :param alarm_data: All information required to create an
+         alarm or eventlog.
+        """
+
+        alarm_data_dict = alarm_data.as_dict()
+        alarm_state = alarm_data_dict['alarm_state']
+        try:
+            if alarm_state == fm_constants.FM_ALARM_STATE_SET:
+                data = pecan.request.dbapi.alarm_create(alarm_data_dict)
+                tmp_dict = data.as_dict()
+                self._alarm_save2event_log(tmp_dict, alarm_state)
+            elif (
+                alarm_state == fm_constants.FM_ALARM_STATE_LOG or
+                alarm_state == fm_constants.FM_ALARM_STATE_MSG
+            ):
+                data = self._alarm_save2event_log(alarm_data_dict, 'log')
+            # This is same action as DELETE Method if para is uuid
+            # keep this RESTful for future use to clear/delete alarm with parameters
+            # are alarm_id and entity_instance_id
+            elif alarm_state == fm_constants.FM_ALARM_STATE_CLEAR:
+                clear_uuid = alarm_data_dict['uuid']
+                alarm_id = alarm_data_dict['alarm_id']
+                entity_instance_id = alarm_data_dict['entity_instance_id']
+                if clear_uuid is not None:
+                    data = pecan.request.dbapi.alarm_get(clear_uuid)
+                    pecan.request.dbapi.alarm_destroy(clear_uuid)
+                    tmp_dict = data.as_dict()
+                    self._alarm_save2event_log(tmp_dict, alarm_state, empty_uuid=True)
+                elif alarm_id is not None and entity_instance_id is not None:
+                    data = pecan.request.dbapi.alarm_get_by_ids(alarm_id, entity_instance_id)
+                    if data is None:
+                        raise wsme.exc.ClientSideError(_("can not find record to clear!"))
+                    pecan.request.dbapi.alarm_destroy_by_ids(alarm_id, entity_instance_id)
+                    tmp_dict = data.as_dict()
+                    self._alarm_save2event_log(tmp_dict, alarm_state, empty_uuid=True)
+            else:
+                msg = _("The alarm_state %s does not support!")
+                raise wsme.exc.ClientSideError(msg % alarm_state)
+        except Exception as err:
+            return err
+        alarm_dict = data.as_dict()
+        return json.dumps({"uuid": alarm_dict['uuid']})
+
+    @wsme_pecan.wsexpose(wtypes.text, wtypes.text, body=Alarm)
+    def put(self, id, alarm_data):
+        """ Update an alarm
+
+        :param id: uuid of an alarm.
+        :param alarm_data: Information to be updated
+        """
+
+        alarm_data_dict = alarm_data.as_dict()
+        try:
+            alm = pecan.request.dbapi.alarm_update(id, alarm_data_dict)
+        except Exception as err:
+            return err
+        alarm_dict = alm.as_dict()
+        return json.dumps({"uuid": alarm_dict['uuid']})

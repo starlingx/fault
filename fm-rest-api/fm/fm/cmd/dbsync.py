@@ -7,12 +7,10 @@
 
 import sys
 from oslo_config import cfg
-
+cfg.CONF(sys.argv[1:], project='fm')
 from fm.db import migration
-
 CONF = cfg.CONF
 
 
 def main():
-    cfg.CONF(sys.argv[1:], project='fm')
     migration.db_sync()

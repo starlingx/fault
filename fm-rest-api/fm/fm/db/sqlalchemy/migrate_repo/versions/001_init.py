@@ -7,8 +7,10 @@
 
 from sqlalchemy import Column, MetaData, String, Table
 from sqlalchemy import Boolean, Integer, DateTime
+from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.schema import ForeignKeyConstraint
-
+from oslo_log import log
+LOG = log.getLogger(__name__)
 ENGINE = 'InnoDB'
 CHARSET = 'utf8'
 
@@ -37,21 +39,25 @@ def upgrade(migrate_engine):
         mysql_charset=CHARSET,
     )
     event_suppression.create()
-
+    if migrate_engine.url.get_dialect().name == 'mysql':
+        LOG.info("alarm dialect is mysql")
+        timestamp_column = Column('timestamp', DATETIME(fsp=6))
+    else:
+        LOG.info("alarm dialect is others")
+        timestamp_column = Column('timestamp', DateTime(timezone=False))
     alarm = Table(
         'alarm',
         meta,
         Column('created_at', DateTime),
         Column('updated_at', DateTime),
         Column('deleted_at', DateTime),
-
         Column('id', Integer, primary_key=True, nullable=False),
         Column('uuid', String(255), unique=True, index=True),
         Column('alarm_id', String(255), index=True),
         Column('alarm_state', String(255)),
         Column('entity_type_id', String(255), index=True),
         Column('entity_instance_id', String(255), index=True),
-        Column('timestamp', DateTime(timezone=False)),
+        timestamp_column,
         Column('severity', String(255), index=True),
         Column('reason_text', String(255)),
         Column('alarm_type', String(255), index=True),
@@ -72,6 +78,12 @@ def upgrade(migrate_engine):
         mysql_charset=CHARSET,
     )
     alarm.create()
+    if migrate_engine.url.get_dialect().name == 'mysql':
+        LOG.info("event_log dialect is mysql")
+        timestamp_column = Column('timestamp', DATETIME(fsp=6))
+    else:
+        LOG.info("event_log dialect is others")
+        timestamp_column = Column('timestamp', DateTime(timezone=False))
 
     event_log = Table(
         'event_log',
@@ -86,7 +98,7 @@ def upgrade(migrate_engine):
         Column('state', String(255)),
         Column('entity_type_id', String(255), index=True),
         Column('entity_instance_id', String(255), index=True),
-        Column('timestamp', DateTime(timezone=False)),
+        timestamp_column,
         Column('severity', String(255), index=True),
         Column('reason_text', String(255)),
         Column('event_log_type', String(255), index=True),

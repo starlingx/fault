@@ -23,7 +23,6 @@
 
 import json
 from six.moves.urllib.parse import urlparse
-
 from oslo_config import cfg
 
 from sqlalchemy import Column, ForeignKey, Integer, Boolean
@@ -32,6 +31,10 @@ from sqlalchemy import DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import TypeDecorator, VARCHAR
 from oslo_db.sqlalchemy import models
+from sqlalchemy.dialects.mysql import DATETIME
+from oslo_log import log
+CONF = cfg.CONF
+LOG = log.getLogger(__name__)
 
 
 def table_args():
@@ -40,6 +43,18 @@ def table_args():
         return {'mysql_engine': 'InnoDB',
                 'mysql_charset': "utf8"}
     return None
+
+
+def get_dialect_name():
+    db_driver_name = 'mysql'
+    if CONF.database.connection is None:
+        LOG.error("engine_name is None")
+        return db_driver_name
+    engine_name = urlparse(CONF.database.connection).scheme
+    if engine_name is not None:
+        db_driver_name = engine_name.split("+", 1)[0]
+    LOG.info("db_drive_name is %s" % db_driver_name)
+    return db_driver_name
 
 
 class JSONEncodedDict(TypeDecorator):
@@ -83,7 +98,10 @@ class Alarm(Base):
     alarm_state = Column(String(255))
     entity_type_id = Column(String(255), index=True)
     entity_instance_id = Column(String(255), index=True)
-    timestamp = Column(DateTime(timezone=False))
+    if get_dialect_name() == 'mysql':
+        timestamp = Column(DATETIME(fsp=6))
+    else:
+        timestamp = Column(DateTime(timezone=False))
     severity = Column(String(255), index=True)
     reason_text = Column(String(255))
     alarm_type = Column(String(255), index=True)
@@ -106,7 +124,10 @@ class EventLog(Base):
     state = Column(String(255))
     entity_type_id = Column(String(255), index=True)
     entity_instance_id = Column(String(255), index=True)
-    timestamp = Column(DateTime(timezone=False))
+    if get_dialect_name() == 'mysql':
+        timestamp = Column(DATETIME(fsp=6))
+    else:
+        timestamp = Column(DateTime(timezone=False))
     severity = Column(String(255), index=True)
     reason_text = Column(String(255))
     event_log_type = Column(String(255), index=True)
