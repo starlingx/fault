@@ -14,6 +14,8 @@ BuildRequires: fm-common-dev
 BuildRequires: systemd-devel
 BuildRequires: libuuid-devel
 
+Requires: logrotate
+
 %description
 CGTS platform Fault Manager that serves the client
 application fault management requests and raise/clear/update
