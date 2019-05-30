@@ -29,6 +29,11 @@ set -o xtrace
 
 STX_FAULT_DIR=${GITDIR[$STX_FAULT_NAME]}
 STX_FAULT_CONF_DIR=/etc/fm
+
+GITDIR["fm-api"]=$STX_FAULT_DIR/fm-api
+GITDIR["fm-client"]=$STX_FAULT_DIR/python-fmclient/fmclient
+GITDIR["fm-core"]=$STX_FAULT_DIR/fm-common/sources
+
 FM_RESTAPI_CONF=$STX_FAULT_CONF_DIR/fm.conf
 FM_RESTAPI_PASTE_INI=$STX_FAULT_CONF_DIR/api-paste.ini
 FM_EVENT_YAML=$STX_FAULT_CONF_DIR/events.yaml
@@ -60,7 +65,7 @@ PYTHON_SITE_DIR=$(python -c "from distutils.sysconfig import get_python_lib; pri
 # ---------
 
 function build_fm_common {
-    pushd $STX_FAULT_DIR/fm-common/sources
+    pushd ${GITDIR["fm-core"]}
 
     local major minor version x
 
@@ -263,8 +268,7 @@ function init_fault {
 }
 
 function init_rest_api {
-    # create db for fm
-    createdb -h 127.0.0.1 -Uroot -l C -T template0 -E utf8 fm
+    recreate_database fm
     fm-dbsync --config-file $FM_RESTAPI_CONF
 }
 
@@ -287,29 +291,15 @@ function install_fault {
 }
 
 function install_fm_api {
-    pushd $STX_FAULT_DIR/fm-api
-    sudo python setup.py install \
-        --root=/ \
-        --install-lib=$PYTHON_SITE_DIR \
-        --prefix=/usr \
-        --install-data=/usr/share \
-        --single-version-externally-managed
-    popd
+    setup_dev_lib "fm-api"
 }
 
 function install_fm_client {
-    pushd $STX_FAULT_DIR/python-fmclient/fmclient
-    sudo python setup.py install \
-        --root=/ \
-        --install-lib=$PYTHON_SITE_DIR \
-        --prefix=/usr \
-        --install-data=/usr/share \
-        --single-version-externally-managed
-    popd
+    setup_dev_lib "fm-client"
 }
 
 function install_fm_common {
-    pushd $STX_FAULT_DIR/fm-common/sources
+    pushd ${GITDIR["fm-core"]}
 
     local major minor version x
 
@@ -331,11 +321,7 @@ function install_fm_common {
         MINOR=$minor \
         install
 
-    sudo python setup.py install \
-        --root=/ \
-        --install-lib=$PYTHON_SITE_DIR \
-        --prefix=/usr \
-        --install-data=/usr/share \
+    setup_dev_lib "fm-core"
 
     # This _is_ still a little nasty, clean it up
     $STX_SUDO install -m 755 fm_db_sync_event_suppression.py \
