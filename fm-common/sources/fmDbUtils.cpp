@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2018 Wind River Systems, Inc.
+// Copyright (c) 2014-2019 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -167,7 +167,7 @@ bool fm_db_util_get_timestamp(const char *str, FMTimeT &ft){
 		struct tm t;
 		memset(&t, 0, sizeof(t));
 		strptime(str, "%F %T", &t);
-		ts.tv_sec = mktime(&t);
+		ts.tv_sec = timegm(&t);
 		//now get the nanoseconds
 		char *tstr = strdup(str);
 		char *tobe_free = strsep(&tstr, ".");
