@@ -1,0 +1,15 @@
+Source: fm-rest-api
+Priority: extra
+Maintainer: Marcela Rosales <marcela.a.rosales.jimenez@intel.com>
+Build-Depends: python-setuptools,
+               python-all,
+               debhelper,
+               dh-python,
+               fm-common-dev
+Standards-Version: 3.9.6
+
+Package: fm-rest-api
+Architecture: all
+Depends: ${misc:Depends},
+         ${python:Depends}
+Description: This package contains the fm-rest-api project.
