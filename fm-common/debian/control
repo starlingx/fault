@@ -1,0 +1,33 @@
+Source: fm-common
+Priority: extra
+Maintainer: Marcela Rosales <marcela.a.rosales.jimenez@intel.com>
+Build-Depends: python-setuptools,
+               python-all,
+               debhelper,
+               dh-python,
+               python-pip,
+               python-wheel,
+               python2.7-dev,
+               libpq-dev,
+               uuid-dev
+Standards-Version: 3.9.6
+
+Package: fm-common
+Architecture: amd64
+Depends: libpq-dev,
+         uuid-dev,
+         python-dev
+Description: fm-common.
+
+Package: fm-common-dev
+Architecture: amd64
+Depends: fm-common
+Description: StarlingX Fault Management Client Library that provides APIs for applications to raise/clear/update active alarms. This package contains symbolic links, header files, and related items necessary for software development.
+
+Package: fm-common-doc
+Architecture: amd64
+Description: Contains fmAlarm.h which is to be used by fm-doc package to validate the Alarms & Logs Doc Yaml file.
+
+Package: fm-common-wheels
+Architecture: amd64
+Description: Contains python wheels for fm-common.

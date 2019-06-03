@@ -1,0 +1,7 @@
+usr/include/fmAPI.h usr/include
+usr/include/fmAlarm.h usr/include
+usr/include/fmConfig.h usr/include
+usr/include/fmDbAPI.h usr/include
+usr/include/fmLog.h usr/include
+usr/include/fmThread.h usr/include
+usr/lib/libfmcommon.so usr/lib

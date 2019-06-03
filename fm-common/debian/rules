@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+export MAJOR=1
+export MINOR=0
+export ROOT=debian/tmp
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	make DESTDIR=${ROOT} \
+		BINDIR=/usr/bin \
+	    LIBDIR=/usr/lib \
+		INCDIR=/usr/include \
+		CGCS_DOC_DEPLOY=/opt/deploy/cgcs_doc \
+		MAJOR=${MAJOR} MINOR=${MINOR} install
+	python setup.py build
+	python setup.py bdist_wheel
+	python setup.py install --root ${ROOT} --install-data=/usr/share --prefix=/usr
+	mkdir -p ${ROOT}/wheels/
+	install -m 644 dist/*.whl ${ROOT}/wheels/
+
+override_dh_installdocs:
+
+override_dh_installchangelogs:
