@@ -1,0 +1,14 @@
+Source: fm-api
+Priority: extra
+Maintainer: Marcela Rosales <marcela.a.rosales.jimenez@intel.com>
+Build-Depends: python-setuptools,
+               python-all,
+               debhelper,
+               dh-python
+Standards-Version: 3.9.6
+
+Package: fm-api
+Architecture: all
+Depends: ${misc:Depends},
+         ${python:Depends}
+Description: This package contains the fm-api project.
