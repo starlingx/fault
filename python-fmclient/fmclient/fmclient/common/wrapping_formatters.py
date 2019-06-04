@@ -425,7 +425,7 @@ def wrapper_formatter_factory(ctx, field, formatter):
 
 
 def build_column_stats_for_best_guess_formatting(objs, fields, field_labels, custom_formatters={}):
-    class ColumnStats:
+    class ColumnStats(object):
         def __init__(self, field, field_label, custom_formatter=None):
             self.field = field
             self.field_label = field_label
