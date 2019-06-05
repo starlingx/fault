@@ -20,6 +20,7 @@ from oslo_db.sqlalchemy import session as db_session
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.orm.exc import NoResultFound
 
+from fm.api import config
 from fm.common import constants
 from fm.common import exceptions
 from fm.common import utils
@@ -290,12 +291,10 @@ class Connection(api.Connection):
         with _session_for_write() as session:
             query = model_query(models.Alarm, session=session)
             query = query.filter_by(uuid=id)
-
             try:
                 query.one()
             except NoResultFound:
                 raise exceptions.AlarmNotFound(alarm=id)
-
             query.delete()
 
     def alarm_destroy_by_ids(self, alarm_id, entity_instance_id):
@@ -304,13 +303,51 @@ class Connection(api.Connection):
             if alarm_id and entity_instance_id:
                 query = query.filter_by(alarm_id=alarm_id)
                 query = query.filter_by(entity_instance_id=entity_instance_id)
-
             try:
                 query.one()
             except NoResultFound:
                 raise exceptions.AlarmNotFound(alarm=alarm_id)
-
             query.delete()
+
+    def event_log_create(self, values):
+        if not values.get('uuid'):
+            values['uuid'] = utils.generate_uuid()
+        event_log = models.EventLog()
+        event_log.update(values)
+        count = self.event_log_get_count()
+        max_log = config.get_max_event_log()
+        if count >= int(max_log):
+            self.delete_oldest_event_log()
+        with _session_for_write() as session:
+            try:
+                session.add(event_log)
+                session.flush()
+            except db_exc.DBDuplicateEntry:
+                raise exceptions.EventLogAlreadyExists(id=values['id'])
+            return event_log
+
+    def event_log_get_count(self):
+        query = model_query(models.EventLog)
+        return query.count()
+
+    def delete_oldest_event_log(self):
+        result = self.event_log_get_oldest()
+        self.event_log_delete(result['id'])
+
+    def event_log_delete(self, id):
+        with _session_for_write() as session:
+            query = model_query(models.EventLog, session=session)
+            query = query.filter_by(id=id)
+            try:
+                query.one()
+            except NoResultFound:
+                raise exceptions.EventLogNotFound(eventLog=id)
+            query.delete()
+
+    def event_log_get_oldest(self):
+        query = model_query(models.EventLog)
+        result = query.order_by(asc(models.EventLog.created_at)).limit(1).one()
+        return result
 
     @objects.objectify(objects.event_log)
     def event_log_get(self, uuid):

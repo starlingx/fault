@@ -30,6 +30,12 @@ sysinv_opts = [
 
 version_info = pbr.version.VersionInfo('fm')
 
+fm_opts = [
+    cfg.StrOpt('event_log_max_size',
+               default='4000',
+               help="the max size of event_log"),
+]
+
 # Pecan Application Configurations
 app = {
     'root': 'fm.api.controllers.root.RootController',
@@ -51,7 +57,7 @@ def init(args, **kwargs):
     ks_loading.register_session_conf_options(cfg.CONF,
                                              sysinv_group.name)
     logging.register_options(cfg.CONF)
-
+    cfg.CONF.register_opts(fm_opts)
     cfg.CONF(args=args, project='fm',
              version='%%(prog)s %s' % version_info.release_string(),
              **kwargs)
@@ -65,3 +71,7 @@ def setup_logging():
               {'prog': sys.argv[0],
                'version': version_info.release_string()})
     LOG.debug("command line: %s", " ".join(sys.argv))
+
+
+def get_max_event_log():
+    return cfg.CONF.event_log_max_size

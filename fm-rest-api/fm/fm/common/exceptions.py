@@ -112,3 +112,7 @@ class Conflict(ApiError):
 
 class AlarmAlreadyExists(Conflict):
     message = _("An Alarm with UUID %(uuid)s already exists.")
+
+
+class EventLogAlreadyExists(Conflict):
+    message = _("An Eventlog with ID %(id)s already exists.")
