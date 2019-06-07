@@ -1,0 +1,6 @@
+usr/lib/libfmcommon.so.1 usr/lib
+usr/lib/libfmcommon.so.1.0 usr/lib
+usr/lib/python2.7/site-packages/fm_core-1.0-py2.7.egg-info usr/lib/python2.7/site-packages
+usr/lib/python2.7/site-packages/fm_core.so usr/lib/python2.7/site-packages
+usr/bin/fmClientCli usr/bin
+usr/bin/fm_db_sync_event_suppression.py usr/bin
