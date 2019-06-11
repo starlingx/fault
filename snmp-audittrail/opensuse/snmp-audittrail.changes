@@ -1,0 +1,14 @@
+-------------------------------------------------------------------
+Thu Jun 13 20:56:01 UTC 2019 - sgw@linux.intel.com
+
+- convert from tarball to _service file
+
+-------------------------------------------------------------------
+Mon Jun 10 23:21:36 UTC 2019 - sgw@linux.intel.com
+
+- spec-cleaner and rpmlint checked 
+
+-------------------------------------------------------------------
+Thu May 23 20:39:25 UTC 2019 - sgw@bigsur.com
+
+- Initial Commit 
