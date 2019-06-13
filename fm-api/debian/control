@@ -1,6 +1,6 @@
 Source: fm-api
-Priority: extra
-Maintainer: Marcela Rosales <marcela.a.rosales.jimenez@intel.com>
+Priority: optional
+Maintainer: StarlingX team <starlingx-discuss@lists.starlingx.io>
 Build-Depends: python-setuptools,
                python-all,
                debhelper,
