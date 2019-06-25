@@ -44,14 +44,14 @@ const std::string ALARM_REPAIR_ACTION = "wrsAlarmActiveProposedRepairAction";
 const std::string ALARM_SERVICE_AFFECTING = "wrsAlarmActiveServiceAffecting";
 const std::string ALARM_SUPPRESSION = "wrsAlarmActiveSuppressionAllowed";
 
-const std::string CUSTOMER_LOG_ID = "wrsCustomerLogId";
-const std::string CUSTOMER_LOG_INSTANCE_ID = "wrsCustomerLogEntityInstanceId";
-const std::string CUSTOMER_LOG_DATE_TIME = "wrsCustomerLogDateAndTime";
-const std::string CUSTOMER_LOG_SEVERITY = "wrsCustomerLogSeverity";
-const std::string CUSTOMER_LOG_REASON_TEXT = "wrsCustomerLogReasonText";
-const std::string CUSTOMER_LOG_EVENT_TYPE = "wrsCustomerLogEventType";
-const std::string CUSTOMER_LOG_CAUSE = "wrsCustomerLogProbableCause";
-const std::string CUSTOMER_LOG_SERVICE_AFFECTING = "wrsCustomerLogServiceAffecting";
+const std::string EVENT_ID = "wrsEventEventId";
+const std::string EVENT_INSTANCE_ID = "wrsEventEntityInstanceId";
+const std::string EVENT_DATE_TIME = "wrsEventDateAndTime";
+const std::string EVENT_SEVERITY = "wrsEventSeverity";
+const std::string EVENT_REASON_TEXT = "wrsEventReasonText";
+const std::string EVENT_EVENT_TYPE = "wrsEventEventType";
+const std::string EVENT_CAUSE = "wrsEventProbableCause";
+const std::string EVENT_SERVICE_AFFECTING = "wrsEventServiceAffecting";
 
 const std::string SNMPv2_MIB = "SNMPv2-MIB";
 const std::string WARM_START = "warmStart";
