@@ -86,6 +86,6 @@ Links
 * Code Review: `Gerrit`_
 * Bugs: `Storyboard`_
 
-.. _stx-fault: https://git.starlingx.io/cgit/stx-fault/
-.. _Gerrit: https://review.openstack.org/#/q/project:openstack/stx-fault
-.. _Storyboard: https://storyboard.openstack.org/#!/project/openstack/stx-fault
+.. _stx-fault: https://opendev.org/starlingx/fault
+.. _Gerrit: https://review.opendev.org/#/q/project:starlingx/fault
+.. _Storyboard: https://storyboard.openstack.org/#!/project/starlingx/fault
