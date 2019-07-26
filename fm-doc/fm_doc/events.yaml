@@ -2626,6 +2626,59 @@
     Probable_Cause: unspecified-reason
     Service_Affecting: False
 
+#---------------------------------------------------------------------------
+#   APPLICATION
+#---------------------------------------------------------------------------
+
+750.001:
+    Type: Alarm
+    Description: "Application Upload Failure"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: warning
+    Proposed_Repair_Action: "Check system inventory log for cause."
+    Alarm_Type: processing-error
+    Probable_Cause: unknown
+    Service_Affecting: False
+
+750.002:
+    Type: Alarm
+    Description: "Application Apply Failure"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: major
+    Proposed_Repair_Action: "Retry applying the application. If the issue persists, please check system inventory log for cause."
+    Alarm_Type: processing-error
+    Probable_Cause: unknown
+    Service_Affecting: True
+
+750.003:
+    Type: Alarm
+    Description: "Application Remove Failure"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: major
+    Proposed_Repair_Action: "Retry removing the application. If the issue persists, please check system inventory log for cause."
+    Alarm_Type: processing-error
+    Probable_Cause: unknown
+    Service_Affecting: True
+
+750.004:
+    Type: Alarm
+    Description: "Application Apply In Progress"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: warning
+    Proposed_Repair_Action: "No action required."
+    Alarm_Type: other
+    Probable_Cause: unknown
+    Service_Affecting: True
+
+750.005:
+    Type: Alarm
+    Description: "Application Update In Progress"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: warning
+    Proposed_Repair_Action: "No action required."
+    Alarm_Type: other
+    Probable_Cause: unknown
+    Service_Affecting: True
 
 #---------------------------------------------------------------------------
 #   STORAGE
