@@ -2636,9 +2636,14 @@
     Entity_Instance_ID: k8s_application=<appname>
     Severity: warning
     Proposed_Repair_Action: "Check system inventory log for cause."
+    Maintenance_Action:
+    Inhibit_Alarms:
     Alarm_Type: processing-error
     Probable_Cause: unknown
     Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 750.002:
     Type: Alarm
@@ -2646,9 +2651,14 @@
     Entity_Instance_ID: k8s_application=<appname>
     Severity: major
     Proposed_Repair_Action: "Retry applying the application. If the issue persists, please check system inventory log for cause."
+    Maintenance_Action:
+    Inhibit_Alarms:
     Alarm_Type: processing-error
     Probable_Cause: unknown
     Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 750.003:
     Type: Alarm
@@ -2656,9 +2666,14 @@
     Entity_Instance_ID: k8s_application=<appname>
     Severity: major
     Proposed_Repair_Action: "Retry removing the application. If the issue persists, please check system inventory log for cause."
+    Maintenance_Action:
+    Inhibit_Alarms:
     Alarm_Type: processing-error
     Probable_Cause: unknown
     Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 750.004:
     Type: Alarm
@@ -2666,9 +2681,14 @@
     Entity_Instance_ID: k8s_application=<appname>
     Severity: warning
     Proposed_Repair_Action: "No action required."
+    Maintenance_Action:
+    Inhibit_Alarms:
     Alarm_Type: other
     Probable_Cause: unknown
     Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 750.005:
     Type: Alarm
@@ -2676,9 +2696,14 @@
     Entity_Instance_ID: k8s_application=<appname>
     Severity: warning
     Proposed_Repair_Action: "No action required."
+    Maintenance_Action:
+    Inhibit_Alarms:
     Alarm_Type: other
     Probable_Cause: unknown
     Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   STORAGE
