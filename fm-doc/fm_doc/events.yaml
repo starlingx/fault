@@ -2687,7 +2687,7 @@
     Probable_Cause: unknown
     Service_Affecting: True
     Suppression: True
-    Management_Affecting_Severity: none
+    Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
 750.005:
@@ -2702,7 +2702,7 @@
     Probable_Cause: unknown
     Service_Affecting: True
     Suppression: True
-    Management_Affecting_Severity: none
+    Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
