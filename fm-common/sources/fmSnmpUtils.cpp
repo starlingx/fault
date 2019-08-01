@@ -145,14 +145,14 @@ static std::string format_trap_cmd(int type, SFmAlarmDataT &data,
 		cmd = add_time_val(cmd, ALARM_DATE_TIME, 0);
     	cmd = add_str_val(cmd, ALARM_REASON_TEXT, CLEAR_REASON_TEXT.c_str());
 	} else if (operation_type == ALARM_MSG){
-		cmd = add_str_val(cmd, CUSTOMER_LOG_ID, data.alarm_id);
-    	cmd = add_str_val(cmd, CUSTOMER_LOG_INSTANCE_ID, data.entity_instance_id);
-    	cmd = add_time_val(cmd, CUSTOMER_LOG_DATE_TIME, data.timestamp);
-		cmd = add_int_val(cmd, CUSTOMER_LOG_SEVERITY, data.severity);
-    	cmd = add_str_val(cmd, CUSTOMER_LOG_REASON_TEXT, data.reason_text);
-		cmd = add_int_val(cmd, CUSTOMER_LOG_EVENT_TYPE, data.alarm_type);
-		cmd = add_int_val(cmd, CUSTOMER_LOG_CAUSE, data.probable_cause);
-    	cmd = add_int_val(cmd, CUSTOMER_LOG_SERVICE_AFFECTING, data.service_affecting);
+		cmd = add_str_val(cmd, EVENT_ID, data.alarm_id);
+		cmd = add_str_val(cmd, EVENT_INSTANCE_ID, data.entity_instance_id);
+		cmd = add_time_val(cmd, EVENT_DATE_TIME, data.timestamp);
+		cmd = add_int_val(cmd, EVENT_SEVERITY, data.severity);
+		cmd = add_str_val(cmd, EVENT_REASON_TEXT, data.reason_text);
+		cmd = add_int_val(cmd, EVENT_EVENT_TYPE, data.alarm_type);
+		cmd = add_int_val(cmd, EVENT_CAUSE, data.probable_cause);
+		cmd = add_int_val(cmd, EVENT_SERVICE_AFFECTING, data.service_affecting);
 	} else if (operation_type == WARM_START){
 		// nothing to add to cmd
 	} else {
