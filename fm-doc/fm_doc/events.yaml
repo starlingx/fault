@@ -2705,6 +2705,21 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+750.006:
+    Type: Alarm
+    Description: "Automatic Application Re-Apply Is Pending"
+    Entity_Instance_ID: k8s_application=<appname>
+    Severity: warning
+    Proposed_Repair_Action: "Ensure all hosts are either locked or unlocked.  When the system is stable the application will be automatically reapplied."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: other
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+
 #---------------------------------------------------------------------------
 #   STORAGE
 #---------------------------------------------------------------------------
