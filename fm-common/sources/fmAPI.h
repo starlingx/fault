@@ -183,10 +183,13 @@ typedef enum{
 
 typedef struct {
   char alarm_id[FM_MAX_BUFFER_LENGTH];
-  fm_ent_inst_t  entity_instance_id;
-}AlarmFilter ;
+  fm_ent_inst_t entity_instance_id;
+}AlarmFilter;
 
 
+/*
+ * APIs to create, clear and query alarms.
+*/
 EFmErrorT fm_set_fault(const SFmAlarmDataT *alarm, fm_uuid_t *uuid);
 
 EFmErrorT fm_clear_fault(AlarmFilter *filter);
@@ -196,10 +199,10 @@ EFmErrorT fm_clear_all(fm_ent_inst_t *inst_id);
 EFmErrorT fm_get_fault(AlarmFilter *filter, SFmAlarmDataT *alarm);
 
 EFmErrorT fm_get_faults(fm_ent_inst_t *inst_id, SFmAlarmDataT *alarm,
-		                unsigned int *max_alarms_to_get);
+                        unsigned int *max_alarms_to_get);
 
 EFmErrorT fm_get_faults_by_id(fm_alarm_id *alarm_id, SFmAlarmDataT *alarm,
-						unsigned int *max_alarms_to_get);
+                              unsigned int *max_alarms_to_get);
 
 
 /*
