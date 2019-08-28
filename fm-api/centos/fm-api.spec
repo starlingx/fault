@@ -7,7 +7,6 @@ Group: base
 Packager: Wind River <info@windriver.com>
 URL: unknown
 Source0: %{name}-%{version}.tar.gz
-Source1: LICENSE
 
 %define debug_package %{nil}
 
