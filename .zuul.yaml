@@ -5,14 +5,14 @@
       - publish-stx-docs
       - stx-api-ref-jobs
       - stx-release-notes-jobs
+      - stx-lint-specfile-jobs
+      - stx-build-rpms
     check:
       jobs:
         - flock-devstack-fault
         - openstack-tox-linters
         - openstack-tox-pep8
         - stx-fault-build
-        - flock-check-packaging:
-            voting: false
     gate:
       jobs:
         - flock-devstack-fault
@@ -51,12 +51,3 @@
         fault: https://opendev.org/starlingx/fault
         integ: https://opendev.org/starlingx/integ
         update: https://opendev.org/starlingx/update
-
-- job:
-    name: flock-check-packaging
-    parent: tox
-    description: Sanity check RPM spec files
-    required-projects:
-      - name: starlingx/integ
-    vars:
-      tox_envlist: rpm-packaging-lint
