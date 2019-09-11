@@ -7,7 +7,7 @@ Summary: StarlingX Platform Fault Manager Package
 License: Apache-2.0
 Group: Development/Tools/Other
 URL: https://opendev.org/starlingx/fault
-Source0: %{name}-%{version}.tar.xz
+Source0: %{name}-%{version}.tar.gz
 BuildRequires: fm-common-devel
 BuildRequires: libuuid-devel
 BuildRequires: systemd-devel

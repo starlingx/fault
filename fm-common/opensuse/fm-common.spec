@@ -9,7 +9,7 @@ Summary: StarlingX Platform Fault Management Common Package
 License: Apache-2.0
 Group: Development/Tools/Other
 URL: https://opendev.org/starlingx/fault
-Source0: %{name}-%{version}.tar.xz
+Source0: %{name}-%{version}.tar.gz
 BuildRequires: libuuid-devel
 BuildRequires: postgresql-devel
 BuildRequires: python-devel
