@@ -12,7 +12,7 @@ Summary:        A python client library for Fault Management
 License:        Apache-2.0
 Group:          Development/Tools/Other
 URL:            https://opendev.org/starlingx/fault
-Source0:        %{name}-%{version}.tar.xz
+Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  git
 BuildRequires:  python-setuptools
 BuildRequires:  python2-pbr
