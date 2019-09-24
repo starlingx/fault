@@ -43,7 +43,7 @@ Contains fmAlarm.h which is to be used by fm-doc package to validate
 the Alarms & Logs Doc Yaml file
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/sources
 
 %build
 VER=%{version}

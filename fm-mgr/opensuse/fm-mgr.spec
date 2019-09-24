@@ -22,7 +22,7 @@ application fault management requests and raise/clear/update
 alarms in the active alarm database.
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/sources
 
 %build
 VER=%{version}

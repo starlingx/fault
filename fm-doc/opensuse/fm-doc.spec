@@ -19,7 +19,7 @@ checker to ensure no duplicate IDs are used, and generally the correct
 field values are documented.
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/fm_doc
 
 %build
 

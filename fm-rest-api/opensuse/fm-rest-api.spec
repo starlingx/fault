@@ -31,7 +31,7 @@ Fault Management Openstack REST API Service
 %define debug_package %{nil}
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/fm
 
 # Remove bundled egg-info
 rm -rf *.egg-info

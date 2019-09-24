@@ -33,7 +33,7 @@ System.  This package contains symbolic links, header files, and related
 items necessary for software development.
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/sources
 
 %build
 MAJOR=`echo %{version} | awk -F . '{print $1}'`

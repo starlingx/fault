@@ -33,7 +33,7 @@ A python client library for StarlingX Fault Management service
 %define debug_package %{nil}
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/fmclient
 
 # Remove bundled egg-info
 rm -rf *.egg-info
