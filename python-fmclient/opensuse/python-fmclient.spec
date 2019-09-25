@@ -6,7 +6,7 @@
 
 %global pypi_name fmclient
 Name:           python-%{pypi_name}
-Version:        1.0
+Version:        1.0.0
 Release:        %{tis_patch_ver}%{?_tis_dist}
 Summary:        A python client library for Fault Management
 License:        Apache-2.0

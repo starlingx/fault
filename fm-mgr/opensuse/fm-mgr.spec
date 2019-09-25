@@ -1,7 +1,7 @@
 %define local_dir %{_prefix}/local
 %define local_bindir %{local_dir}/bin
 Name: fm-mgr
-Version: 1.0
+Version: 1.0.0
 Release: %{tis_patch_ver}%{?_tis_dist}
 Summary: StarlingX Platform Fault Manager Package
 License: Apache-2.0

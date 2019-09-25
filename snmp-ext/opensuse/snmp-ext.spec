@@ -1,6 +1,6 @@
 %define mib_ver 2.0
 Name: snmp-ext
-Version: 1.0
+Version: 1.0.0
 Release: %{tis_patch_ver}%{?_tis_dist}
 Summary: StarlingX Platform SNMP extension Package
 License: Apache-2.0

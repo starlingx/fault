@@ -1,6 +1,6 @@
 %define  cgcs_doc_deploy_dir /opt/deploy/cgcs_doc
 Name: fm-doc
-Version: 1.0
+Version: 1.0.0
 Release: stx
 Summary: StarlingX Platform Fault Management Documentation Package
 License: Apache-2.0

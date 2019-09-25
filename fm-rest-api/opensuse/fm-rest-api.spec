@@ -1,5 +1,5 @@
 Name: fm-rest-api
-Version: 1.0
+Version: 1.0.0
 Release: %{tis_patch_ver}%{?_tis_dist}
 Summary: Fault Management Openstack REST API
 License: Apache-2.0

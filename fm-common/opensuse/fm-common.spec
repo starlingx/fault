@@ -3,7 +3,7 @@
 %define cgcs_doc_deploy_dir /opt/deploy/cgcs_doc
 %define pythonroot %{_libdir}/python2.7/site-packages
 Name: fm-common
-Version: 1.0
+Version: 1.0.0
 Release: %{tis_patch_ver}%{?_tis_dist}
 Summary: StarlingX Platform Fault Management Common Package
 License: Apache-2.0

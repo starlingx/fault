@@ -1,5 +1,5 @@
 Name: snmp-audittrail
-Version: 1.0
+Version: 1.0.0
 Release: %{tis_patch_ver}%{?_tis_dist}
 Summary: StarlingX SNMP Audit Trail
 License: Apache-2.0
