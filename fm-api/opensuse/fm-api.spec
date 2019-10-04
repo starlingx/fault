@@ -51,8 +51,8 @@ install -m 644 fm_api/constants.py $DOC_DEPLOY
 %license LICENSE
 %dir %{pythonroot}/fm_api
 %{pythonroot}/fm_api/*
-%dir %{pythonroot}/fm_api-%{version}.0-py2.7.egg-info
-%{pythonroot}/fm_api-%{version}.0-py2.7.egg-info/*
+%dir %{pythonroot}/fm_api-%{version}-py2.7.egg-info
+%{pythonroot}/fm_api-%{version}-py2.7.egg-info/*
 
 %files -n fm-api-doc
 %defattr(-,root,root,-)
