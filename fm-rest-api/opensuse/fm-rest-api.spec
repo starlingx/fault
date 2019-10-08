@@ -7,6 +7,7 @@ Group: Development/Tools/Other
 URL: https://opendev.org/starlingx/fault
 Source0: %{name}-%{version}.tar.gz
 BuildRequires: insserv-compat
+BuildRequires: fdupes
 BuildRequires: python-oslo.db
 BuildRequires: python-oslo.messaging
 BuildRequires: python-oslo.middleware
@@ -68,6 +69,8 @@ install -m 640 fm/db/sqlalchemy/migrate_repo/migrate.cfg %{buildroot}%{pythonroo
 # install default config files
 oslo-config-generator --config-file fm/config-generator.conf --output-file %{_builddir}/fm.conf.sample
 install -p -D -m 644 %{_builddir}/fm.conf.sample %{buildroot}%{_sysconfdir}/fm/fm.conf
+
+%fdupes %{buildroot}%{pythonroot}/fm
 
 %files
 %defattr(-,root,root,-)

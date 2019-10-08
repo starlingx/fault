@@ -13,6 +13,7 @@ License:        Apache-2.0
 Group:          Development/Tools/Other
 URL:            https://opendev.org/starlingx/fault
 Source0:        %{name}-%{version}.tar.gz
+BuildRequires:  fdupes
 BuildRequires:  git
 BuildRequires:  python-setuptools
 BuildRequires:  python2-pbr
@@ -52,6 +53,10 @@ python setup.py install --root=%{buildroot} \
 
 install -d -m 755 %{buildroot}%{local_etc_bash_completiond}
 install -p -D -m 664 tools/fm.bash_completion %{buildroot}%{local_etc_bash_completiond}/fm.bash_completion
+
+%fdupes %{buildroot}%{pythonroot}/fmclient
+%fdupes %{buildroot}%{pythonroot}/%{pypi_name}-%{version}*.egg-info
+
 
 %files
 %license LICENSE
