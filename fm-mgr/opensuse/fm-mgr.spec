@@ -11,6 +11,8 @@ Source0: %{name}-%{version}.tar.gz
 BuildRequires: fm-common-devel
 BuildRequires: libuuid-devel
 BuildRequires: systemd-devel
+Requires: fm-common
+Requires: fm-doc
 Requires: logrotate
 %if 0%{?suse_version}
 BuildRequires: gcc-c++

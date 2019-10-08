@@ -10,6 +10,9 @@ Source0: %{name}-%{version}.tar.gz
 BuildRequires: python-setuptools
 BuildRequires: python2-pip
 
+Requires: fm-common
+Requires: python2-six
+
 %description
 StarlingX platform Fault Management Client Library that provides APIs
 for applications to raise/clear/update active alarms.

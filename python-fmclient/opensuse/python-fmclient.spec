@@ -19,6 +19,10 @@ BuildRequires:  python-setuptools
 BuildRequires:  python2-pbr
 BuildRequires:  python3-pbr
 Requires:       bash-completion
+Requires:       python2-httplib2
+Requires:       python2-pyOpenSSL
+Requires:       python2-PrettyTable
+Requires:       python2-python-dateutil
 Requires:       python-keystoneauth1 >= 3.1.0
 Requires:       python-oslo.i18n >= 2.1.0
 Requires:       python-oslo.utils >= 3.20.0

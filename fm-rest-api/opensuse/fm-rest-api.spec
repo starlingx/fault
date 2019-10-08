@@ -17,10 +17,20 @@ BuildRequires: python2-oslo.log
 BuildRequires: python2-pip
 BuildRequires: systemd
 BuildRequires: systemd-rpm-macros
+Requires: cgts-client
+Requires: python2-oslo.policy
+Requires: python2-pecan
+Requires: python2-SQLAlchemy
+Requires: python2-WSME
+Requires: python-oslo.service
+Requires: python-oslo.db
+Requires: python-oslo.versionedobjects
 Requires: python-eventlet
+Requires: python-keystonemiddleware
 Requires: python-paste
 Requires: python-webob
 Requires: systemd
+Requires: tsconfig
 
 %description
 Fault Management Openstack REST API Service
