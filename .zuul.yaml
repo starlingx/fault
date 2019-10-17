@@ -9,13 +9,11 @@
       - stx-build-rpms
     check:
       jobs:
-        - flock-devstack-fault
         - openstack-tox-linters
         - openstack-tox-pep8
         - stx-fault-build
     gate:
       jobs:
-        - flock-devstack-fault
         - openstack-tox-linters
         - openstack-tox-pep8
 
