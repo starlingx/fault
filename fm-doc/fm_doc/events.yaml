@@ -807,6 +807,21 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+250.003:
+    Type: Alarm
+    Description: Kubernetes certificates rotation failed on host <hostname>.
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Rotate kubernetes certificates manually.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
 
 #---------------------------------------------------------------------------
 #   VM Compute Services
