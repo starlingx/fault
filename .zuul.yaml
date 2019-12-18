@@ -6,7 +6,6 @@
       - stx-api-ref-jobs
       - stx-release-notes-jobs
       - stx-lint-specfile-jobs
-      - stx-build-rpms
     check:
       jobs:
         - openstack-tox-linters
