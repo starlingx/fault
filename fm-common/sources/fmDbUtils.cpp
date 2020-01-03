@@ -15,7 +15,7 @@
 #include <iostream>
 #include <assert.h>
 #include <arpa/inet.h>
-#include <python2.7/Python.h>
+#include <python3.6m/Python.h>
 
 
 #include "fmMutex.h"
@@ -611,21 +611,32 @@ bool fm_db_util_sync_event_suppression(void){
 
 	FILE* file;
 	int argc;
-	char * argv[2];
 
 	FM_INFO_LOG("Starting event suppression synchronization...\n");
 
 	argc = 2;
-	argv[0] = (char*)FM_DB_SYNC_EVENT_SUPPRESSION;
-	argv[1] = (char*)db_conn;
 
-	Py_SetProgramName(argv[0]);
+	wchar_t *py_argv[2];
+	py_argv[0] = Py_DecodeLocale(FM_DB_SYNC_EVENT_SUPPRESSION, NULL);
+	if (py_argv[0] == NULL) {
+		FM_ERROR_LOG("Fatal error: cannot decode argv[0]\n");
+		return false;
+	}
+	py_argv[1] = Py_DecodeLocale(db_conn, NULL);
+	if (py_argv[1] == NULL) {
+		PyMem_RawFree(py_argv[0]);
+		FM_ERROR_LOG("Fatal error: cannot decode argv[1]\n");
+		return false;
+	}
+	Py_SetProgramName(py_argv[0]);
 	Py_Initialize();
-	PySys_SetArgv(argc, argv);
+	PySys_SetArgv(argc, py_argv);
 	file = fopen(FM_DB_SYNC_EVENT_SUPPRESSION,"r");
 	PyRun_SimpleFile(file, FM_DB_SYNC_EVENT_SUPPRESSION);
 	fclose(file);
 	Py_Finalize();
+	PyMem_RawFree(py_argv[0]);
+	PyMem_RawFree(py_argv[1]);
 
 	FM_INFO_LOG("Completed event suppression synchronization.\n");
 

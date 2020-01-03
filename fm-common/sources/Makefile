@@ -4,7 +4,7 @@ SRCS = fmAPI.cpp fmFile.cpp fmLog.cpp fmMsgServer.cpp fmMutex.cpp fmSocket.cpp f
 CLI_SRCS = fm_cli.cpp
 OBJS = $(SRCS:.cpp=.o)
 CLI_OBJS = fm_cli.o
-LDLIBS = -lstdc++ -lrt -luuid -lpq -lpthread -lpython2.7
+LDLIBS = -lstdc++ -lrt -luuid -lpq -lpthread -lpython3.6m
 INCLUDES = -I./ -I$(shell pg_config --includedir)
 CCFLAGS = -g -O2 -Wall -Werror -fPIC
 EXTRACCFLAGS= -Wformat -Wformat-security

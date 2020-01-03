@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-
-#include <python2.7/Python.h>
+#define PY_SSIZE_T_CLEAN
+#include <python3.6m/Python.h>
 #include <stdio.h>
 #include "fmAPI.h"
 #include "fmAlarmUtils.h"
@@ -84,7 +84,7 @@ static PyObject * _fm_set(PyObject * self, PyObject *args) {
 
 	rc = fm_set_fault(&alm_data, &tmp_uuid);
 	if (rc == FM_ERR_OK) {
-		return PyString_FromString(&(tmp_uuid[0]));
+		return PyUnicode_FromString(&(tmp_uuid[0]));
 	}
 
 	if (rc == FM_ERR_NOCONNECT){
@@ -120,7 +120,7 @@ static PyObject * _fm_get(PyObject * self, PyObject *args) {
 	rc = fm_get_fault(&af,&ad);
 	if (rc == FM_ERR_OK) {
 		fm_alarm_to_string(&ad,alm_str);
-		return PyString_FromString(alm_str.c_str());
+		return PyUnicode_FromString(alm_str.c_str());
 	}
 
 	if (rc == FM_ERR_ENTITY_NOT_FOUND) {
@@ -165,7 +165,7 @@ static PyObject * _fm_get_by_aid(PyObject * self, PyObject *args, PyObject* kwar
 			std::string s;
 			fm_alarm_to_string(&lst[ix],s);
 			if (s.size() > 0) {
-				if (PyList_Append(__lst, PyString_FromString(s.c_str())) != 0) {
+				if (PyList_Append(__lst, PyUnicode_FromString(s.c_str())) != 0) {
 					ERROR_LOG("Failed to append alarm to the list");
 				}
 			}
@@ -214,7 +214,7 @@ static PyObject * _fm_get_by_eid(PyObject * self, PyObject *args, PyObject* kwar
 			std::string s;
 			fm_alarm_to_string(&lst[ix], s);
 			if (s.size() > 0) {
-				if (PyList_Append(__lst,PyString_FromString(s.c_str())) != 0) {
+				if (PyList_Append(__lst,PyUnicode_FromString(s.c_str())) != 0) {
 					ERROR_LOG("Failed to append alarm to the list");
 				}
 			}
@@ -313,10 +313,20 @@ static PyMethodDef _methods [] = {
 	    { NULL, NULL, 0, NULL }
 };
 
+static struct PyModuleDef cModPyDem =
+{
+	PyModuleDef_HEAD_INIT,
+	"fm_core", /* name of module */
+	"",          /* module documentation, may be NULL */
+	-1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+	_methods
+};
+
 PyMODINIT_FUNC initfm_core() {
-	PyObject *m = Py_InitModule("fm_core", _methods);
+	PyObject *m = PyModule_Create(&cModPyDem);
 	if (m == NULL){
 		PySys_WriteStderr("Failed to initialize fm_core");
-		return;
+		return NULL;
 	}
+	return m;
 }

@@ -1,7 +1,7 @@
 %define local_dir /usr/local
 %define local_bindir %{local_dir}/bin
 %define cgcs_doc_deploy_dir /opt/deploy/cgcs_doc
-%define pythonroot /usr/lib64/python2.7/site-packages
+%define pythonroot %python3_sitearch
 
 Summary: CGTS Platform Fault Management Common Package
 Name: fm-common
@@ -15,10 +15,10 @@ Source0: %{name}-%{version}.tar.gz
 BuildRequires: util-linux
 BuildRequires: postgresql-devel
 BuildRequires: libuuid-devel
-BuildRequires: python-devel
-BuildRequires: python-setuptools
-BuildRequires: python2-pip
-BuildRequires: python2-wheel
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-pip
+BuildRequires: python3-wheel
 
 %package -n fm-common-dev
 Summary: CGTS Platform Fault Management Common Package - Development files
@@ -51,8 +51,8 @@ VER=%{version}
 MAJOR=`echo $VER | awk -F . '{print $1}'`
 MINOR=`echo $VER | awk -F . '{print $2}'`
 make  MAJOR=$MAJOR MINOR=$MINOR %{?_smp_mflags}
-%{__python} setup.py build
-%py2_build_wheel
+%{__python3} setup.py build
+%py3_build_wheel
 
 %install
 rm -rf %{buildroot}
@@ -66,7 +66,7 @@ make DESTDIR=%{buildroot} \
      CGCS_DOC_DEPLOY=%{cgcs_doc_deploy_dir} \
      MAJOR=$MAJOR MINOR=$MINOR install
 
-%{__python} setup.py install --root=%{buildroot} \
+%{__python3} setup.py install --root=%{buildroot} \
                              --install-lib=%{pythonroot} \
                              --prefix=/usr \
                              --install-data=/usr/share
@@ -83,7 +83,9 @@ rm -rf %{buildroot}
 %{local_bindir}/*
 %{_libdir}/*.so.*
 
-%{pythonroot}/fm_core.so
+# with python3 PEP 3149, ABI version is tagged in so name.
+# so the file name will be like: fm_core.cpython-36m-x86_64-linux-gnu.so
+%{pythonroot}/fm_core.cpython-3*.so
 %{pythonroot}/fm_core-*.egg-info
 
 %files -n fm-common-dev
