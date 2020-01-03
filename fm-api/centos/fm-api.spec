@@ -10,9 +10,9 @@ Source0: %{name}-%{version}.tar.gz
 
 %define debug_package %{nil}
 
-BuildRequires: python-setuptools
-BuildRequires: python2-pip
-BuildRequires: python2-wheel
+BuildRequires: python3-setuptools
+BuildRequires: python3-pip
+BuildRequires: python3-wheel
 
 %description
 CGTS platform Fault Management Client Library that provides APIs
@@ -27,18 +27,18 @@ Provides: fm-api-doc
 Contains contansts which is to be used by fm-doc package to validate
 the Alarms & Logs Doc Yaml file
 
-%define pythonroot /usr/lib64/python2.7/site-packages
+%define pythonroot %python3_sitearch
 %define cgcs_doc_deploy_dir /opt/deploy/cgcs_doc
 
 %prep
 %setup
 
 %build
-%{__python} setup.py build
-%py2_build_wheel
+%{__python3} setup.py build
+%py3_build_wheel
 
 %install
-%{__python} setup.py install --root=$RPM_BUILD_ROOT \
+%{__python3} setup.py install --root=$RPM_BUILD_ROOT \
                              --install-lib=%{pythonroot} \
                              --prefix=/usr \
                              --install-data=/usr/share \
@@ -62,8 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %dir %{pythonroot}/fm_api
 %{pythonroot}/fm_api/*
-%dir %{pythonroot}/fm_api-%{version}.0-py2.7.egg-info
-%{pythonroot}/fm_api-%{version}.0-py2.7.egg-info/*
+%dir %{pythonroot}/fm_api-%{version}.0-py3.6.egg-info
+%{pythonroot}/fm_api-%{version}.0-py3.6.egg-info/*
 
 %files -n fm-api-doc
 %defattr(-,root,root,-)
