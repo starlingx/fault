@@ -8,7 +8,7 @@ Packager: Wind River <info@windriver.com>
 URL: unknown
 BuildRequires: fm-api-doc
 BuildRequires: fm-common-doc
-BuildRequires: python-yaml
+BuildRequires: python3-yaml
 
 Source0: %{name}-%{version}.tar.gz
 

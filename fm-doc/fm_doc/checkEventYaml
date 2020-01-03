@@ -27,7 +27,7 @@ if [ ${DUP_LINES} -gt 0 ]; then
     exit 1
 fi
 
-python parseEventYaml.py ${FMEVENTDOC_YAMLFILE}
-python check_missing_alarms.py ${FMEVENTDOC_YAMLFILE}
+python3 parseEventYaml.py ${FMEVENTDOC_YAMLFILE}
+python3 check_missing_alarms.py ${FMEVENTDOC_YAMLFILE}
 exit $?
 
