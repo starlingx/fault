@@ -4,8 +4,13 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-
-#include <python2.7/Python.h>
+#if PY_MAJOR_VERSION >= 3
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+#define PyString_FromString PyUnicode_FromString
+#else
+#include <Python.h>
+#endif
 #include <stdio.h>
 #include "fmAPI.h"
 #include "fmAlarmUtils.h"
@@ -313,6 +318,7 @@ static PyMethodDef _methods [] = {
 	    { NULL, NULL, 0, NULL }
 };
 
+#if PY_MAJOR_VERSION >= 3
 static struct PyModuleDef cModPyDem =
 {
 	PyModuleDef_HEAD_INIT,
@@ -321,15 +327,24 @@ static struct PyModuleDef cModPyDem =
 	-1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
 	_methods
 };
+#endif
 
 #if PY_MAJOR_VERSION >= 3
 PyMODINIT_FUNC PyInit_fm_core() {
+        PyObject *m = PyModule_Create(&cModPyDem);
+        if (m == NULL){
+                PySys_WriteStderr("Failed to initialize fm_core");
+                return NULL;
+        }
+        return m;
+}
 #else
 PyMODINIT_FUNC initfm_core() {
-#endif
-	PyObject *m = PyModule_Create(&cModPyDem);
-	if (m == NULL){
-		PySys_WriteStderr("Failed to initialize fm_core");
-		return;
-	}
+        PyObject *m = Py_InitModule("fm_core", _methods);
+        if (m == NULL){
+                PySys_WriteStderr("Failed to initialize fm_core");
+                return;
+        }
 }
+#endif
+

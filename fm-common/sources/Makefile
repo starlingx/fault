@@ -4,13 +4,24 @@ SRCS = fmAPI.cpp fmFile.cpp fmLog.cpp fmMsgServer.cpp fmMutex.cpp fmSocket.cpp f
 CLI_SRCS = fm_cli.cpp
 OBJS = $(SRCS:.cpp=.o)
 CLI_OBJS = fm_cli.o
-LDLIBS = -lstdc++ -lrt -luuid -lpq -lpthread -lpython2.7 -ljson-c
+LDLIBS = -lstdc++ -lrt -luuid -lpq -lpthread -ljson-c
 INCLUDES = -I./ -I$(shell pg_config --includedir)
-CCFLAGS = -g -O2 -Wall -Werror -fPIC
+CCFLAGS = -g -O2 -Wall -fPIC
 EXTRACCFLAGS= -Wformat -Wformat-security
 
 MAJOR ?= 1
 MINOR ?= 0
+OS_ID        = $(shell grep '^ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
+OS_VERSION_ID= $(shell grep '^VERSION_ID=' /etc/os-release | cut -f2- -d= | sed -e 's/\"//g')
+ifeq ($(OS_ID)-$(OS_VERSION_ID),centos-8)
+LDLIBS += -lpython3.6m
+INCLUDES += -I/usr/include/python3.6m
+CCFLAGS += -Werror
+else
+INCLUDES += -I/usr/include/python2.7
+LDLIBS += -lpython2.7
+endif
+
 
 DESTDIR ?= /
 BINDIR ?= /usr/local/bin
