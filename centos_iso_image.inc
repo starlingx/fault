@@ -15,13 +15,13 @@ fm-mgr
 fm-doc
 
 # snmp-ext
-snmp-ext
+#snmp-ext
 
 # snmp-audittrail
-snmp-audittrail
+#snmp-audittrail
 
 # fm-rest-api
-fm-rest-api
+#fm-rest-api
 
 # python-fmclient
 python-fmclient
