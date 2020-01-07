@@ -11,17 +11,17 @@ URL: unknown
 Source0: %{name}-%{version}.tar.gz
 
 BuildRequires:  git
-BuildRequires:  python-pbr >= 2.0.0
-BuildRequires:  python-setuptools
-BuildRequires:  python2-pip
-BuildRequires:  python2-wheel
+BuildRequires:  python3-pbr >= 5.1.2
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-pip
+BuildRequires:  python3-wheel
 
-Requires:       python-keystoneauth1 >= 3.1.0
-Requires:       python-pbr >= 2.0.0
-Requires:       python-six >= 1.9.0
-Requires:       python-oslo-i18n >= 2.1.0
-Requires:       python-oslo-utils >= 3.20.0
-Requires:       python-requests
+Requires:       python3-keystoneauth1 >= 3.17.1
+Requires:       python3-pbr >= 5.1.2
+Requires:       python3-six >= 1.11.0
+Requires:       python3-oslo-i18n >= 3.24.0
+Requires:       python3-oslo-utils >= 3.41.3
+Requires:       python3-requests
 Requires:       bash-completion
 
 %description
@@ -29,7 +29,7 @@ A python client library for Fault Management
 
 %define local_bindir /usr/bin/
 %define local_etc_bash_completiond /etc/bash_completion.d/
-%define pythonroot /usr/lib64/python2.7/site-packages
+%define pythonroot %python3_sitearch
 
 %define debug_package %{nil}
 
@@ -43,13 +43,13 @@ rm -rf *.egg-info
 echo "Start build"
 
 export PBR_VERSION=%{version}
-%{__python} setup.py build
-%py2_build_wheel
+%{__python3} setup.py build
+%py3_build_wheel
 
 %install
 echo "Start install"
 export PBR_VERSION=%{version}
-%{__python} setup.py install --root=%{buildroot} \
+%{__python3} setup.py install --root=%{buildroot} \
                              --install-lib=%{pythonroot} \
                              --prefix=/usr \
                              --install-data=/usr/share \
