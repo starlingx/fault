@@ -8,19 +8,19 @@ Packager: Wind River <info@windriver.com>
 URL: unknown
 Source0: %{name}-%{version}.tar.gz
 
-BuildRequires: python-devel
-BuildRequires: python-setuptools
-BuildRequires: python2-pip
-BuildRequires: python2-wheel
-BuildRequires: python-oslo-config
-BuildRequires: python-oslo-db
-BuildRequires: python-oslo-log
-BuildRequires: python-oslo-messaging
-BuildRequires: python-oslo-middleware
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-pip
+BuildRequires: python3-wheel
+BuildRequires: python3-oslo-config
+BuildRequires: python3-oslo-db
+BuildRequires: python3-oslo-log
+BuildRequires: python3-oslo-messaging
+BuildRequires: python3-oslo-middleware
 
-Requires: python-eventlet
-Requires: python-webob
-Requires: python-paste
+Requires: python3-eventlet
+Requires: python3-webob
+Requires: python3-paste
 
 BuildRequires: systemd
 
@@ -29,7 +29,7 @@ Fault Management Openstack REST API Service
 
 %define local_bindir /usr/bin/
 %define local_initddir /etc/rc.d/init.d
-%define pythonroot /usr/lib64/python2.7/site-packages
+%define pythonroot %{python3_sitearch}
 %define local_etc_pmond /etc/pmon.d/
 %define debug_package %{nil}
 
@@ -43,14 +43,14 @@ rm -rf *.egg-info
 echo "Start build"
 
 export PBR_VERSION=%{version}
-%{__python} setup.py build
-%py2_build_wheel
+%{__python3} setup.py build
+%py3_build_wheel
 PYTHONPATH=. oslo-config-generator --config-file=fm/config-generator.conf
 
 %install
 echo "Start install"
 export PBR_VERSION=%{version}
-%{__python} setup.py install --root=%{buildroot} \
+%{__python3} setup.py install --root=%{buildroot} \
                              --install-lib=%{pythonroot} \
                              --prefix=/usr \
                              --install-data=/usr/share \
