@@ -1,1 +1,10 @@
--r requirements.txt
+hacking!=0.13.0,<0.14,>=0.12.0
+bashate >= 0.2
+PyYAML >= 3.1.0
+yamllint >= 0.5.2
+stestr
+testtools!=1.2.0,>=0.9.36
+iso8601
+stestr
+mock
+cython
