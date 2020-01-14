@@ -19,7 +19,13 @@ Allows overriding of config for use of fakes, and some black magic for
 inline callbacks.
 
 """
+import fixtures
 import testtools
+
+from oslo_config import cfg
+from oslo_log import log as logging
+
+CONF = cfg.CONF
 
 
 class TestCase(testtools.TestCase):
@@ -28,6 +34,13 @@ class TestCase(testtools.TestCase):
     def setUp(self):
         """Run before each test method to initialize test environment."""
         super(TestCase, self).setUp()
+
+        def fake_logging_setup(*args):
+            pass
+
+        self.useFixture(
+            fixtures.MonkeyPatch('oslo_log.log.setup', fake_logging_setup))
+        logging.register_options(CONF)
 
     def tearDown(self):
         super(TestCase, self).tearDown()

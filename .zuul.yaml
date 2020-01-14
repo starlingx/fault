@@ -59,6 +59,8 @@
     description: |
       Run py27 test for fm-rest-api
     nodeset: ubuntu-xenial
+    required-projects:
+      - starlingx/config
     vars:
       tox_envlist: py27
       tox_extra_args: -c fm-rest-api/fm/tox.ini
@@ -69,6 +71,8 @@
     description: |
       Run py35 test for fm-rest-api
     nodeset: ubuntu-xenial
+    required-projects:
+      - starlingx/config
     vars:
       tox_envlist: py35
       tox_extra_args: -c fm-rest-api/fm/tox.ini

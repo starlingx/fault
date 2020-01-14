@@ -15,6 +15,7 @@
 
 import datetime
 from fm.common import timeutils
+from fm.common import utils
 
 from fm.tests import base
 
@@ -32,3 +33,24 @@ class FaultTimeUtilsTestCase(base.TestCase):
 
         self.assertRaises(ValueError, timeutils.parse_isotime, "bad input")
         self.assertRaises(ValueError, timeutils.parse_isotime, isotime)
+
+
+class FaultUtilsTestCase(base.TestCase):
+
+    def test_generate_uuid(self):
+        uuid = utils.generate_uuid()
+        self.assertTrue(isinstance(uuid, str))
+
+    def test_safe_rstrip(self):
+        input_int = 1
+        self.assertEqual(input_int, utils.safe_rstrip(input_int))
+        input_str = "string input"
+        self.assertEqual(input_str, utils.safe_rstrip(input_str))
+
+        input_str = "string to strip   \r\n\t"
+        output_str = "string to strip"
+        self.assertEqual(output_str, utils.safe_rstrip(input_str))
+
+        input_str = "string to strip ssss"
+        output_str = "string to strip"
+        self.assertEqual(output_str, utils.safe_rstrip(input_str, "s "))
