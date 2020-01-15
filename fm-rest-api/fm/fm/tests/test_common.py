@@ -19,10 +19,6 @@ from fm.tests import base
 
 class FaultUtilsTestCase(base.TestCase):
 
-    def test_generate_uuid(self):
-        uuid = utils.generate_uuid()
-        self.assertTrue(isinstance(uuid, str))
-
     def test_safe_rstrip(self):
         input_int = 1
         self.assertEqual(input_int, utils.safe_rstrip(input_int))
