@@ -13,26 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import datetime
-from fm.common import timeutils
 from fm.common import utils
-
 from fm.tests import base
-
-
-class FaultTimeUtilsTestCase(base.TestCase):
-
-    def test_isotime(self):
-        isotimestr = timeutils.isotime()
-        isotime = timeutils.parse_isotime(isotimestr)
-        self.assertTrue(isinstance(isotime, datetime.datetime))
-
-        isotimestr = timeutils.isotime(subsecond=True)
-        isotime = timeutils.parse_isotime(isotimestr)
-        self.assertTrue(isinstance(isotime, datetime.datetime))
-
-        self.assertRaises(ValueError, timeutils.parse_isotime, "bad input")
-        self.assertRaises(ValueError, timeutils.parse_isotime, isotime)
 
 
 class FaultUtilsTestCase(base.TestCase):

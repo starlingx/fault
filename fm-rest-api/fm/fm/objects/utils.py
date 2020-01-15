@@ -26,7 +26,7 @@ import uuid
 import six
 
 from fm.common.i18n import _
-from fm.common import timeutils
+from oslo_utils import timeutils
 
 
 def datetime_or_none(dt):
