@@ -1,8 +1,8 @@
-=======================
-stx-fault Documentation
-=======================
+==================================
+StarlingX Fault Management Project
+==================================
 
-Following is the documentation for StarlingX fault management.
+The starlingx/fault project provides fault management.
 
 --------
 Overview
@@ -61,31 +61,31 @@ Finally, the StarlingX dashboard includes a view/panel that allows you to more
 easily view and interpret FM operations.
 
 -------------
-Release Notes
+Release notes
 -------------
 
 .. toctree::
    :maxdepth: 1
 
-   Release Notes <https://docs.starlingx.io/releasenotes/stx-fault>
+   Release notes <https://docs.starlingx.io/releasenotes/fault>
 
 -------------
-API Reference
+API reference
 -------------
 
 .. toctree::
    :maxdepth: 1
 
-   API Reference <https://docs.starlingx.io/api-ref/stx-fault>
+   API reference <https://docs.starlingx.io/api-ref/fault>
 
 -----
 Links
 -----
 
-* Source: `stx-fault`_
-* Code Review: `Gerrit`_
-* Bugs: `Storyboard`_
+* Source: `starlingx/fault`_
+* Code review: `Gerrit`_
+* Project tracking: `Storyboard`_
 
-.. _stx-fault: https://opendev.org/starlingx/fault
+.. _starlingx/fault: https://opendev.org/starlingx/fault
 .. _Gerrit: https://review.opendev.org/#/q/project:starlingx/fault
 .. _Storyboard: https://storyboard.openstack.org/#!/project/starlingx/fault
