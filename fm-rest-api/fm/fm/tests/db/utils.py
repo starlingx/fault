@@ -12,8 +12,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright 2020 Intel Corporation.
-#
+# Copyright 2020 Intel Corporation
 
 """Fault test utilities."""
 

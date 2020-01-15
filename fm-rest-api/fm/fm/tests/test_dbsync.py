@@ -13,20 +13,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-"""Fault DB test base class."""
-
-import abc
-import six
-
-from fm.common import context
-from fm.tests import base
-
-INIT_VERSION = 0
+from fm.db import migration
+from fm.db.sqlalchemy import api as db_api
+from fm.tests.db import base
 
 
-@six.add_metaclass(abc.ABCMeta)
-class DbTestCase(base.TestCase):
-
+class DbSyncTestCase(base.DbTestCase):
     def setUp(self):
-        super(DbTestCase, self).setUp()
-        self.admin_context = context.make_context(is_admin=True)
+        super(DbSyncTestCase, self).setUp()
+
+    def test_sync_and_version(self):
+        migration.db_sync()
+        engine = db_api.get_engine()
+        v = migration.get_backend().db_version(engine, migration.MIGRATE_REPO_PATH, None)
+        self.assertTrue(v > base.INIT_VERSION)

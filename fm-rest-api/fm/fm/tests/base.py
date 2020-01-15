@@ -20,6 +20,7 @@ inline callbacks.
 
 """
 import sys
+import os
 
 import fixtures
 import mock
@@ -34,7 +35,6 @@ from fm.tests import conf_fixture
 
 CONF = cfg.CONF
 _DB_CACHE = None
-INIT_VERSION = 0
 
 sys.modules['fm_core'] = mock.Mock()
 
@@ -46,11 +46,34 @@ class TestCase(testtools.TestCase):
         """Run before each test method to initialize test environment."""
         super(TestCase, self).setUp()
 
+        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 0)
+        try:
+            test_timeout = int(test_timeout)
+        except ValueError:
+            # If timeout value is invalid do not set a timeout.
+            test_timeout = 0
+        if test_timeout > 0:
+            self.useFixture(fixtures.Timeout(test_timeout, gentle=True))
+        self.useFixture(fixtures.NestedTempfile())
+        self.useFixture(fixtures.TempHomeDir())
+
+        if (os.environ.get('OS_STDOUT_CAPTURE') == 'True' or
+                os.environ.get('OS_STDOUT_CAPTURE') == '1'):
+            stdout = self.useFixture(fixtures.StringStream('stdout')).stream
+            self.useFixture(fixtures.MonkeyPatch('sys.stdout', stdout))
+        if (os.environ.get('OS_STDERR_CAPTURE') == 'True' or
+                os.environ.get('OS_STDERR_CAPTURE') == '1'):
+            stderr = self.useFixture(fixtures.StringStream('stderr')).stream
+            self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
+
+        self.log_fixture = self.useFixture(fixtures.FakeLogger())
+
         def fake_logging_setup(*args):
             pass
 
         self.useFixture(
             fixtures.MonkeyPatch('oslo_log.log.setup', fake_logging_setup))
+
         logging.register_options(CONF)
 
         self.useFixture(conf_fixture.ConfFixture(CONF))
