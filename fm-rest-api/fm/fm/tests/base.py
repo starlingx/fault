@@ -26,9 +26,15 @@ import mock
 import testtools
 
 from oslo_config import cfg
+from oslo_db.sqlalchemy import enginefacade
 from oslo_log import log as logging
+from fm.db import migration
+from fm.tests import conf_fixture
+
 
 CONF = cfg.CONF
+_DB_CACHE = None
+INIT_VERSION = 0
 
 sys.modules['fm_core'] = mock.Mock()
 
@@ -46,6 +52,15 @@ class TestCase(testtools.TestCase):
         self.useFixture(
             fixtures.MonkeyPatch('oslo_log.log.setup', fake_logging_setup))
         logging.register_options(CONF)
+
+        self.useFixture(conf_fixture.ConfFixture(CONF))
+
+        global _DB_CACHE
+        if not _DB_CACHE:
+            engine = enginefacade.get_legacy_facade().get_engine()
+            engine.dispose()
+            engine.connect()
+            migration.db_sync(engine=engine)
 
     def tearDown(self):
         super(TestCase, self).tearDown()
