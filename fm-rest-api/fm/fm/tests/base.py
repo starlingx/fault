@@ -19,13 +19,18 @@ Allows overriding of config for use of fakes, and some black magic for
 inline callbacks.
 
 """
+import sys
+
 import fixtures
+import mock
 import testtools
 
 from oslo_config import cfg
 from oslo_log import log as logging
 
 CONF = cfg.CONF
+
+sys.modules['fm_core'] = mock.Mock()
 
 
 class TestCase(testtools.TestCase):
