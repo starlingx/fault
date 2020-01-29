@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 repository_name = 'openstack/stx-fault'
-project = u'stx-fault'
+project = u'StarlingX Fault Management'
 bug_project = 'starlingx'
 bug_tag = 'stx.fault'
 

@@ -1,12 +1,14 @@
-=======================
-stx-fault API Reference
-=======================
+==============================
+Fault Management API Reference
+==============================
 
-Use the StarlingX stx-fault API for alarm and event collection of the cloud platform.
+Use the StarlingX Fault Management API for alarm and event collection of the
+cloud platform.
 
-stx-fault API content can be searched using the :ref:`search page <search>`.
+Search Fault Management API content using the :ref:`search page <search>`.
 
-API Reference
+-------------
+API reference
 -------------
 
 .. toctree::
