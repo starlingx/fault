@@ -50,13 +50,17 @@ static inline char* fmtaddr(const char *prefix, int af,
                             char*buf, size_t buflen)
 {
     char remote_addr_str[LOG_BUF_STR+1];
+    int ret;
 
     if (NULL == inet_ntop(af, remote_addr, remote_addr_str, sizeof(remote_addr_str))) {
         strncpy(remote_addr_str, "UNKNOWN", LOG_BUF_STR+1);
     }
     remote_addr_str[LOG_BUF_STR] = 0;
 
-    snprintf(buf, buflen, "transport:%s remote:%s", prefix, remote_addr_str);
+    ret = snprintf(buf, buflen, "transport:%s remote:%s", prefix, remote_addr_str);
+    if (ret >= (int)buflen) {
+        DEBUGMSGTL(("helper:snmpAudit", "fmtaddr: log string is truncated\n"));
+    }
     return buf;
 }
 
