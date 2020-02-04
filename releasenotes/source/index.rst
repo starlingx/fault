@@ -1,6 +1,6 @@
-=======================
-stx-fault Release Notes
-=======================
+========================================
+StarlingX Fault Management Release Notes
+========================================
 
 .. toctree::
    :maxdepth: 2

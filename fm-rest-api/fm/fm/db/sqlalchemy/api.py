@@ -23,7 +23,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from fm.api import config
 from fm.common import constants
 from fm.common import exceptions
-from fm.common import utils
 from fm.db import api
 from fm.db.sqlalchemy import models
 from fm import objects
@@ -182,7 +181,7 @@ class Connection(api.Connection):
 
     def alarm_create(self, values):
         if not values.get('uuid'):
-            values['uuid'] = utils.generate_uuid()
+            values['uuid'] = uuidutils.generate_uuid()
         alarm = models.Alarm()
         alarm.update(values)
         with _session_for_write() as session:
@@ -311,7 +310,7 @@ class Connection(api.Connection):
 
     def event_log_create(self, values):
         if not values.get('uuid'):
-            values['uuid'] = utils.generate_uuid()
+            values['uuid'] = uuidutils.generate_uuid()
         event_log = models.EventLog()
         event_log.update(values)
         count = self.event_log_get_count()

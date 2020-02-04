@@ -23,7 +23,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'stx-fault'
+project = u'StarlingX Fault Management'
 copyright = u'2018, StarlingX'
 author = u'StarlingX'
 

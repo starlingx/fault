@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'stx-fault'
+project = u'StarlingX Fault Management'
 
 # Release notes are version independent, no need to set version and release
 release = ''

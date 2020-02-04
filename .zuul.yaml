@@ -11,10 +11,14 @@
         - openstack-tox-linters
         - openstack-tox-pep8
         - stx-fault-build
+        - fault-rest-api-py27
+        - fault-rest-api-py35
     gate:
       jobs:
         - openstack-tox-linters
         - openstack-tox-pep8
+        - fault-rest-api-py27
+        - fault-rest-api-py35
 
 # Perform just a build
 - job:
@@ -48,3 +52,27 @@
         fault: https://opendev.org/starlingx/fault
         integ: https://opendev.org/starlingx/integ
         update: https://opendev.org/starlingx/update
+
+- job:
+    name: fault-rest-api-py27
+    parent: tox
+    description: |
+      Run py27 test for fm-rest-api
+    nodeset: ubuntu-xenial
+    required-projects:
+      - starlingx/config
+    vars:
+      tox_envlist: py27
+      tox_extra_args: -c fm-rest-api/fm/tox.ini
+
+- job:
+    name: fault-rest-api-py35
+    parent: tox
+    description: |
+      Run py35 test for fm-rest-api
+    nodeset: ubuntu-xenial
+    required-projects:
+      - starlingx/config
+    vars:
+      tox_envlist: py35
+      tox_extra_args: -c fm-rest-api/fm/tox.ini

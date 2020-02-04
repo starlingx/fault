@@ -21,17 +21,12 @@
 #
 
 import six
-import uuid
 from oslo_log import log
 from oslo_concurrency import lockutils
 
 from fm.common import constants
 
 LOG = log.getLogger(__name__)
-
-
-def generate_uuid():
-    return str(uuid.uuid4())
 
 
 def synchronized(name, external=True):

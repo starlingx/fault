@@ -22,6 +22,8 @@ develop-eggs
 dist
 eggs
 sdist
+.stestr
+.ipynb_checkpoints
 
 # Sphinx documentation
 doc/build
