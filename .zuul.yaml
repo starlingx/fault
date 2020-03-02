@@ -12,13 +12,13 @@
         - openstack-tox-pep8
         - stx-fault-build
         - fault-rest-api-py27
-        - fault-rest-api-py35
+        - fault-rest-api-py36
     gate:
       jobs:
         - openstack-tox-linters
         - openstack-tox-pep8
         - fault-rest-api-py27
-        - fault-rest-api-py35
+        - fault-rest-api-py36
     post:
       jobs:
         - stx-fault-upload-git-mirror
@@ -62,7 +62,7 @@
     parent: tox
     description: |
       Run py27 test for fm-rest-api
-    nodeset: ubuntu-xenial
+    nodeset: ubuntu-bionic
     required-projects:
       - starlingx/config
     vars:
@@ -70,15 +70,15 @@
       tox_extra_args: -c fm-rest-api/fm/tox.ini
 
 - job:
-    name: fault-rest-api-py35
+    name: fault-rest-api-py36
     parent: tox
     description: |
-      Run py35 test for fm-rest-api
-    nodeset: ubuntu-xenial
+      Run py36 test for fm-rest-api
+    nodeset: ubuntu-bionic
     required-projects:
       - starlingx/config
     vars:
-      tox_envlist: py35
+      tox_envlist: py36
       tox_extra_args: -c fm-rest-api/fm/tox.ini
 
 - job:
