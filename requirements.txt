@@ -1,0 +1,15 @@
+httplib2
+keystoneauth1
+keystonemiddleware
+oslo.config
+oslo.db
+oslo.log
+oslo.policy
+oslo.service
+oslo.utils
+oslo.versionedobjects
+pecan
+prettytable
+pyOpenSSL
+SQLAlchemy
+WSME

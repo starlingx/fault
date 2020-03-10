@@ -10,6 +10,7 @@
       jobs:
         - openstack-tox-linters
         - openstack-tox-pep8
+        - fault-tox-pylint
         - stx-fault-build
         - fault-rest-api-py27
         - fault-rest-api-py36
@@ -17,6 +18,7 @@
       jobs:
         - openstack-tox-linters
         - openstack-tox-pep8
+        - fault-tox-pylint
         - fault-rest-api-py27
         - fault-rest-api-py36
     post:
@@ -80,6 +82,16 @@
     vars:
       tox_envlist: py36
       tox_extra_args: -c fm-rest-api/fm/tox.ini
+
+- job:
+    name: fault-tox-pylint
+    parent: tox
+    description: |
+      Run pylint for python files in fault
+    required-projects:
+      - starlingx/config
+    vars:
+      tox_envlist: pylint
 
 - job:
     name: stx-fault-upload-git-mirror

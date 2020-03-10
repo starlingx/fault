@@ -13,7 +13,7 @@
 import copy
 from . import constants
 import six
-import fm_core
+import fm_core  # pylint: disable=import-error
 import threading
 
 fm_api_lock = threading.Lock()
