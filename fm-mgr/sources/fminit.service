@@ -1,5 +1,5 @@
 [Unit]
-Description=Titanium Cloud Fault Management Initialization
+Description=StarlingX Fault Management Initialization
 After=network.target syslog.target
 
 [Service]
