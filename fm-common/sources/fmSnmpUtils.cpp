@@ -125,14 +125,7 @@ static std::string format_trap_cmd(int type, SFmAlarmDataT &data,
 
 	objtype = mib + SCOPE + get_trap_objtype(type);
 
-        if (comm.compare(DC_COMM_STR) == 0){
-               env = CONF_PATH_ENV + CONF_DIR + SEP;
-        }
-        else {
-               env = "";
-        }
-
-	cmd = env + TRAP_CMD + OPTION_COMM + comm + SEP + ip + SEP + s + objtype + SEP;
+	cmd = TRAP_CMD + OPTION_COMM + comm + SEP + ip + SEP + s + objtype + SEP;
 	std::string operation_type =get_trap_objtype(type);
 
 	if (operation_type == ALARM_CLEAR){
