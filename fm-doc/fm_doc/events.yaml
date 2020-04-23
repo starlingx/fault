@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2020 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -895,7 +895,7 @@
     Probable_Cause: loss-of-signal
     Service_Affecting: False
     Suppression: False
-    Management_Affecting_Severity: warning
+    Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
 280.002:
@@ -910,7 +910,7 @@
     Probable_Cause: application-subsystem-failure
     Service_Affecting: False
     Suppression: False
-    Management_Affecting_Severity: warning
+    Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
 
