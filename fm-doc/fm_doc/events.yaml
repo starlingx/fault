@@ -178,6 +178,25 @@
     Management_Affecting_Severity: critical
     Degrade_Affecting_Severity: critical
 
+100.105:
+    Type: Alarm
+    Description: |-
+        Filesystem Alarm Condition:
+        <fs_name> filesystem is not added on both controllers and/or does not have the same size: <hostname>.
+    Entity_Instance_ID: fs_name=<image-conversion>
+    Severity: critical
+    Proposed_Repair_Action: "Add image-conversion filesystem on both controllers.
+                             Consult the System Administration Manual for more details.
+                             If problem persists, contact next level of support."
+    Maintenance_Action: degrade
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: configuration-or-customization-error
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+
 #--------
 # 100.105: Retired (with R2 release): previously monitored /etc/nova/instances
 #          NFS mount from controller to computes
