@@ -64,7 +64,3 @@ const std::string SCOPE = "::";
 const std::string STR_TYPE = " s ";
 const std::string INT_TYPE = " i ";
 const std::string OPTION_COMM = " -c ";
-
-const std::string DC_COMM_STR = "dcorchAlarmAggregator";
-const std::string CONF_PATH_ENV = "SNMPCONFPATH=";
-const std::string CONF_DIR = "/etc/snmp";

@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2020 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -177,6 +177,25 @@
     Suppression: True
     Management_Affecting_Severity: critical
     Degrade_Affecting_Severity: critical
+
+100.105:
+    Type: Alarm
+    Description: |-
+        Filesystem Alarm Condition:
+        <fs_name> filesystem is not added on both controllers and/or does not have the same size: <hostname>.
+    Entity_Instance_ID: fs_name=<image-conversion>
+    Severity: critical
+    Proposed_Repair_Action: "Add image-conversion filesystem on both controllers.
+                             Consult the System Administration Manual for more details.
+                             If problem persists, contact next level of support."
+    Maintenance_Action: degrade
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: configuration-or-customization-error
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
 
 #--------
 # 100.105: Retired (with R2 release): previously monitored /etc/nova/instances
@@ -895,7 +914,7 @@
     Probable_Cause: loss-of-signal
     Service_Affecting: False
     Suppression: False
-    Management_Affecting_Severity: warning
+    Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
 280.002:
@@ -910,7 +929,7 @@
     Probable_Cause: application-subsystem-failure
     Service_Affecting: False
     Suppression: False
-    Management_Affecting_Severity: warning
+    Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
 
@@ -3316,6 +3335,150 @@
     Type: Log
     Description: Software upgrade auto-apply aborted
     Entity_Instance_ID: orchestration=sw-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.301:
+    Type: Alarm
+    Description: Firmware Update auto-apply inprogress
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: major
+    Proposed_Repair_Action: Wait for firmware update auto-apply to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.302:
+    Type: Alarm
+    Description: Firmware Update auto-apply aborting
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: major
+    Proposed_Repair_Action: Wait for firmware update auto-apply abort to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.303:
+    Type: Alarm
+    Description: Firmware Update auto-apply failed
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Proposed_Repair_Action: Attempt to apply firmware update manually; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.311:
+    Type: Log
+    Description: Firmware update auto-apply start
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.312:
+    Type: Log
+    Description: Firmware update auto-apply inprogress
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.313:
+    Type: Log
+    Description: Firmware update auto-apply rejected
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.314:
+    Type: Log
+    Description: Firmware update auto-apply cancelled
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.315:
+    Type: Log
+    Description: Firmware update auto-apply failed
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.316:
+    Type: Log
+    Description: Firmware update auto-apply completed
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.317:
+    Type: Log
+    Description: Firmware update auto-apply abort
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.318:
+    Type: Log
+    Description: Firmware update auto-apply aborting
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.319:
+    Type: Log
+    Description: Firmware update auto-apply abort rejected
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.320:
+    Type: Log
+    Description: Firmware update auto-apply abort failed
+    Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.321:
+    Type: Log
+    Description: Firmware update auto-apply aborted
+    Entity_Instance_ID: orchestration=fw-update
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason

@@ -26,11 +26,11 @@ Group: devel
 Requires: fm-common = %{version}-%{release}
 
 %description
-Titanium Cloud platform Fault Management Client Library that provides APIs for
+StarlingX platform Fault Management Client Library that provides APIs for
 applications to raise/clear/update active alarms.
 
 %description -n fm-common-dev
-Titanium Cloud platform Fault Management Client Library that provides APIs for
+StarlingX platform Fault Management Client Library that provides APIs for
 applications to raise/clear/update active alarms.  This package contains
 symbolic links, header files, and related items necessary for software
 development.

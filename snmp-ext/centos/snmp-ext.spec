@@ -16,17 +16,17 @@ Requires: net-snmp
 %define mib_ver 2.0
 
 %description
-Titanium Cloud platform SNMP extension provides Wind River enterprise MIBs support
+StarlingX platform SNMP extension provides Wind River enterprise MIBs support
 and it serves as SNMP based alarm surveillance module for Network Manager
 System.
 
 %package -n snmp-ext-devel
-Summary: Titanium Cloud Platform SNMP extension Package - Development files
+Summary: StarlingX Platform SNMP extension Package - Development files
 Group: devel
 Requires: snmp-ext = %{version}-%{release}
 
 %description -n snmp-ext-devel
-Titanium Cloud platform SNMP extension provides Wind River enterprise MIBs support
+StarlingX platform SNMP extension provides Wind River enterprise MIBs support
 and it serves as SNMP based alarm surveillance module for Network Manager
 System.  This package contains symbolic links, header files, and related
 items necessary for software development.
