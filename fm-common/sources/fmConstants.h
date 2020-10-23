@@ -94,6 +94,9 @@
 #define FM_STRING_TRUE               "True"
 #define FM_CONF_PASSWORD             "password"
 #define FM_CONF_CONNECTION           "connection"
+#define FM_TRAP_SERVER_IP            "trap_server_ip"
+#define FM_TRAP_SERVER_PORT          "trap_server_port"
+#define FM_TRAP_SNMP_ENABLED         "snmp_enabled"
 
 #define CLEAR_ALL_REASON_TEXT        "System initiated hierarchical alarm clear"
 
