@@ -93,9 +93,8 @@
         Platform CPU threshold exceeded; threshold x%, actual y% .
              CRITICAL @ 95%
              MAJOR    @ 90%
-             MINOR    @ 80%
     Entity_Instance_ID: host=<hostname>
-    Severity: [critical, major, minor]
+    Severity: [critical, major]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action:
         critical: degrade
@@ -135,9 +134,15 @@
         Memory threshold exceeded; threshold x%, actual y% .
              CRITICAL @ 90%
              MAJOR    @ 80%
-             MINOR    @ 70%
-    Entity_Instance_ID: host=<hostname>
-    Severity: [critical, major, minor]
+    Entity_Instance_ID: |-
+        host=<hostname>
+        OR
+        host=<hostname>.memory=total
+        OR
+        host=<hostname>.memory=platform
+        OR
+        host=<hostname>.numa=node<number>
+    Severity: [critical, major]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support; may require additional memory on Host."
     Maintenance_Action:
         critical: degrade
@@ -157,7 +162,6 @@
             File System threshold exceeded; threshold x%, actual y% .
                 CRITICAL @ 90%
                 MAJOR    @ 80%
-                MINOR    @ 70%
         OR
         host=<hostname>.volumegroup=<volumegroup-name>
             Monitor and if condition persists, consider adding additional physical volumes to the volume group.
@@ -165,7 +169,7 @@
         host=<hostname>.filesystem=<mount-dir>
         OR
         host=<hostname>.volumegroup=<volumegroup-name>
-    Severity: [critical, major, minor]
+    Severity: [critical, major]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action:
         critical: degrade
