@@ -154,7 +154,7 @@ class HTTPClient(_BaseHTTPClient):
             if kwargs.get('insecure', False) is True:
                 self.session.verify = False
             else:
-                if kwargs.get('cacert', None) is not '':
+                if kwargs.get('cacert', None) is not '':  # noqa: F632
                     self.session.verify = kwargs.get('cacert', True)
 
             self.session.cert = (kwargs.get('cert_file'),

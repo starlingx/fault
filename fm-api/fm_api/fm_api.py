@@ -140,17 +140,17 @@ class FaultAPIsBase(object):
         """ Validate the attributes
             only applies to Telco specific attributes"""
         if data.alarm_state not in constants.ALARM_STATE:
-                raise ClientException("Invalid Fault State: %s" %
-                                      data.alarm_state)
+            raise ClientException("Invalid Fault State: %s" %
+                                  data.alarm_state)
         if data.severity not in constants.ALARM_SEVERITY:
-                raise ClientException("Invalid Fault Severity: %s" %
-                                      data.severity)
+            raise ClientException("Invalid Fault Severity: %s" %
+                                  data.severity)
         if data.alarm_type not in constants.ALARM_TYPE:
-                raise ClientException("Invalid Fault Type: %s" %
-                                      data.alarm_type)
+            raise ClientException("Invalid Fault Type: %s" %
+                                  data.alarm_type)
         if data.probable_cause not in constants.ALARM_PROBABLE_CAUSE:
-                raise ClientException("Invalid Fault Probable Cause: %s" %
-                                      data.probable_cause)
+            raise ClientException("Invalid Fault Probable Cause: %s" %
+                                  data.probable_cause)
 
     @staticmethod
     def alarm_allowed(alarm_severity, threshold):

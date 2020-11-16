@@ -79,8 +79,8 @@ def do_event_list(cc, args={}):
     logs = cc.event_log.list(q=queryAsArray, limit=args.limit,
                              alarms=alarms, logs=logs,
                              include_suppress=include_suppress)
-    for l in logs:
-        utils.normalize_field_data(l, ['entity_instance_id', 'reason_text'])
+    for lg in logs:
+        utils.normalize_field_data(lg, ['entity_instance_id', 'reason_text'])
 
     # omit action initially to keep output width sane
     # (can switch over to vertical formatting when available from CLIFF)
