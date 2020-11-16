@@ -78,8 +78,13 @@ void fm_get_config_paramters() {
         }
         if (key.compare(FM_SQL_CONNECTION) != 0) {
             // Don't log sql_connection, as it has a password
-            FM_INFO_LOG("Config key (%s), value (%s)",
-                        key.c_str(), value.c_str());
+            if (key.compare(FM_CONF_PASSWORD) == 0 || key.compare(FM_CONF_CONNECTION) == 0) {
+                // Don't log password values
+                continue;
+            } else {
+                FM_INFO_LOG("Config key (%s), value (%s)",
+                    key.c_str(), value.c_str());
+            }
         }
     }
 }

@@ -92,6 +92,8 @@
 #define FM_REGION_NAME               "region_name"
 #define FM_DEBUG_FLAG                "debug"
 #define FM_STRING_TRUE               "True"
+#define FM_CONF_PASSWORD             "password"
+#define FM_CONF_CONNECTION           "connection"
 
 #define CLEAR_ALL_REASON_TEXT        "System initiated hierarchical alarm clear"
 
