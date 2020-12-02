@@ -82,24 +82,24 @@ def print_event_suppression_list(cc, no_paging, includeUUID):
 
 
 def event_suppression_update(cc, data, suppress=False):
-        event_suppression_list = _event_suppression_list(cc, include_unsuppressed=True)
+    event_suppression_list = _event_suppression_list(cc, include_unsuppressed=True)
 
-        alarm_id_list = []
-        for alarm_id in data['alarm_id'].split(',') or []:
-            alarm_id_list.append(alarm_id)
+    alarm_id_list = []
+    for alarm_id in data['alarm_id'].split(',') or []:
+        alarm_id_list.append(alarm_id)
 
-        if suppress:
-            patch_value = 'suppressed'
-        else:
-            patch_value = 'unsuppressed'
+    if suppress:
+        patch_value = 'suppressed'
+    else:
+        patch_value = 'unsuppressed'
 
-        patch = []
-        for event_id in event_suppression_list:
-            if event_id.alarm_id in alarm_id_list:
-                print("Alarm ID: {} {}.".format(event_id.alarm_id, patch_value))
-                uuid = event_id.uuid
-                patch.append(dict(path='/' + 'suppression_status', value=patch_value, op='replace'))
-                cc.event_suppression.update(uuid, patch)
+    patch = []
+    for event_id in event_suppression_list:
+        if event_id.alarm_id in alarm_id_list:
+            print("Alarm ID: {} {}.".format(event_id.alarm_id, patch_value))
+            uuid = event_id.uuid
+            patch.append(dict(path='/' + 'suppression_status', value=patch_value, op='replace'))
+            cc.event_suppression.update(uuid, patch)
 
 
 @utils.arg('--include-unsuppressed', action='store_true',

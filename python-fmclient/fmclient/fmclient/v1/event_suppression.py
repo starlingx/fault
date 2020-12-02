@@ -12,7 +12,7 @@ from fmclient.common import base
 
 class EventSuppression(base.Resource):
     def __repr__(self):
-                return "<EventSuppression %s>" % self._info
+        return "<EventSuppression %s>" % self._info
 
 
 class EventSuppressionManager(base.Manager):

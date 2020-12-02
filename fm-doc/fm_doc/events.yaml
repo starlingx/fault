@@ -3052,6 +3052,21 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+900.006:
+    Type: Alarm
+    Description: Device image update operation in progress.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Complete reboots of affected hosts.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: environmental
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply inprogress

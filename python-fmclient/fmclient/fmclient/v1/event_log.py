@@ -11,7 +11,7 @@ from fmclient.common import base
 
 class EventLog(base.Resource):
     def __repr__(self):
-                return "<EventLog %s>" % self._info
+        return "<EventLog %s>" % self._info
 
 
 class EventLogManager(base.Manager):

@@ -8,7 +8,7 @@
 import sys
 from oslo_config import cfg
 cfg.CONF(sys.argv[1:], project='fm')
-from fm.db import migration
+from fm.db import migration  # noqa: E402
 CONF = cfg.CONF
 
 
