@@ -14,12 +14,6 @@ fm-mgr
 # fm-doc
 fm-doc
 
-# snmp-ext
-snmp-ext
-
-# snmp-audittrail
-snmp-audittrail
-
 # fm-rest-api
 fm-rest-api
 
