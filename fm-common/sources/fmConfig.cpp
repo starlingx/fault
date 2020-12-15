@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2018 Wind River Systems, Inc.
+// Copyright (c) 2018-2020 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -15,7 +15,6 @@
 #include "fmMutex.h"
 #include "fmConstants.h"
 #include "fmSnmpConstants.h"
-#include "fmSnmpUtils.h"
 
 typedef std::map<std::string, std::string> configParams;
 
@@ -73,9 +72,6 @@ void fm_get_config_paramters() {
         key = trim(line.substr(0, pos));
         value = trim(line.erase(0, pos + delimiter.length()));
         getConfigMap()[key] = value;
-        if (key.compare(FM_SNMP_TRAPDEST) == 0) {
-            set_trap_dest_list(value);
-        }
         if (key.compare(FM_SQL_CONNECTION) != 0) {
             // Don't log sql_connection, as it has a password
             if (key.compare(FM_CONF_PASSWORD) == 0 || key.compare(FM_CONF_CONNECTION) == 0) {

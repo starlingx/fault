@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2018 Wind River Systems, Inc.
+// Copyright (c) 2017-2020 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -13,14 +13,6 @@
 #define FM_WARM_START 9
 
 #define FM_CUSTOMER_LOG 10
-
-/* Trap Destination definitions */
-
-#define FM_SNMP_TRAPDEST      "trap_destinations"
-
-#define FM_TRAPDEST_IP        "ip_address"
-
-#define FM_TRAPDEST_COMM      "community"
 
 /* MIB Trap definitions */
 const std::string WRS_ALARM_MIB = "WRS-ALARM-MIB";
@@ -56,11 +48,5 @@ const std::string EVENT_SERVICE_AFFECTING = "wrsEventServiceAffecting";
 const std::string SNMPv2_MIB = "SNMPv2-MIB";
 const std::string WARM_START = "warmStart";
 
-const std::string TRAP_CMD = "/usr/bin/snmptrap -v 2c";
 const std::string CLEAR_REASON_TEXT = "System initiated hierarchical alarm clear";
 
-const std::string SEP = " ";
-const std::string SCOPE = "::";
-const std::string STR_TYPE = " s ";
-const std::string INT_TYPE = " i ";
-const std::string OPTION_COMM = " -c ";
