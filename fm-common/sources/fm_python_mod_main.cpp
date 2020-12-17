@@ -322,7 +322,11 @@ static struct PyModuleDef cModPyDem =
 	_methods
 };
 
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_fm_core() {
+#else
 PyMODINIT_FUNC initfm_core() {
+#endif
 	PyObject *m = PyModule_Create(&cModPyDem);
 	if (m == NULL){
 		PySys_WriteStderr("Failed to initialize fm_core");
