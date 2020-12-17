@@ -313,8 +313,21 @@ static PyMethodDef _methods [] = {
 	    { NULL, NULL, 0, NULL }
 };
 
+static struct PyModuleDef cModPyDem =
+{
+	PyModuleDef_HEAD_INIT,
+	"fm_core", /* name of module */
+	"",          /* module documentation, may be NULL */
+	-1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+	_methods
+};
+
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_fm_core() {
+#else
 PyMODINIT_FUNC initfm_core() {
-	PyObject *m = Py_InitModule("fm_core", _methods);
+#endif
+	PyObject *m = PyModule_Create(&cModPyDem);
 	if (m == NULL){
 		PySys_WriteStderr("Failed to initialize fm_core");
 		return;
