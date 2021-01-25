@@ -38,10 +38,6 @@ static int_to_objtype objtype_map;
 static pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 
-fm_db_result_t &getTrapDestList(){
-    static fm_db_result_t trap_dest_list;
-    return trap_dest_list;
-}
 
 static void add_to_table(int t, std::string objtype, int_to_objtype &tbl) {
     tbl[t]=objtype;
@@ -173,36 +169,6 @@ bool send_data(const char * server_name, int portno, const void * message,
 static std::string get_trap_objtype(int type){
     init_objtype_table();
     return objtype_map[type];
-}
-
-static void add_to_list(std::vector<std::string> &trap_strings) {
-    std::string delimiter = " ";
-
-    std::vector<std::string>::iterator it = trap_strings.begin();
-    std::vector<std::string>::iterator end = trap_strings.end();
-    getTrapDestList().clear();
-    for (; it != end; ++it){
-        size_t pos = 0;
-        fm_db_single_result_t entry;
-        pos = (*it).find(delimiter);
-        entry[FM_TRAPDEST_IP] = (*it).substr(0, pos);
-        entry[FM_TRAPDEST_COMM] = (*it).erase(0, pos + delimiter.length());
-        getTrapDestList().push_back(entry);
-    }
-}
-
-void set_trap_dest_list(std::string value){
-
-    std::vector<std::string> entries;
-    std::istringstream f(value);
-    std::string s;
-    while (getline(f, s, ',')) {
-        std::cout << s << std::endl;
-        FM_INFO_LOG("Add entry: (%s)", s.c_str());
-        entries.push_back(s);
-    }
-    add_to_list(entries);
-    FM_INFO_LOG("Set trap entries: (%d)", getTrapDestList().size());
 }
 
 
