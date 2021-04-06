@@ -3,25 +3,25 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-nodateext
 
 /var/log/fm-event.log
 {
-    nodateext
+    create 0640 root root
     size 100M
     start 1
-    missingok
     rotate 20
+    missingok
     compress
     sharedscripts
     postrotate
         systemctl reload syslog-ng > /dev/null 2>&1 || true
-    endscript 
+    endscript
+    delaycompress
 }
 
 /var/log/fm-manager.log
 {
-    nodateext
+    create 0600 root root
     size 10M
     start 1
     rotate 20
@@ -32,4 +32,5 @@ nodateext
     postrotate
         systemctl reload syslog-ng > /dev/null 2>&1 || true
     endscript
+    delaycompress
 }
