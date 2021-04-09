@@ -60,7 +60,7 @@ class EventSuppression(base.APIBase):
     "A list containing a self link and associated links"
 
     def __init__(self, **kwargs):
-        self.fields = objects.event_suppression.fields.keys()
+        self.fields = list(objects.event_suppression.fields.keys())
         for k in self.fields:
             if not hasattr(self, k):
                 continue

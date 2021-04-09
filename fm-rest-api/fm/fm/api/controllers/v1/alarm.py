@@ -99,7 +99,7 @@ class Alarm(base.APIBase):
     "A list containing a self link and associated alarm links"
 
     def __init__(self, **kwargs):
-        self.fields = objects.alarm.fields.keys()
+        self.fields = list(objects.alarm.fields.keys())
         for k in self.fields:
             setattr(self, k, kwargs.get(k))
 
@@ -284,7 +284,7 @@ class AlarmController(rest.RestController):
         :param alarm_dict: Dictionary obtained from an alarm object.
         """
         event_log_dict = {}
-        for key in alarm_dict.keys():
+        for key in list(alarm_dict.keys()):
             if key == 'alarm_id':
                 event_log_dict['event_log_id'] = alarm_dict[key]
             elif key == 'alarm_state':

@@ -25,7 +25,7 @@ class TestRoot(base.FunctionalTest):
         data = self.get_json('/', path_prefix='')
         self.assertEqual(data['default_version']['id'], 'v1')
         # Check fields are not empty
-        [self.assertNotIn(f, ['', []]) for f in data.keys()]
+        [self.assertNotIn(f, ['', []]) for f in list(data.keys())]
 
 
 class TestV1Root(base.FunctionalTest):
@@ -34,7 +34,7 @@ class TestV1Root(base.FunctionalTest):
         data = self.get_json('/')
         self.assertEqual(data['id'], 'v1')
         # Check fields are not empty
-        [self.assertNotIn(f, ['', []]) for f in data.keys()]
+        [self.assertNotIn(f, ['', []]) for f in list(data.keys())]
         # Check if the resources are present
         self.assertIn({'type': 'application/vnd.openstack.fm.v1+json',
                        'base': 'application/json'}, data['media_types'])

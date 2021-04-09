@@ -29,6 +29,7 @@ import wsme
 from wsme import types as wtypes
 from oslo_utils import strutils
 from oslo_utils import uuidutils
+from six.moves import map
 
 from fm.common.i18n import _
 from fm.common import exceptions
