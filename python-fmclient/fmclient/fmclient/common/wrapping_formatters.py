@@ -25,9 +25,10 @@ import re
 import six
 import textwrap
 
-from cli_no_wrap import is_nowrap_set
-from cli_no_wrap import set_no_wrap
+from fmclient.common.cli_no_wrap import is_nowrap_set
+from fmclient.common.cli_no_wrap import set_no_wrap
 from prettytable import _get_size
+from six.moves import range
 
 UUID_MIN_LENGTH = 36
 
@@ -51,7 +52,7 @@ def get_width(value):
 
 
 def _get_terminal_width():
-    from utils import get_terminal_size
+    from fmclient.common.utils import get_terminal_size
     result = get_terminal_size()[0]
     return result
 
@@ -669,7 +670,7 @@ def build_wrapping_formatters(objs, fields, field_labels, format_spec, add_blank
         else:
             format_spec = build_best_guess_formatters_using_average_widths(objs, fields, field_labels)
 
-    for k in format_spec.keys():
+    for k in list(format_spec.keys()):
         if k not in fields:
             raise Exception("Error in buildWrappingFormatters: format_spec "
                             "specifies a field {} that is not specified "
@@ -717,7 +718,7 @@ def set_no_wrap_on_formatters(no_wrap, formatters):
     global_orig_no_wrap = is_nowrap_set()
     set_no_wrap(no_wrap)
 
-    for k, f in formatters.iteritems():
+    for k, f in formatters.items():
         if WrapperFormatter.is_wrapper_formatter(f):
             formatter_no_wrap_settings[k] = (f.wrapper_formatter.no_wrap, f.wrapper_formatter)
             f.wrapper_formatter.no_wrap = no_wrap
@@ -740,7 +741,7 @@ def unset_no_wrap_on_formatters(orig_no_wrap_settings):
 
     formatters = {}
 
-    for k, v in formatter_no_wrap_settings.iteritems():
+    for k, v in formatter_no_wrap_settings.items():
         formatters[k] = v[1]
         formatters[k].no_wrap = v[0]
 
@@ -751,7 +752,7 @@ def unset_no_wrap_on_formatters(orig_no_wrap_settings):
 
 def _simpleTestHarness(no_wrap):
 
-    import utils
+    from fmclient.common import utils
 
     def testFormatter(event):
         return "*{}".format(event["state"])
