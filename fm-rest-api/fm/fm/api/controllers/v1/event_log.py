@@ -93,7 +93,7 @@ class EventLog(base.APIBase):
 
     def __init__(self, **kwargs):
 
-        self.fields = objects.event_log.fields.keys()
+        self.fields = list(objects.event_log.fields.keys())
         for k in self.fields:
             setattr(self, k, kwargs.get(k))
 

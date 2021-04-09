@@ -49,14 +49,17 @@ def save_and_reraise_exception():
         LOG.error(_('Original exception being dropped: %s'),
                   traceback.format_exception(type_, value, tb))
         raise
-    raise (type_, value, tb)
+    raise type_
 
 
 def validate_limit(limit):
     if limit and limit < 0:
         raise wsme.exc.ClientSideError(_("Limit must be positive"))
 
-    return min(CONF.api.limit_max, limit) or CONF.api.limit_max
+    if limit:
+        return min(CONF.api.limit_max, limit) or CONF.api.limit_max
+    else:
+        return CONF.api_limit_max
 
 
 def validate_sort_dir(sort_dir):
