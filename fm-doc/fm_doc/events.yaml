@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2020 Wind River Systems, Inc.
+# Copyright (c) 2013-2021 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -845,6 +845,23 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+#---------------------------------------------------------------------------
+#   Deployment Manager Monitor
+#---------------------------------------------------------------------------
+260.001:
+    Type: Alarm
+    Description: "Deployment Manager resource not reconciled: <name>"
+    Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
+    Severity: major
+    Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: configuration-out-of-date
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   VM Compute Services
