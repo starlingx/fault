@@ -3124,6 +3124,21 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+900.008:
+    Type: Alarm
+    Description: Kubernetes rootca update in progress
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Wait for kubernetes rootca procedure to complete
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply inprogress
