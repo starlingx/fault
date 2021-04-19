@@ -39,8 +39,9 @@ from dateutil import parser
 from prettytable import ALL
 from prettytable import FRAME
 from prettytable import NONE
+from six.moves import zip
 
-import wrapping_formatters
+from fmclient.common import wrapping_formatters
 
 
 SENSITIVE_HEADERS = ('X-Auth-Token', )
@@ -531,7 +532,7 @@ def print_dict(d, dict_property="Property", wrap=0):
     pt = prettytable.PrettyTable([dict_property, 'Value'],
                                  caching=False, print_empty=False)
     pt.align = 'l'
-    for k, v in sorted(d.iteritems()):
+    for k, v in sorted(d.items()):
         v = parse_date(v)
         # convert dict to str to check length
         if isinstance(v, dict):
