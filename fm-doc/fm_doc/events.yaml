@@ -170,7 +170,7 @@
         OR
         host=<hostname>.volumegroup=<volumegroup-name>
     Severity: [critical, major]
-    Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
+    Proposed_Repair_Action: "Reduce usage or resize filesystem."
     Maintenance_Action:
         critical: degrade
         major: degrade
