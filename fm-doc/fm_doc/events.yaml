@@ -2993,6 +2993,27 @@
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
 
+#---------------------------------------------------------------------------
+#   KUBERNETES
+#---------------------------------------------------------------------------
+
+850.001:
+    Type: Alarm
+    Description: Persistent Volume Migration Error
+    Entity_Instance_ID: kubernetes=PV-migration-failed
+    Severity: major
+    Proposed_Repair_Action: "Manually execute /usr/bin/ceph_k8s_update_monitors.sh
+                             to confirm PVs are updated, then lock/unlock to clear
+                             alarms. If problem persists, contact next level of
+                             support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: communication-subsystem-failure
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   SOFTWARE
