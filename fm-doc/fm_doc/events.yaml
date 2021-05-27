@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2020 Wind River Systems, Inc.
+# Copyright (c) 2013-2021 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -93,9 +93,8 @@
         Platform CPU threshold exceeded; threshold x%, actual y% .
              CRITICAL @ 95%
              MAJOR    @ 90%
-             MINOR    @ 80%
     Entity_Instance_ID: host=<hostname>
-    Severity: [critical, major, minor]
+    Severity: [critical, major]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action:
         critical: degrade
@@ -135,9 +134,15 @@
         Memory threshold exceeded; threshold x%, actual y% .
              CRITICAL @ 90%
              MAJOR    @ 80%
-             MINOR    @ 70%
-    Entity_Instance_ID: host=<hostname>
-    Severity: [critical, major, minor]
+    Entity_Instance_ID: |-
+        host=<hostname>
+        OR
+        host=<hostname>.memory=total
+        OR
+        host=<hostname>.memory=platform
+        OR
+        host=<hostname>.numa=node<number>
+    Severity: [critical, major]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support; may require additional memory on Host."
     Maintenance_Action:
         critical: degrade
@@ -157,7 +162,6 @@
             File System threshold exceeded; threshold x%, actual y% .
                 CRITICAL @ 90%
                 MAJOR    @ 80%
-                MINOR    @ 70%
         OR
         host=<hostname>.volumegroup=<volumegroup-name>
             Monitor and if condition persists, consider adding additional physical volumes to the volume group.
@@ -165,8 +169,8 @@
         host=<hostname>.filesystem=<mount-dir>
         OR
         host=<hostname>.volumegroup=<volumegroup-name>
-    Severity: [critical, major, minor]
-    Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
+    Severity: [critical, major]
+    Proposed_Repair_Action: "Reduce usage or resize filesystem."
     Maintenance_Action:
         critical: degrade
         major: degrade
@@ -841,6 +845,23 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+#---------------------------------------------------------------------------
+#   Deployment Manager Monitor
+#---------------------------------------------------------------------------
+260.001:
+    Type: Alarm
+    Description: "Deployment Manager resource not reconciled: <name>"
+    Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
+    Severity: major
+    Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: configuration-out-of-date
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   VM Compute Services
@@ -2972,6 +2993,27 @@
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
 
+#---------------------------------------------------------------------------
+#   KUBERNETES
+#---------------------------------------------------------------------------
+
+850.001:
+    Type: Alarm
+    Description: Persistent Volume Migration Error
+    Entity_Instance_ID: kubernetes=PV-migration-failed
+    Severity: major
+    Proposed_Repair_Action: "Manually execute /usr/bin/ceph_k8s_update_monitors.sh
+                             to confirm PVs are updated, then lock/unlock to clear
+                             alarms. If problem persists, contact next level of
+                             support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: communication-subsystem-failure
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   SOFTWARE
@@ -3061,6 +3103,21 @@
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: environmental
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.007:
+    Type: Alarm
+    Description: Kubernetes upgrade in progress.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: No action required.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
     Probable_Cause: unspecified-reason
     Service_Affecting: False
     Suppression: False
@@ -3494,6 +3551,150 @@
     Type: Log
     Description: Firmware update auto-apply aborted
     Entity_Instance_ID: orchestration=fw-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.401:
+    Type: Alarm
+    Description: Kubernetes upgrade auto-apply inprogress
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: major
+    Proposed_Repair_Action: Wait for kubernetes upgrade auto-apply to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.402:
+    Type: Alarm
+    Description: Kubernetes upgrade auto-apply aborting
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: major
+    Proposed_Repair_Action: Wait for kubernetes upgrade auto-apply abort to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.403:
+    Type: Alarm
+    Description: Kubernetes upgrade auto-apply failed
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Proposed_Repair_Action: Attempt to apply kubernetes upgrade manually; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.411:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply start
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.412:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply inprogress
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.413:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply rejected
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.414:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply cancelled
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.415:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply failed
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.416:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply completed
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.417:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply abort
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.418:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply aborting
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.419:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply abort rejected
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.420:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply abort failed
+    Entity_Instance_ID: orchestration=kube-upgrade
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.421:
+    Type: Log
+    Description: Kubernetes upgrade auto-apply aborted
+    Entity_Instance_ID: orchestration=kube-upgrade
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason

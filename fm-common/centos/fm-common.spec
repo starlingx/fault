@@ -19,6 +19,8 @@ BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 BuildRequires: python3-pip
 BuildRequires: python3-wheel
+Buildrequires: json-c-devel
+Requires: json-c
 
 %package -n fm-common-dev
 Summary: CGTS Platform Fault Management Common Package - Development files
