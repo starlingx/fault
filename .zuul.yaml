@@ -49,13 +49,11 @@
     vars:
       tox_envlist: functional
       devstack_services:
-        # cgtsclient: true
         fm-common: true
         fm-api: true
         fm-rest-api: true
         fm-mgr: true
       devstack_plugins:
-        # config: https://opendev.org/starlingx/config
         fault: https://opendev.org/starlingx/fault
         integ: https://opendev.org/starlingx/integ
         update: https://opendev.org/starlingx/update
@@ -89,6 +87,7 @@
     parent: tox
     description: |
       Run pylint for python files in fault
+    nodeset: ubuntu-bionic
     required-projects:
       - starlingx/config
     vars:
