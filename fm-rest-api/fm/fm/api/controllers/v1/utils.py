@@ -59,7 +59,7 @@ def validate_limit(limit):
     if limit:
         return min(CONF.api.limit_max, limit) or CONF.api.limit_max
     else:
-        return CONF.api_limit_max
+        return CONF.api.limit_max
 
 
 def validate_sort_dir(sort_dir):

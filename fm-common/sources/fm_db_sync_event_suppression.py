@@ -109,7 +109,7 @@ if not os.path.isfile(EVENT_TYPES_FILE):
 with open(EVENT_TYPES_FILE, 'r') as stream:
     event_types = yaml.load(stream)
 
-for alarm_id in event_types:
+for alarm_id in list(event_types.keys()):
     if isinstance(alarm_id, float):
         # force 3 digits after the decimal point,
         # to include trailing zero's (ex.: 200.010)
