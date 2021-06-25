@@ -3714,4 +3714,148 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+
+900.501:
+    Type: Alarm
+    Description: Kubernetes rootca update auto-apply inprogress
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: major
+    Proposed_Repair_Action: Wait for kubernetes rootca update auto-apply to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.502:
+    Type: Alarm
+    Description: Kubernetes rootca update auto-apply aborting
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: major
+    Proposed_Repair_Action: Wait for kubernetes rootca update auto-apply abort to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.503:
+    Type: Alarm
+    Description: Kubernetes rootca update auto-apply failed
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Proposed_Repair_Action: Attempt to apply kubernetes rootca update manually; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
+900.511:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply start
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.512:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply inprogress
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.513:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply rejected
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.514:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply cancelled
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.515:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply failed
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.516:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply completed
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.517:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply abort
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.518:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply aborting
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.519:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply abort rejected
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.520:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply abort failed
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+
+900.521:
+    Type: Log
+    Description: Kubernetes rootca update auto-apply aborted
+    Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
 ...
