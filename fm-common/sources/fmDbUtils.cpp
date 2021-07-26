@@ -621,7 +621,11 @@ bool fm_db_util_sync_event_suppression(void){
 
 	Py_SetProgramName(argv[0]);
 	Py_Initialize();
+#if PY_MAJOR_VERSION >= 3
+	PySys_SetArgv(argc, py_argv);
+#else
 	PySys_SetArgv(argc, argv);
+#endif
 	file = fopen(FM_DB_SYNC_EVENT_SUPPRESSION,"r");
 	PyRun_SimpleFile(file, FM_DB_SYNC_EVENT_SUPPRESSION);
 	fclose(file);
