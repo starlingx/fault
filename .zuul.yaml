@@ -15,6 +15,7 @@
         - stx-fault-build
         - fault-rest-api-py27
         - fault-rest-api-py36
+        - fault-rest-api-py39
     gate:
       jobs:
         - openstack-tox-linters
@@ -22,6 +23,7 @@
         - fault-tox-pylint
         - fault-rest-api-py27
         - fault-rest-api-py36
+        - fault-rest-api-py39
     post:
       jobs:
         - stx-fault-upload-git-mirror
@@ -80,6 +82,20 @@
       - starlingx/config
     vars:
       tox_envlist: py36
+      tox_extra_args: -c fm-rest-api/fm/tox.ini
+
+- job:
+    name: fault-rest-api-py39
+    parent: tox-py39
+    description: |
+      Run py39 test for fm-rest-api
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+    vars:
+      bindep_profile: test py39
+      python_version: 3.9
+      tox_envlist: py39
       tox_extra_args: -c fm-rest-api/fm/tox.ini
 
 - job:

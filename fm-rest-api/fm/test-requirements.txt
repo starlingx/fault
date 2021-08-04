@@ -22,4 +22,4 @@ keystonemiddleware>=4.12.0  # Apache-2.0
 pecan>=1.0.0
 WSME>=0.5b2
 httplib2
-keyring <= 18.0.1
+keyring <= 22.0.1
