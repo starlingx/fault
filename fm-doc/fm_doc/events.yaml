@@ -832,10 +832,10 @@
 
 250.003:
     Type: Alarm
-    Description: Kubernetes certificates rotation failed on host <hostname>.
+    Description: "Kubernetes certificates rotation failed on host[, reason = <reason_text>]"
     Entity_Instance_ID: host=<hostname>
     Severity: major
-    Proposed_Repair_Action: Rotate kubernetes certificates manually.
+    Proposed_Repair_Action: Lock and unlock the host to update services with new certificates (Manually renew kubernetes certificates first if renewal failed).
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: operational-violation
