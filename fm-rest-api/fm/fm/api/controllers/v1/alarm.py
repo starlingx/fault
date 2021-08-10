@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2019 Wind River Systems, Inc.
+# Copyright (c) 2018-2021 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -27,7 +27,6 @@ from fm.common import exceptions
 from fm.common import constants
 from fm import objects
 from fm.api.controllers.v1.query import Query
-from fm.api.controllers.v1.sysinv import cgtsclient
 
 from fm_api import constants as fm_constants
 
@@ -191,18 +190,14 @@ class AlarmSummary(base.APIBase):
     status = wsme.wsattr(wtypes.text, mandatory=True)
     "The status of the system"
 
-    system_uuid = wsme.wsattr(types.uuid, mandatory=True)
-    "The UUID of the system (for distributed cloud use)"
-
     @classmethod
-    def convert_with_links(cls, ialm_sum, uuid):
+    def convert_with_links(cls, ialm_sum):
         summary = AlarmSummary()
         summary.critical = ialm_sum[fm_constants.FM_ALARM_SEVERITY_CRITICAL]
         summary.major = ialm_sum[fm_constants.FM_ALARM_SEVERITY_MAJOR]
         summary.minor = ialm_sum[fm_constants.FM_ALARM_SEVERITY_MINOR]
         summary.warnings = ialm_sum[fm_constants.FM_ALARM_SEVERITY_WARNING]
         summary.status = ialm_sum['status']
-        summary.system_uuid = uuid
         return summary
 
 
@@ -238,10 +233,7 @@ class AlarmController(rest.RestController):
             status = fm_constants.FM_ALARM_CRITICAL_STATUS
         ialm_counts['status'] = status
 
-        system = cgtsclient(pecan.request.context).isystem.list()[0]
-        uuid = system.uuid
-
-        return AlarmSummary.convert_with_links(ialm_counts, uuid)
+        return AlarmSummary.convert_with_links(ialm_counts)
 
     def _get_alarm_collection(self, marker, limit, sort_key, sort_dir,
                               expand=False, resource_url=None,

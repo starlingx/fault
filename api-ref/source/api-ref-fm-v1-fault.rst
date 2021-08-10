@@ -332,7 +332,6 @@ unauthorized (401), forbidden (403), badMethod (405), overLimit (413)
    :header: "Parameter", "Style", "Type", "Description"
    :widths: 20, 20, 20, 60
 
-   "system_uuid (Optional)", "plain", "csapi:UUID", "UUID of the system."
    "status (Optional)", "plain", "xsd:string", "Overall system status based on alarms present; ``critical``, ``degraded``, or ``OK``."
    "critical (Optional)", "plain", "xsd:integer", "Count of critical alarms on the system"
    "major (Optional)", "plain", "xsd:integer", "Count of major alarms on the system"
@@ -345,7 +344,6 @@ unauthorized (401), forbidden (403), badMethod (405), overLimit (413)
        "status": "OK",
        "major": 0,
        "warnings": 0,
-       "system_uuid": "6a314f63-4969-46f8-9221-b69b6b50424c",
        "critical": 0,
        "minor": 0
    }
