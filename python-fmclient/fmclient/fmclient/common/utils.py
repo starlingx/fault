@@ -36,6 +36,7 @@ import textwrap
 from datetime import datetime
 from dateutil import parser
 
+from oslo_utils import encodeutils
 from prettytable import ALL
 from prettytable import FRAME
 from prettytable import NONE
@@ -55,7 +56,7 @@ class HelpFormatter(argparse.HelpFormatter):
 
 def safe_header(name, value):
     if value is not None and name in SENSITIVE_HEADERS:
-        h = hashlib.sha1(value)
+        h = hashlib.sha1(encodeutils.safe_encode(value))
         d = h.hexdigest()
         return name, "{SHA1}%s" % d
     else:
