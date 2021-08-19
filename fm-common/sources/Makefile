@@ -17,6 +17,9 @@ ifeq ($(OS_ID)-$(OS_VERSION_ID),centos-8)
 LDLIBS += -lpython3.6m
 INCLUDES += -I/usr/include/python3.6m
 CCFLAGS += -Werror
+else ifeq ($(OS_ID)-$(OS_VERSION_ID),debian-11)
+LDLIBS += -lpython3.9
+INCLUDES += -I/usr/include/python3.9
 else
 INCLUDES += -I/usr/include/python2.7
 LDLIBS += -lpython2.7
