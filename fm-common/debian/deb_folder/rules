@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE = 1
+
+export ROOT=debian/tmp
+
+%:
+	dh $@ --with python3 --builsystem=pybuild
+
+override_dh_auto_build:
+	$(MAKE)
+	python3 setup.py build
+
+override_dh_auto_install:
+	make DESTDIR=$(ROOT) \
+		BINDIR=/usr/bin \
+		LIBDIR=/usr/lib \
+		INCDIR=/usr/include \
+		CGCS_DOC_DEPLOY=/opt/deploy/cgcs_doc install
+	python3 setup.py install --install-layout=deb --root $(ROOT)
+
+
