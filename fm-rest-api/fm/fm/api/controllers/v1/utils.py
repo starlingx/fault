@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2021 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -10,6 +10,7 @@ import contextlib
 import traceback
 import pecan
 import wsme
+from cgtsclient import exc
 from oslo_config import cfg
 from oslo_log import log
 from oslo_utils import uuidutils
@@ -111,6 +112,10 @@ def replace_name_with_uuid(instance_id):
                     pass
                 except exceptions.ServerNotFound:
                     LOG.error("Can't find the port for name %s", value)
+                    pass
+                except exc.HTTPException as http_exc:
+                    msg = "Http request failed with code {}"
+                    LOG.error(msg.format(http_exc.code))
                     pass
 
                 if port:
