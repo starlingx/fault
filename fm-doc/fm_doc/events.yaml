@@ -3193,6 +3193,21 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
+900.009:
+    Type: Alarm
+    Description: Kubernetes root CA update aborted, certificates may not be fully updated.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Fully update certificates by a new root CA update.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply inprogress
