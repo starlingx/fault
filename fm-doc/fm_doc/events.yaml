@@ -1357,11 +1357,11 @@
 500.200:
     Type: Alarm
     Description: |-
-        Certificate ‘system certificate-show <uuid>' (mode=<ssl/ssl_ca/docker_registry/openstack/openstack_ca>) expiring soon on <date>.
+        Certificate 'system certificate-show <uuid>' (mode=<ssl/ssl_ca/docker_registry/openstack/openstack_ca>) expiring soon on <date>.
         OR
-        Certificate ‘<Namespace>/<Certificate/Secret>’ expiring soon on <date>.
+        Certificate '<Namespace>/<Certificate/Secret>' expiring soon on <date>.
         OR
-        Certificate ‘<k8sRootCA/EtcdCA>’ expiring soon on <date>.
+        Certificate '<k8sRootCA/EtcdCA>' expiring soon on <date>.
     Entity_Instance_ID: |-
         system.certificate.mode=<mode>.uuid=<uuid>
         OR
@@ -1384,11 +1384,11 @@
 500.210:
     Type: Alarm
     Description: |-
-        Certificate ‘system certificate-show <uuid>' (mode=<ssl/ssl_ca/docker_registry/openstack/openstack_ca>) expired.
+        Certificate 'system certificate-show <uuid>' (mode=<ssl/ssl_ca/docker_registry/openstack/openstack_ca>) expired.
         OR
-        Certificate ‘<Namespace>/<Certificate/Secret>’ expired.
+        Certificate '<Namespace>/<Certificate/Secret>' expired.
         OR
-        Certificate ‘<k8sRootCA/EtcdRootCA>’ expired.
+        Certificate '<k8sRootCA/EtcdRootCA>' expired.
     Entity_Instance_ID: |-
         system.certificate.mode=<mode>.uuid=<uuid>
         OR
