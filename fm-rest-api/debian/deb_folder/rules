@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE = 1
+
+export PYBUILD_NAME=fm-rest-api
+export ROOT=debian/tmp
+export FMCONFDIR=$(ROOT)/etc/fm
+export PMONDDIR=$(ROOT)/etc/pmon.d
+export INITDIR=$(ROOT)/etc/init.d
+export UNITDIR=$(ROOT)/lib/systemd/system
+
+%:
+	dh $@ --with=python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	install -d -m 755 $(UNITDIR)
+	install -p -D -m 644 scripts/fm-api.service $(UNITDIR)/fm-api.service
+	install -d -m 755 $(INITDIR)
+	install -p -D -m 755 scripts/fm-api $(INITDIR)/fm-api
+	install -d -m 755 $(PMONDDIR)
+	install -p -D -m 644 fm-api-pmond.conf $(PMONDDIR)/fm-api.conf
+	oslo-config-generator --config-file fm/config-generator.conf --output-file fm.conf.sample
+	install -d -m 755 $(FMCONFDIR)
+	install -p -D -m 600 fm.conf.sample $(FMCONFDIR)/fm.conf
+	dh_auto_install
+
+
+override_dh_fixperms:
+	dh_fixperms -Xfm.conf
+
+ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
+override_dh_auto_test:
+        # (tbogue) FIXME
+        PYTHONDIR=$(CURDIR) stestr run || true
+endif

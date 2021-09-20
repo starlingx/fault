@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE = 1
+
+export ROOT=debian/tmp
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	make DESTDIR=${ROOT} \
+		BINDIR=/usr/bin \
+		LIBDIR=/usr/lib \
+		SYSCONFDIR=/etc \
+		install
