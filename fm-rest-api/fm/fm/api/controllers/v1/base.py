@@ -127,5 +127,8 @@ class Version(object):
     def __eq__(self, other):
         return (self.major, self.minor) == (other.major, other.minor)
 
+    def __hash__(self):
+        return hash((self.major, self.minor))
+
     def __ne__(self, other):
         return not self.__eq__(other)
