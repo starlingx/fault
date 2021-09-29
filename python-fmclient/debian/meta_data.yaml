@@ -1,0 +1,7 @@
+---
+debname: python-fmclient
+debver: 1.0
+src_path: fmclient
+revision:
+  dist: $STX_DIST
+  PKG_GITREVCOUNT: true

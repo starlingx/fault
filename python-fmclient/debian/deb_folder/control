@@ -1,0 +1,25 @@
+Source: python-fmclient
+Section: admin
+Priority: optional
+Maintainer: StarlingX Developers <starlingx-discuss@lists.starlingx.io>
+Build-Depends: debhelper-compat (= 12), dh-python, python3-setuptools, python3-all, python3-pbr
+Build-Depends-Indep:
+ python3-oslo.utils,
+ python3-prettytable,
+ python3-keystoneauth1,
+ python3-six,
+ python3-httplib2
+Standards-Version: 4.4.1
+
+Package: python3-fmclient
+Architecture: all
+Depends: ${python3:Depends},
+ ${misc:Depends},
+ python3-oslo.utils,
+ python3-prettytable,
+ python3-keystoneauth1,
+ python3-six,
+ python3-httplib2,
+ bash-completion
+Description: Client library for fault management
+ A python client library for Fault Management
