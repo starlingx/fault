@@ -1,4 +1,7 @@
 fm-api
+fm-common
+fm-mgr
+fm-rest-api
 python-fmclient
 fm-common
 fm-mgr
