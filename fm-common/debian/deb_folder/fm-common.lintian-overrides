@@ -1,0 +1,3 @@
+arch-dependent-file-not-in-arch-specific-directory
+dir-or-file-in-opt
+missing-dependency-on-libc
