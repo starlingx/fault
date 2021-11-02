@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Copyright (c) 2016-2018 Wind River Systems, Inc.
+# Copyright (c) 2016-2021 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -9,9 +9,6 @@ import os
 import json
 import datetime
 import uuid as uuid_gen
-import socket
-from inspect import getframeinfo
-from inspect import stack
 
 import yaml
 import collections
@@ -19,9 +16,16 @@ import collections
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Boolean, Integer, String, DateTime
+from sqlalchemy import Column
+from sqlalchemy import Boolean
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import DateTime
+from sqlalchemy import exc
 
-FM_LOG_EVENT_LOG_FILE = "/var/log/platform.log"
+import fm_log as log
+
+LOG = log.get_logger(__name__)
 
 Base = declarative_base()
 
@@ -57,20 +61,6 @@ def prettyDict(dict):
     return output
 
 
-def logInfo(msg):
-    try:
-        timestamp = str(datetime.datetime.now())
-        host_name = socket.gethostname()
-        caller = getframeinfo(stack()[1][0])
-        line_no = str(caller.lineno)
-        output = "\n" + timestamp + " " + host_name + " fmManager: info " \
-                 + current_file_name + "(" + line_no + "):" + " " + msg + "\n"
-        with open(FM_LOG_EVENT_LOG_FILE, "a") as logFile:
-            logFile.write(output)
-    except Exception as e:
-        print(e)
-
-
 def get_events_yaml_filename():
     events_yaml_name = os.environ.get("EVENTS_YAML")
     if events_yaml_name is not None and os.path.isfile(events_yaml_name):
@@ -83,7 +73,9 @@ def get_events_yaml_filename():
 #
 
 if len(sys.argv) < 2:
-    sys.exit("Postgres credentials required as argument.")
+    msg = 'Postgres credentials required as argument.'
+    LOG.error(msg)
+    sys.exit(msg)
 
 postgresql_credentials = str(sys.argv[1])
 
@@ -92,18 +84,23 @@ current_file_name = __file__
 current_file_name = current_file_name[2:]  # remove leading characters "./"
 
 # Set up sqlalchemy:
-meta = sqlalchemy.MetaData()
-engine = sqlalchemy.create_engine(postgresql_credentials)
-
-meta.bind = engine
+try:
+    meta = sqlalchemy.MetaData()
+    engine = sqlalchemy.create_engine(postgresql_credentials)
+    meta.bind = engine
+except exc.SQLAlchemyError as exp:
+    LOG.error(exp)
+    sys.exit(exp)
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
 # Convert events.yaml to dict:
+LOG.info("Converting events.yaml to dict: ")
 EVENT_TYPES_FILE = get_events_yaml_filename()
 
 if not os.path.isfile(EVENT_TYPES_FILE):
+    LOG.error("file %s doesn't exist. Finishing" % (EVENT_TYPES_FILE))
     exit(-1)
 
 with open(EVENT_TYPES_FILE, 'r') as stream:
@@ -122,6 +119,7 @@ yaml_event_list = []
 uneditable_descriptions = {'100.114', '200.007', '200.02', '200.021', '200.022', '800.002'}
 
 # Parse events.yaml dict, and add any new alarm to event_suppression table:
+LOG.info("Parsing events.yaml and adding any new alarm to event_suppression table: ")
 for event_type in event_types:
 
     if event_types.get(event_type).get('Type') == "Alarm":
@@ -142,8 +140,11 @@ for event_type in event_types:
         event_description = (event_description[:250] + ' ...') \
             if len(event_description) > 250 else event_description
 
-        event_supp = session.query(EventSuppression) \
-                            .filter_by(alarm_id=string_event_type).first()
+        try:
+            event_supp = session.query(EventSuppression) \
+                                .filter_by(alarm_id=string_event_type).first()
+        except exc.SQLAlchemyError as exp:
+            LOG.error(exp)
 
         event_mgmt_affecting = str(event_types.get(event_type).get(
             'Management_Affecting_Severity', 'warning'))
@@ -165,9 +166,12 @@ for event_type in event_types:
                                           mgmt_affecting=event_mgmt_affecting,
                                           degrade_affecting=event_degrade_affecting)
             session.add(event_supp)
-            logInfo("Created Event Type {} in event_suppression table.".format(string_event_type))
+            LOG.info("Created Event Type: %s in event_suppression table." % (string_event_type))
 
-        session.commit()
+        try:
+            session.commit()
+        except exc.SQLAlchemyError as exp:
+            LOG.error(exp)
 
 event_supp = session.query(EventSuppression)
 alarms = session.query(ialarm)
@@ -186,13 +190,18 @@ for event_type in event_supp:
             event_supp = session.query(EventSuppression) \
                                 .filter_by(alarm_id=event_type.alarm_id).first()
             session.delete(event_supp)
-            logInfo("Deleted Event Type {} from event_suppression table.".format(event_type.alarm_id))
+            LOG.info("Deleted Event Type: %s from event_suppression table." % (event_type.alarm_id))
         else:
             event_supp.suppression_status = 'unsuppressed'
             event_supp.set_for_deletion = True
-            logInfo("Event Type {} no longer in events.yaml, but still used by alarm in database.".format(event_type.alarm_id))
-            logInfo("Event Type {} marked as set for deletion in event_suppression table.".format(event_type.alarm_id))
+            LOG.info("Event Type: %s no longer in events.yaml, but still used by alarm in database." % (event_type.alarm_id))
+            LOG.info("Event Type: %s marked as set for deletion in event_suppression table." % (event_type.alarm_id))
 
-        session.commit()
+        try:
+            session.commit()
+        except exc.SQLAlchemyError as exp:
+            LOG.error(exp)
 
 session.close()
+
+LOG.debug("Normally exiting from: %s" % (__file__))
