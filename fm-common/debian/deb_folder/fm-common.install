@@ -1,4 +1,4 @@
 usr/bin/fmClientCli usr/bin
-usr/bin/fm_db_sync_event_suppression.py usr/bin
+usr/bin/*.py usr/bin
 usr/lib/*.so.*
 usr/lib/python*/dist-packages/*
