@@ -11,6 +11,8 @@ Logging
 
 import logging
 import logging.handlers
+import os
+import sys
 
 _loggers = {}
 
@@ -34,8 +36,12 @@ def setup_logger(logger):
                                   "%(pathname)s:%(lineno)s " +
                                   "%(levelname)8s [%(name)s] %(message)s")
 
-    handler = logging.handlers.SysLogHandler(address='/dev/log',
-                                             facility=syslog_facility)
+    running_in_container = os.getenv("RUNNING_IN_CONTAINER", "False").strip().lower()
+    if running_in_container == "true":
+        handler = logging.StreamHandler(stream=sys.stdout)
+    else:
+        handler = logging.handlers.SysLogHandler(address='/dev/log',
+                                                 facility=syslog_facility)
     handler.setLevel(logging.INFO)
     handler.setFormatter(formatter)
 
