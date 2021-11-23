@@ -458,6 +458,24 @@
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
+100.150:
+    Type: Alarm
+    Description:
+        critical: "service open file descriptor has reached its limit"
+        major: "service open file descriptor is approaching to its limit"
+    Entity_Instance_ID: |-
+        host=<hostname>.resource_type=file-descriptor.service_name=<service-name>
+    Severity: [critical, major]
+    Proposed_Repair_Action: "swact to the other controller if it is available"
+    Maintenance_Action: none
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: threshold-crossed
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: critical
+    Degrade_Affecting_Severity: critical
+
 #---------------------------------------------------------------------------
 #   MAINTENANCE
 #---------------------------------------------------------------------------
