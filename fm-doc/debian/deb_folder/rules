@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+
+export ROOT = $(CURDIR)/debian/tmp
+export CGCS_DOC_DEPLOY_DIR = $(ROOT)/opt/deploy/cgcs_doc
+export CGCS_DOC_DIR = /opt/deploy/cgcs_doc
+export FM_DIR = $(ROOT)/etc/fm
+
+%:
+	dh $@
+
+override_dh_auto_install:
+
+	install -d $(CGCS_DOC_DEPLOY_DIR)
+	install -m 644 events.yaml $(CGCS_DOC_DEPLOY_DIR)
+	install -m 755 checkEventYaml $(CGCS_DOC_DEPLOY_DIR)
+	install -m 644 parseEventYaml.py $(CGCS_DOC_DEPLOY_DIR)
+	install -m 644 check_missing_alarms.py $(CGCS_DOC_DEPLOY_DIR)
+
+	install -d $(FM_DIR)
+	install -m 744 events.yaml $(FM_DIR)
+
+	cd $(CGCS_DOC_DEPLOY_DIR)
+	cp $(CGCS_DOC_DIR)/fmAlarm.h /usr/lib/python3/dist-packages/fm_api/constants.py .
+
+	sed -i 's/python/python3/g' checkEventYaml
+	./checkEventYaml
+
+	rm constants.py* fmAlarm.h*
+	cd -
+
+# Prevents dh_fixperms from changing the permissions defined in this file
+override_dh_fixperms:
+	dh_fixperms --exclude etc/fm/events.yaml
