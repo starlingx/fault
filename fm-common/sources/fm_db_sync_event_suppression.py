@@ -8,6 +8,7 @@ import sys
 import os
 import json
 import datetime
+import errno
 import uuid as uuid_gen
 
 import yaml
@@ -75,7 +76,7 @@ def get_events_yaml_filename():
 if len(sys.argv) < 2:
     msg = 'Postgres credentials required as argument.'
     LOG.error(msg)
-    sys.exit(msg)
+    raise ValueError(msg)
 
 postgresql_credentials = str(sys.argv[1])
 
@@ -88,23 +89,28 @@ try:
     meta = sqlalchemy.MetaData()
     engine = sqlalchemy.create_engine(postgresql_credentials)
     meta.bind = engine
+    Session = sessionmaker(bind=engine)
+    session = Session()
 except exc.SQLAlchemyError as exp:
     LOG.error(exp)
-    sys.exit(exp)
-
-Session = sessionmaker(bind=engine)
-session = Session()
+    raise RuntimeError(exp)
 
 # Convert events.yaml to dict:
 LOG.info("Converting events.yaml to dict: ")
 EVENT_TYPES_FILE = get_events_yaml_filename()
 
 if not os.path.isfile(EVENT_TYPES_FILE):
-    LOG.error("file %s doesn't exist. Finishing" % (EVENT_TYPES_FILE))
-    exit(-1)
+    LOG.error("file %s doesn't exist. Ending execution" % (EVENT_TYPES_FILE))
+    raise OSError(
+        errno.ENOENT, os.strerror(errno.ENOENT), EVENT_TYPES_FILE
+    )
 
-with open(EVENT_TYPES_FILE, 'r') as stream:
-    event_types = yaml.load(stream)
+try:
+    with open(EVENT_TYPES_FILE, 'r') as stream:
+        event_types = yaml.load(stream)
+except Exception as exp:
+    LOG.error(exp)
+    raise RuntimeError(exp)
 
 for alarm_id in list(event_types.keys()):
     if isinstance(alarm_id, float):
@@ -172,6 +178,7 @@ for event_type in event_types:
             session.commit()
         except exc.SQLAlchemyError as exp:
             LOG.error(exp)
+            raise RuntimeError(exp)
 
 event_supp = session.query(EventSuppression)
 alarms = session.query(ialarm)
@@ -201,6 +208,7 @@ for event_type in event_supp:
             session.commit()
         except exc.SQLAlchemyError as exp:
             LOG.error(exp)
+            raise RuntimeError(exp)
 
 session.close()
 

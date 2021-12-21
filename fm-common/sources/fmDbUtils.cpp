@@ -644,7 +644,15 @@ bool fm_db_util_sync_event_suppression(void){
 	PySys_SetArgv(argc, argv);
 #endif
 	file = fopen(FM_DB_SYNC_EVENT_SUPPRESSION,"r");
-	PyRun_SimpleFile(file, FM_DB_SYNC_EVENT_SUPPRESSION);
+	if(file != NULL){
+		int rc = PyRun_SimpleFile(file, FM_DB_SYNC_EVENT_SUPPRESSION);
+		FM_DEBUG_LOG("return code from PyRun_SimpleFile: %d",rc);
+		if(rc != 0) {
+			FM_ERROR_LOG("Error running script %s", FM_DB_SYNC_EVENT_SUPPRESSION);
+		}
+	}else {
+		FM_ERROR_LOG("Error opening file %s", FM_DB_SYNC_EVENT_SUPPRESSION);
+	}
 	fclose(file);
 	Py_Finalize();
 #if PY_MAJOR_VERSION >= 3
