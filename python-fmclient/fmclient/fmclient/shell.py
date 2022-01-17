@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -12,6 +12,7 @@ from __future__ import print_function
 import argparse
 import httplib2
 import logging
+import os
 import sys
 from oslo_utils import importutils
 
@@ -19,6 +20,18 @@ import fmclient
 from fmclient.common import utils
 from fmclient import exc
 from fmclient import client
+
+
+def env(*args, **kwargs):
+    """Returns the first environment variable set.
+
+    If all are empty, defaults to '' or keyword arg `default`.
+    """
+    for arg in args:
+        value = os.environ.get(arg)
+        if value:
+            return value
+    return kwargs.get('default', '')
 
 
 class FmShell(object):
@@ -165,6 +178,13 @@ class FmShell(object):
                             default=utils.env('OS_PROJECT_DOMAIN_NAME'),
                             help='Defaults to env[OS_PROJECT_DOMAIN_NAME].')
 
+        parser.add_argument('--insecure',
+                            action='store_true',
+                            dest='insecure',
+                            default=env('FMCLIENT_INSECURE', default=False),
+                            help='Disables SSL/TLS certificate verification '
+                                 '(Env: FMCLIENT_INSECURE)')
+
         return parser
 
     def get_subcommand_parser(self, version):
@@ -259,7 +279,7 @@ class FmShell(object):
             'os_tenant_name', 'os_region_name', 'os_user_domain_id',
             'os_user_domain_name', 'os_project_domain_id',
             'os_project_domain_name', 'os_service_type', 'os_endpoint_type',
-            'timeout'
+            'timeout', 'insecure'
         )
         kwargs = {}
         for key in client_args:

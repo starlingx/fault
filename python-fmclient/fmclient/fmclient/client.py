@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -20,7 +20,7 @@ def get_client(version, endpoint=None, session=None, auth_token=None,
                region_name=None, timeout=None,
                user_domain_id=None, user_domain_name=None,
                project_domain_id=None, project_domain_name=None,
-               service_type=SERVICE_TYPE, endpoint_type=None,
+               service_type=SERVICE_TYPE, endpoint_type=None, insecure=None,
                **ignored_kwargs):
     """Get an authenticated client, based on the credentials."""
     kwargs = {}
@@ -62,7 +62,7 @@ def get_client(version, endpoint=None, session=None, auth_token=None,
             loader = loading.get_plugin_loader(auth_type)
             auth_plugin = loader.load_from_options(**auth_kwargs)
             session = loading.session.Session().load_from_options(
-                auth=auth_plugin, timeout=timeout)
+                auth=auth_plugin, timeout=timeout, insecure=insecure)
 
     exception_msg = _('Must provide Keystone credentials or user-defined '
                       'endpoint and token')
@@ -86,6 +86,7 @@ def get_client(version, endpoint=None, session=None, auth_token=None,
     kwargs['service_type'] = service_type
     kwargs['interface'] = interface
     kwargs['version'] = version
+    kwargs['insecure'] = insecure
 
     fm_module = importutils.import_versioned_module('fmclient',
                                                     version, 'client')

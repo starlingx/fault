@@ -28,7 +28,6 @@ from oslo_utils import netutils
 import requests
 import OpenSSL
 
-
 from fmclient.common import utils
 from fmclient.common import exceptions as exc
 
@@ -318,6 +317,9 @@ class SessionClient(adapter.Adapter, _BaseHTTPClient):
 
     def __init__(self, session, **kwargs):
         kwargs.setdefault('user_agent', USER_AGENT)
+        insecure = kwargs.pop('insecure', False)
+        if insecure:
+            session.verify = False
         self.global_request_id = kwargs.pop('global_request_id', None)
         super(SessionClient, self).__init__(session, **kwargs)
 
