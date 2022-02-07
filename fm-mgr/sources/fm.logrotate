@@ -4,6 +4,21 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+/var/log/fm-api.log
+{
+    create 0640 root root
+    size 10M
+    start 1
+    rotate 20
+    missingok
+    compress
+    sharedscripts
+    postrotate
+        systemctl reload syslog-ng > /dev/null 2>&1 || true
+    endscript
+    delaycompress
+}
+
 /var/log/fm-event.log
 {
     create 0640 root root
