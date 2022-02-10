@@ -10,6 +10,6 @@ Rules-Requires-Root: no
 Package: fm-mgr
 Section: libs
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, centos-debian-compat
 Description: StarlingX Fault Manager
  This package contains StarlingX fm-mgr project.
