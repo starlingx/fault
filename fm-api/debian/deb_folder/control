@@ -8,7 +8,7 @@ Homepage: https://www.starlingx.io
 
 Package: python3-fm-api
 Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends}, centos-debian-compat
+Depends: ${python3:Depends}, ${misc:Depends}
 Description: Starlingx fault management api
  Provides the the APIs for applications to raise/clear/update
  active alarms.

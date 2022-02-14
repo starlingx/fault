@@ -12,6 +12,3 @@ override_dh_auto_install:
 		LIBDIR=/usr/lib \
 		SYSCONFDIR=/etc \
 		install
-
-override_dh_installsystemd:
-	dh_installsystemd --no-enable --name fminit
