@@ -432,9 +432,16 @@
 
 100.119:
     Type: Alarm
-    Description:
-        major: "PTP configuration or out-of-tolerance timestamping conditions"
-        minor: "PTP out-of-tolerance timestamping condition"
+    Description: |-
+        <hostname> does not support the provisioned PTP mode
+        OR
+        <hostname> PTP clocking is out-of-tolerance
+        OR
+        <hostname> is not locked to remote PTP Grand Master
+        OR
+        <hostname> GNSS signal loss state:<state>
+        OR
+        <hostname> 1PPS signal loss state:<state>
     Entity_Instance_ID: |-
         host=<hostname>.ptp
         OR
@@ -447,6 +454,10 @@
         host=<hostname>.ptp=<interface>.unsupported=legacy-timestamping
         OR
         host=<hostname>.ptp=out-of-tolerance
+        OR
+        host=<hostname>.instance=<instance>.ptp=out-of-tolerance
+        OR
+        host=<hostname>.interface=<interface>.ptp=signal-loss
     Severity: [major, minor]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action: none
