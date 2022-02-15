@@ -13,6 +13,7 @@ export UNITDIR=$(ROOT)/lib/systemd/system
 
 override_dh_auto_install:
 	install -d -m 755 $(UNITDIR)
+	install -p -D -m 644 scripts/fm-api.service $(UNITDIR)/fm-api.service
 	install -d -m 755 $(INITDIR)
 	install -p -D -m 755 scripts/fm-api $(INITDIR)/fm-api
 	install -d -m 755 $(PMONDDIR)
@@ -25,9 +26,6 @@ override_dh_auto_install:
 
 override_dh_fixperms:
 	dh_fixperms -Xfm.conf
-
-override_dh_installsystemd:
-	dh_installsystemd --name fm-api
 
 ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
 override_dh_auto_test:
