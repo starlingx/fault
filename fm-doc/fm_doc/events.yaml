@@ -2964,25 +2964,6 @@
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
-
-800.003:
-    Type: Alarm
-    Description: |-
-        Storage Alarm Condition:
-        Quota/Space mismatch for the <tiername> tier. The sum of Ceph pool quotas does not match the tier size.
-    Entity_Instance_ID: cluster=<dist-fs-uuid>.tier=<tiername>
-    Severity: minor
-    Proposed_Repair_Action: "Update ceph storage pool quotas to use all available tier space."
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: operational-violation
-    Probable_Cause: configuration-out-of-date
-    Service_Affecting: False
-    Suppression: False
-    Management_Affecting_Severity: none
-    Degrade_Affecting_Severity: none
-
-
 800.100:
     Type: Alarm
     Description: |-
