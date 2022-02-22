@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -43,6 +43,7 @@ app = {
     'hooks': [
         hooks.ContextHook(),
         hooks.DBHook(),
+        hooks.AuditLogging(),
     ],
     'acl_public_routes': [
         '/',
@@ -65,6 +66,9 @@ def init(args, **kwargs):
 
 def setup_logging():
     """Sets up the logging options for a log with supplied name."""
+    extra_log_level_defaults = ['eventlet.wsgi.server=WARN']
+    logging.set_defaults(default_log_levels=logging.get_default_log_levels() +
+                         extra_log_level_defaults)
     logging.setup(cfg.CONF, "fm")
     LOG.debug("Logging enabled!")
     LOG.debug("%(prog)s version %(version)s",
