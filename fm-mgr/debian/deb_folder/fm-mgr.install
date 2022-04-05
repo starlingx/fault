@@ -1,4 +1,3 @@
-usr/bin/fmManager
 etc/init.d/fminit
 etc/logrotate.d/fm.logrotate
-usr/lib/systemd/system/fminit.service lib/systemd/system
+usr/local/bin/fmManager

@@ -8,7 +8,10 @@ export ROOT=debian/tmp
 
 override_dh_auto_install:
 	make DESTDIR=${ROOT} \
-		BINDIR=/usr/bin \
-		LIBDIR=/usr/lib \
-		SYSCONFDIR=/etc \
 		install
+
+override_dh_installsystemd:
+	dh_installsystemd --no-enable --name fminit
+
+override_dh_usrlocal:
+	# Do nothing

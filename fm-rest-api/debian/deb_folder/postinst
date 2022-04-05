@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+chown fm:fm /etc/fm/fm.conf
+
+#DEBHELPER#

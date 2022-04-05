@@ -1,4 +1,4 @@
+debian/systemd/00-fm-rest-api.preset etc/systemd/system-preset
 etc/fm/fm.conf
-etc/pmon.d/fm-api.conf
 etc/init.d
-lib/systemd/system
+etc/pmon.d/fm-api.conf
