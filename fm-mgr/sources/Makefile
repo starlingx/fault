@@ -12,7 +12,6 @@ MINOR ?= 0
 DESTDIR ?= /
 BINDIR ?= /usr/local/bin
 SYSCONFDIR ?= /etc
-UNITDIR ?= /usr/lib/systemd/system
 
 
 build: fmManager
@@ -35,4 +34,3 @@ install:
 	install -m 755 fminit $(DESTDIR)$(SYSCONFDIR)/init.d/fminit
 	install -m 755 fmManager $(DESTDIR)$(BINDIR)/fmManager
 	install -m 644 fm.logrotate $(DESTDIR)$(SYSCONFDIR)/logrotate.d/fm.logrotate
-	install -m 644 fminit.service $(DESTDIR)$(UNITDIR)/fminit.service

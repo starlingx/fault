@@ -41,6 +41,7 @@ make DESTDIR=%{buildroot} \
      UNITDIR=%{_unitdir} \
      MAJOR=$MAJOR MINOR=$MINOR \
      install
+install -m 644 fminit.service %{buildroot}%{_unitdir}/fminit.service
 
 %clean
 rm -rf %{buildroot}
