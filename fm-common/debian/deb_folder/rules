@@ -12,10 +12,10 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	make DESTDIR=$(ROOT) \
-		BINDIR=/usr/bin \
 		LIBDIR=/usr/lib \
 		INCDIR=/usr/include \
 		CGCS_DOC_DEPLOY=/opt/deploy/cgcs_doc install
 	python3 setup.py install --install-layout=deb --root $(ROOT)
 
-
+override_dh_usrlocal:
+	# do nothing

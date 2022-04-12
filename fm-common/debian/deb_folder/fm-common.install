@@ -1,4 +1,3 @@
-usr/bin/fmClientCli usr/bin
-usr/bin/*.py usr/bin
 usr/lib/*.so.*
 usr/lib/python*/dist-packages/*
+usr/local/bin/*
