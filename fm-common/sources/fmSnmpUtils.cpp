@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2020 Wind River Systems, Inc.
+// Copyright (c) 2014-2022 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -204,6 +204,7 @@ static std::string format_trap_json(int type, SFmAlarmDataT &data){
     }
 
     if (operation_type == ALARM_CLEAR){
+        add_value_json_trap(result, ALARM_UUID, data.uuid);
         add_value_json_trap(result, ALARM_ID, data.alarm_id);
         add_value_json_trap(result, ALARM_INSTANCE_ID,
                 data.entity_instance_id);
@@ -211,12 +212,14 @@ static std::string format_trap_json(int type, SFmAlarmDataT &data){
         add_value_json_trap(result, ALARM_DATE_TIME, time_str);
         add_value_json_trap(result, ALARM_REASON_TEXT, data.reason_text);
     } else if (operation_type == ALARM_HIERARCHICAL_CLEAR){
+        add_value_json_trap(result, ALARM_UUID, data.uuid);
         add_value_json_trap(result, ALARM_INSTANCE_ID,
                 data.entity_instance_id);
         fm_db_util_make_timestamp_string(time_str, 0, true);
         add_value_json_trap(result, ALARM_DATE_TIME, time_str);
         add_value_json_trap(result, ALARM_REASON_TEXT, CLEAR_REASON_TEXT);
     } else if (operation_type == ALARM_MSG){
+        add_value_json_trap(result, EVENT_UUID, data.uuid);
         add_value_json_trap(result, EVENT_ID, data.alarm_id);
         add_value_json_trap(result, EVENT_INSTANCE_ID,
                 data.entity_instance_id);
@@ -234,6 +237,7 @@ static std::string format_trap_json(int type, SFmAlarmDataT &data){
     } else if (operation_type == WARM_START){
         // nothing to add to cmd
     } else {
+        add_value_json_trap(result, ALARM_UUID, data.uuid);
         add_value_json_trap(result, ALARM_ID, data.alarm_id);
         add_value_json_trap(result, ALARM_INSTANCE_ID,
                 data.entity_instance_id );
