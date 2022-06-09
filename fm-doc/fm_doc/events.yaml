@@ -3100,10 +3100,10 @@
 
 900.002:
     Type: Alarm
-    Description: Obsolete patch in system.
-    Entity_Instance_ID: host=controller
-    Severity: warning
-    Proposed_Repair_Action: Remove and delete obsolete patches.
+    Description: Patch host install failure.
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Undo patching operation.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: environmental
@@ -3115,10 +3115,10 @@
 
 900.003:
     Type: Alarm
-    Description: Patch host install failure.
-    Entity_Instance_ID: host=<hostname>
-    Severity: major
-    Proposed_Repair_Action: Undo patching operation.
+    Description: Obsolete patch in system.
+    Entity_Instance_ID: host=controller
+    Severity: warning
+    Proposed_Repair_Action: Remove and delete obsolete patches.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: environmental
