@@ -3001,23 +3001,6 @@
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
 
-800.102:
-    Type: Alarm
-    Description: |-
-        Storage Alarm Condition:
-        PV configuration <error/failed to apply> on <hostname>. Reason: <detailed reason>.
-    Entity_Instance_ID: pv=<pv_uuid>
-    Severity: [critical, major]
-    Proposed_Repair_Action: "Remove failed PV and associated Storage Device then recreate them."
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: equipment
-    Probable_Cause: configuration-or-customization-error
-    Service_Affecting: True
-    Suppression: False
-    Management_Affecting_Severity: major
-    Degrade_Affecting_Severity: none
-
 800.103:
     Type: Alarm
     Description: |-
