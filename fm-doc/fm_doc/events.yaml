@@ -1400,7 +1400,7 @@
         OR
         system.certificate.k8sRootCA
     Severity: major
-    Proposed_Repair_Action: Renew certificate for the entity identified
+    Proposed_Repair_Action: Check certificate expiration time. Renew certificate for the entity identified.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: operational-violation
@@ -1427,7 +1427,7 @@
         OR
         system.certificate.k8sRootCA
     Severity: critical
-    Proposed_Repair_Action: Renew certificate for the entity identified
+    Proposed_Repair_Action: Check certificate expiration time. Renew certificate for the entity identified.
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: operational-violation
@@ -2788,7 +2788,8 @@
     Description: "Application Apply Failure"
     Entity_Instance_ID: k8s_application=<appname>
     Severity: major
-    Proposed_Repair_Action: "Retry applying the application. If the issue persists, please check system inventory log for cause."
+    Proposed_Repair_Action: "Retry applying the application. Check application is managed by the system application framework.
+                             If the issue persists, please check system inventory log for cause."
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: processing-error
@@ -3083,10 +3084,10 @@
 
 900.002:
     Type: Alarm
-    Description: Patch host install failure.
+    Description: Patch host install failure. Command "sw-patch host-install" failed.
     Entity_Instance_ID: host=<hostname>
     Severity: major
-    Proposed_Repair_Action: Undo patching operation.
+    Proposed_Repair_Action: Undo patching operation. Check patch logs on the target host (i.e. /var/log/patching.log)
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: environmental
@@ -3098,7 +3099,7 @@
 
 900.003:
     Type: Alarm
-    Description: Obsolete patch in system.
+    Description: A patch with state 'obsolete' in its metadata has been uploaded.
     Entity_Instance_ID: host=controller
     Severity: warning
     Proposed_Repair_Action: Remove and delete obsolete patches.
@@ -3113,7 +3114,7 @@
 
 900.004:
     Type: Alarm
-    Description: Host version mismatch.
+    Description: The upgrade and running software version do not match. Command host-upgrade failed.
     Entity_Instance_ID: host=<hostname>
     Severity: major
     Proposed_Repair_Action: Reinstall host to update applied load.
@@ -3188,7 +3189,7 @@
 
 900.009:
     Type: Alarm
-    Description: Kubernetes root CA update aborted, certificates may not be fully updated.
+    Description: Kubernetes root CA update aborted, certificates may not be fully updated. Command "system kube-rootca-update-abort" has been run.
     Entity_Instance_ID: host=controller
     Severity: minor
     Proposed_Repair_Action: Fully update certificates by a new root CA update.
@@ -3233,7 +3234,7 @@
 
 900.103:
     Type: Alarm
-    Description: Software patch auto-apply failed
+    Description: Software patch auto-apply failed. Command "sw-manager patch-strategy apply" failed.
     Entity_Instance_ID: orchestration=sw-patch
     Severity: critical
     Proposed_Repair_Action: Attempt to apply software patches manually; if problem persists contact next level of support
@@ -3377,7 +3378,7 @@
 
 900.203:
     Type: Alarm
-    Description: Software upgrade auto-apply failed
+    Description: Software upgrade auto-apply failed. Command "sw-manager update-strategy apply" failed
     Entity_Instance_ID: orchestration=sw-upgrade
     Severity: critical
     Proposed_Repair_Action: Attempt to apply software upgrade manually; if problem persists contact next level of support
@@ -3521,7 +3522,7 @@
 
 900.303:
     Type: Alarm
-    Description: Firmware Update auto-apply failed
+    Description: Firmware Update auto-apply failed. Command "sw-manager kube-rootca-update-strategy apply" failed.
     Entity_Instance_ID: orchestration=fw-update
     Severity: critical
     Proposed_Repair_Action: Attempt to apply firmware update manually; if problem persists contact next level of support
@@ -3809,7 +3810,7 @@
 
 900.503:
     Type: Alarm
-    Description: Kubernetes rootca update auto-apply failed
+    Description: Kubernetes rootca update auto-apply failed. Command "sw-manager kube-upgrade-strategy apply" failed.
     Entity_Instance_ID: orchestration=kube-rootca-update
     Severity: critical
     Proposed_Repair_Action: Attempt to apply kubernetes rootca update manually; if problem persists contact next level of support
