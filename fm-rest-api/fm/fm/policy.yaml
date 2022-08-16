@@ -1,0 +1,16 @@
+---
+# The commented lines below contains the default values for presented rules.
+
+# admin_in_system_projects: role:admin and (project_name:admin or project_name:services)
+# reader_in_system_projects: role:reader and (project_name:admin or project_name:services)
+
+# fm_api:alarm:create: rule:admin_in_system_projects
+# fm_api:alarm:delete: rule:admin_in_system_projects
+# fm_api:alarm:get: role:reader
+# fm_api:alarm:modify: rule:admin_in_system_projects
+
+# fm_api:event_log:get: role:reader
+
+# fm_api:event_suppression:get: role:reader
+# fm_api:event_suppression:modify: rule:admin_in_system_projects
+

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -20,7 +20,10 @@ from fm.api.controllers.v1 import link
 from fm.api.controllers.v1.query import Query
 from fm.api.controllers.v1 import types
 from fm.api.controllers.v1 import utils as api_utils
+from fm.api.policies import event_suppression as event_suppression_policy
 from fm.common import constants
+from fm.common import exceptions
+from fm.common import policy
 from fm.common import utils as cutils
 from fm.common.i18n import _
 
@@ -213,3 +216,15 @@ class EventSuppressionController(rest.RestController):
             pecan.request.dbapi.event_suppression_update(uuid, updates)
 
         return EventSuppression.convert_with_links(updated_event_suppression)
+
+    def enforce_policy(self, method_name, request):
+        """Check policy rules for each action of this controller."""
+        context_dict = request.context.to_dict()
+        if method_name in ["get_all", "get_one"]:
+            policy.authorize(event_suppression_policy.POLICY_ROOT % "get",
+                             {}, context_dict)
+        elif method_name == "patch":
+            policy.authorize(event_suppression_policy.POLICY_ROOT % "modify",
+                             {}, context_dict)
+        else:
+            raise exceptions.PolicyNotFound()

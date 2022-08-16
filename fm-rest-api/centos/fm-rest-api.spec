@@ -69,6 +69,7 @@ install -p -D -m 644 fm-api-pmond.conf %{buildroot}%{local_etc_pmond}/fm-api.con
 # install default config files
 cd %{_builddir}/%{name}-%{version} && oslo-config-generator --config-file fm/config-generator.conf --output-file %{_builddir}/%{name}-%{version}/fm.conf.sample
 install -p -D -m 600 %{_builddir}/%{name}-%{version}/fm.conf.sample %{buildroot}%{_sysconfdir}/fm/fm.conf
+install -p -D -m 600 fm/policy.yaml %{buildroot}%{_sysconfdir}/fm/policy.yaml
 
 %clean
 echo "CLEAN CALLED"
@@ -90,6 +91,7 @@ rm -rf $RPM_BUILD_ROOT
 %{pythonroot}/fm-%{version}*.egg-info
 
 %config(noreplace) %attr(600,fm,fm)%{_sysconfdir}/fm/fm.conf
+%config(noreplace) %attr(600,fm,fm)%{_sysconfdir}/fm/policy.yaml
 
 # systemctl service files
 %{_unitdir}/fm-api.service

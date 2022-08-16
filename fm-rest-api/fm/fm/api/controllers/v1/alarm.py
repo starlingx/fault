@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2021 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -25,7 +25,9 @@ from fm.api.controllers.v1 import types
 from fm.api.controllers.v1 import utils as api_utils
 from fm.common import exceptions
 from fm.common import constants
+from fm.common import policy
 from fm import objects
+from fm.api.policies import alarm as alarm_policy
 from fm.api.controllers.v1.query import Query
 
 from fm_api import constants as fm_constants
@@ -438,3 +440,21 @@ class AlarmController(rest.RestController):
             return err
         alarm_dict = alm.as_dict()
         return json.dumps({"uuid": alarm_dict['uuid']})
+
+    def enforce_policy(self, method_name, request):
+        """Check policy rules for each action of this controller."""
+        context_dict = request.context.to_dict()
+        if method_name == "delete":
+            policy.authorize(alarm_policy.POLICY_ROOT % "delete", {},
+                             context_dict)
+        elif method_name in ["detail", "get_all", "get_one", "summary"]:
+            policy.authorize(alarm_policy.POLICY_ROOT % "get", {},
+                             context_dict)
+        elif method_name == "post":
+            policy.authorize(alarm_policy.POLICY_ROOT % "create", {},
+                             context_dict)
+        elif method_name == "put":
+            policy.authorize(alarm_policy.POLICY_ROOT % "modify", {},
+                             context_dict)
+        else:
+            raise exceptions.PolicyNotFound()

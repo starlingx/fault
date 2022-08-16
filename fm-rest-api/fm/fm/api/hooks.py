@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2022 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,6 +13,7 @@ from oslo_config import cfg
 from oslo_log import log
 from oslo_serialization import jsonutils
 from oslo_utils import uuidutils
+from webob import exc
 
 from fm.common import context
 from fm.db import api as dbapi
@@ -59,7 +60,7 @@ class ContextHook(hooks.PecanHook):
         environ = state.request.environ
         user_name = headers.get('X-User-Name')
         user_id = headers.get('X-User-Id')
-        project = headers.get('X-Project-Name')
+        project_name = headers.get('X-Project-Name')
         project_id = headers.get('X-Project-Id')
         domain_id = headers.get('X-User-Domain-Id')
         domain_name = headers.get('X-User-Domain-Name')
@@ -83,7 +84,7 @@ class ContextHook(hooks.PecanHook):
             auth_token_info=auth_token_info,
             user_name=user_name,
             user_id=user_id,
-            project_name=project,
+            project_name=project_name,
             project_id=project_id,
             domain_id=domain_id,
             domain_name=domain_name,
@@ -146,7 +147,10 @@ class AuditLogging(hooks.PecanHook):
         def json_post_data(rest_state):
             if 'form-data' in rest_state.request.headers.get('Content-Type'):
                 return " POST: {}".format(rest_state.request.params)
-            if not hasattr(rest_state.request, 'json'):
+            try:
+                if not hasattr(rest_state.request, 'json'):
+                    return ""
+            except Exception:
                 return ""
             return " POST: {}".format(rest_state.request.json)
 
@@ -195,3 +199,19 @@ class AuditLogging(hooks.PecanHook):
 
     def on_error(self, state, e):
         auditLOG.exception("Exception in AuditLogging passed to event 'on_error': " + str(e))
+
+
+class AccessPolicyHook(hooks.PecanHook):
+    """Verify that the user has the needed privilege to execute the action."""
+    def before(self, state):
+        is_public_api = state.request.environ.get('is_public_api', False)
+        if not is_public_api:
+            controller = state.controller.__self__
+            if hasattr(controller, 'enforce_policy'):
+                try:
+                    controller_method = state.controller.__name__
+                    controller.enforce_policy(controller_method, state.request)
+                except Exception:
+                    raise exc.HTTPForbidden()
+            else:
+                raise exc.HTTPForbidden()

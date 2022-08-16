@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -9,6 +9,7 @@ from oslo_config import cfg
 from keystoneauth1 import plugin
 from keystoneauth1.access import service_catalog as k_service_catalog
 
+from fm.api.policies import base as base_policy
 from fm.common import policy
 
 
@@ -95,7 +96,9 @@ class RequestContext(context.RequestContext):
 
         self.user_auth_plugin = user_auth_plugin
         if is_admin is None:
-            self.is_admin = policy.check_is_admin(self)
+            self.is_admin = policy.authorize(
+                base_policy.ADMIN_IN_SYSTEM_PROJECTS, {}, self.to_dict(),
+                do_raise=False)
         else:
             self.is_admin = is_admin
 

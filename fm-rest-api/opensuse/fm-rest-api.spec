@@ -79,6 +79,7 @@ install -m 640 fm/db/sqlalchemy/migrate_repo/migrate.cfg %{buildroot}%{pythonroo
 # install default config files
 oslo-config-generator --config-file fm/config-generator.conf --output-file %{_builddir}/fm.conf.sample
 install -p -D -m 644 %{_builddir}/fm.conf.sample %{buildroot}%{_sysconfdir}/fm/fm.conf
+install -p -D -m 600 fm/policy.yaml %{buildroot}%{_sysconfdir}/fm/policy.yaml
 
 %fdupes %{buildroot}%{pythonroot}/fm
 
@@ -99,6 +100,7 @@ install -p -D -m 644 %{_builddir}/fm.conf.sample %{buildroot}%{_sysconfdir}/fm/f
 
 %dir %{_sysconfdir}/fm
 %config(noreplace) %{_sysconfdir}/fm/fm.conf
+%config(noreplace) %attr(600,fm,fm)%{_sysconfdir}/fm/policy.yaml
 
 # systemctl service files
 %{_unitdir}/fm-api.service

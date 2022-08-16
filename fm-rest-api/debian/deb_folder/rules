@@ -18,11 +18,12 @@ override_dh_auto_install:
 	oslo-config-generator --config-file fm/config-generator.conf --output-file fm.conf.sample
 	install -d -m 755 $(FMCONFDIR)
 	install -p -D -m 600 fm.conf.sample $(FMCONFDIR)/fm.conf
+	install -p -D -m 600 fm/policy.yaml $(FMCONFDIR)/policy.yaml
 	dh_auto_install
 
 
 override_dh_fixperms:
-	dh_fixperms -Xfm.conf
+	dh_fixperms -Xfm.conf -Xpolicy.yaml
 
 override_dh_installsystemd:
 	dh_installsystemd --no-enable --name fm-api

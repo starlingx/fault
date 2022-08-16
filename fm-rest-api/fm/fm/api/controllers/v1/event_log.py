@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2019 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -23,7 +23,9 @@ from fm.api.controllers.v1 import collection
 from fm.api.controllers.v1 import link
 from fm.api.controllers.v1.query import Query
 from fm.api.controllers.v1 import types
+from fm.api.policies import event_log as event_log_policy
 from fm.common import exceptions
+from fm.common import policy
 from fm.common.i18n import _
 
 LOG = log.getLogger(__name__)
@@ -292,3 +294,12 @@ class EventLogController(rest.RestController):
             pecan.request.context, id)
 
         return EventLog.convert_with_links(rpc_ilog)
+
+    def enforce_policy(self, method_name, request):
+        """Check policy rules for each action of this controller."""
+        context_dict = request.context.to_dict()
+        if method_name in ["detail", "get_all", "get_one"]:
+            policy.authorize(event_log_policy.POLICY_ROOT % "get", {},
+                             context_dict)
+        else:
+            raise exceptions.PolicyNotFound()

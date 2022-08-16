@@ -3,5 +3,6 @@
 set -e
 
 chown fm:fm /etc/fm/fm.conf
+chown fm:fm /etc/fm/policy.yaml
 
 #DEBHELPER#

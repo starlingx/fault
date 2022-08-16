@@ -12,6 +12,11 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+#
+# Copyright (c) 2022 Wind River Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 """Base classes for API tests."""
 
 from oslo_config import cfg
@@ -45,7 +50,7 @@ class FunctionalTest(base.TestCase):
             'app': {
                 'root': 'fm.api.controllers.root.RootController',
                 'modules': ['fm.api'],
-                'acl_public_routes': ['/', '/v1'],
+                'enable_acl': False
             },
         }
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2022 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -45,10 +45,7 @@ app = {
         hooks.DBHook(),
         hooks.AuditLogging(),
     ],
-    'acl_public_routes': [
-        '/',
-        '/v1',
-    ],
+    'enable_acl': True
 }
 
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -102,6 +102,10 @@ class PolicyNotAuthorized(ApiError):
     message = _("Policy doesn't allow %(action)s to be performed.")
     # 401 - HTTPUnauthorized
     code = webob.exc.HTTPUnauthorized.code
+
+
+class PolicyNotFound(Invalid):
+    message = _("Policy not found for requested action.")
 
 
 class Conflict(ApiError):

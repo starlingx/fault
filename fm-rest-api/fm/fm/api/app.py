@@ -10,7 +10,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -23,6 +23,7 @@ from oslo_log import log
 import pecan
 
 from fm.api import config
+from fm.api import hooks
 from fm.api import middleware
 from fm.common import policy
 from fm.common.i18n import _
@@ -48,6 +49,8 @@ def setup_app(config=None):
 
     pecan.configuration.set_config(dict(config), overwrite=True)
     app_conf = dict(config.app)
+    if app_conf['enable_acl']:
+        app_conf['hooks'].append(hooks.AccessPolicyHook())
 
     app = pecan.make_app(
         app_conf.pop('root'),

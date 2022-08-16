@@ -2,7 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright (C) 2019 Intel Corporation
+# Copyright (c) 2019 Intel Corporation
+#
+# Copyright (c) 2022 Wind River Systems, Inc.
 #
 # lib/fault
 # Functions to control the configuration and operation of the **fault** service
@@ -37,6 +39,7 @@ GITDIR["fm-core"]=$STX_FAULT_DIR/fm-common/sources
 FM_RESTAPI_CONF=$STX_FAULT_CONF_DIR/fm.conf
 FM_RESTAPI_PASTE_INI=$STX_FAULT_CONF_DIR/api-paste.ini
 FM_EVENT_YAML=$STX_FAULT_CONF_DIR/events.yaml
+FM_POLICY_YAML=$STX_FAULT_CONF_DIR/policy.yaml
 FM_RESTAPI_AUTH_CACHE_DIR=${FM_RESTAPI_AUTH_CACHE_DIR:-/var/cache/fault}
 
 FM_RESTAPI_DIR=$STX_FAULT_DIR/fm-rest-api/fm
@@ -191,7 +194,7 @@ function cleanup_fm_mgr {
 function cleanup_fm_rest_api {
     sudo pip uninstall -y fm
 
-    sudo rm -rf $FM_RESTAPI_AUTH_CACHE_DIR $FM_RESTAPI_CONF $FM_RESTAPI_PASTE_INI $FM_EVENT_YAML
+    sudo rm -rf $FM_RESTAPI_AUTH_CACHE_DIR $FM_RESTAPI_CONF $FM_RESTAPI_PASTE_INI $FM_EVENT_YAML $FM_POLICY_YAML
     dropdb -h 127.0.0.1 -Uroot fm
 }
 
@@ -208,6 +211,7 @@ function configure_fm_rest_api {
 
     cp -p $STX_FAULT_DIR/devstack/files/api-paste.ini $FM_RESTAPI_PASTE_INI
     cp -p $STX_FAULT_DIR/fm-doc/fm_doc/events.yaml $FM_EVENT_YAML
+    cp -p $STX_FAULT_DIR/fm-rest-api/fm/fm/policy.yaml $FM_POLICY_YAML
 
     configure_auth_token_middleware $FM_RESTAPI_CONF fm $FM_RESTAPI_AUTH_CACHE_DIR
 

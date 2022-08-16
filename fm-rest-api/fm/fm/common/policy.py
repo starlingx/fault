@@ -13,77 +13,47 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 """Policy Engine For FM."""
 
 from oslo_config import cfg
-
 from oslo_policy import policy
-from oslo_log import log
+from fm.api import policies as controller_policies
 
-
-base_rules = [
-    policy.RuleDefault('admin_required', 'role:admin or is_admin:1',
-                       description='Who is considered an admin'),
-    policy.RuleDefault('admin_api', 'is_admin_required:True',
-                       description='admin API requirement'),
-    policy.RuleDefault('default', 'rule:admin_api',
-                       description='default rule'),
-]
 
 CONF = cfg.CONF
-
-
-LOG = log.getLogger(__name__)
-
 _ENFORCER = None
 
 
-# we can get a policy enforcer by this init.
-# oslo policy support change policy rule dynamically.
-# at present, policy.enforce will reload the policy rules when it checks
-# the policy files have been touched.
-def init(policy_file=None, rules=None,
-         default_rule=None, use_conf=True, overwrite=True):
+def reset():
+    """Discard current Enforcer object."""
+    global _ENFORCER
+    _ENFORCER = None
+
+
+def init(policy_file='policy.yaml'):
     """Init an Enforcer class.
 
-        :param policy_file: Custom policy file to use, if none is
-                            specified, ``conf.policy_file`` will be
-                            used.
-        :param rules: Default dictionary / Rules to use. It will be
-                      considered just in the first instantiation. If
-                      :meth:`load_rules` with ``force_reload=True``,
-                      :meth:`clear` or :meth:`set_rules` with
-                      ``overwrite=True`` is called this will be overwritten.
-        :param default_rule: Default rule to use, conf.default_rule will
-                             be used if none is specified.
-        :param use_conf: Whether to load rules from cache or config file.
-        :param overwrite: Whether to overwrite existing rules when reload rules
-                          from config file.
+       :param policy_file: Custom policy file to be used.
+
+       :return: Returns a Enforcer instance.
     """
     global _ENFORCER
     if not _ENFORCER:
         # https://docs.openstack.org/oslo.policy/latest/user/usage.html
         _ENFORCER = policy.Enforcer(CONF,
                                     policy_file=policy_file,
-                                    rules=rules,
-                                    default_rule=default_rule,
-                                    use_conf=use_conf,
-                                    overwrite=overwrite)
-        _ENFORCER.register_defaults(base_rules)
+                                    default_rule='default',
+                                    use_conf=True,
+                                    overwrite=True)
+        _ENFORCER.register_defaults(controller_policies.list_rules())
     return _ENFORCER
 
 
-def check_is_admin(context):
-    """Whether or not role contains 'admin' role according to policy setting.
-
-    """
+def authorize(rule, target, creds, do_raise=True):
+    """A wrapper around 'authorize' from 'oslo_policy.policy'."""
     init()
-
-    target = {}
-    credentials = context.to_dict()
-
-    return _ENFORCER.enforce('context_is_admin', target, credentials)
+    return _ENFORCER.authorize(rule, target, creds, do_raise=do_raise)
