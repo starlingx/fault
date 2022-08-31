@@ -982,6 +982,20 @@
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
+280.003:
+    Type: Alarm
+    Description: Subcloud Backup Failure
+    Entity_Instance_ID: subcloud=<subcloud>
+    Severity: minor
+    Proposed_Repair_Action: Retry subcloud backup after checking backup input file. If problem persists contact next level of support.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
 
 #---------------------------------------------------------------------------
 #   NETWORK
