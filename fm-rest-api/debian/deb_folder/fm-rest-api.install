@@ -2,5 +2,4 @@ debian/systemd/00-fm-rest-api.preset etc/systemd/system-preset
 etc/fm/fm.conf
 etc/fm/policy.yaml
 etc/init.d
-etc/pmon.d/fm-api.conf
 usr/share/starlingx/pmon.d/fm-api.conf

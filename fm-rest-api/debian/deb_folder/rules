@@ -4,8 +4,7 @@
 export PYBUILD_NAME=fm-rest-api
 export ROOT=debian/tmp
 export FMCONFDIR=$(ROOT)/etc/fm
-export PMONDIR_1=$(ROOT)/etc/pmon.d
-export PMONDIR_2=$(ROOT)/usr/share/starlingx/pmon.d
+export PMONDIR=$(ROOT)/usr/share/starlingx/pmon.d
 export INITDIR=$(ROOT)/etc/init.d
 
 %:
@@ -14,10 +13,8 @@ export INITDIR=$(ROOT)/etc/init.d
 override_dh_auto_install:
 	install -d -m 755 $(INITDIR)
 	install -p -D -m 755 scripts/fm-api $(INITDIR)/fm-api
-	install -d -m 755 $(PMONDIR_1)
-	install -p -D -m 644 fm-api-pmond.conf $(PMONDIR_1)/fm-api.conf
-	install -d -m 755 $(PMONDIR_2)
-	install -p -D -m 644 fm-api-pmond.conf $(PMONDIR_2)/fm-api.conf
+	install -d -m 755 $(PMONDIR)
+	install -p -D -m 644 fm-api-pmond.conf $(PMONDIR)/fm-api.conf
 	oslo-config-generator --config-file fm/config-generator.conf --output-file fm.conf.sample
 	install -d -m 755 $(FMCONFDIR)
 	install -p -D -m 600 fm.conf.sample $(FMCONFDIR)/fm.conf
