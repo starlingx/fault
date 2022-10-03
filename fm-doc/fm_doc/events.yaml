@@ -554,21 +554,6 @@
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
 
-200.012:
-    Type: Alarm
-    Description: <hostname> controller function has in-service failure while compute services remain healthy.
-    Entity_Instance_ID: host=<hostname>
-    Severity: major
-    Proposed_Repair_Action: Lock and then Unlock host to recover. Avoid using 'Force Lock' action as that will impact compute services running on this host.  If lock action fails then contact next level of support to investigate and recover.
-    Maintenance_Action: "degrade - requires manual action"
-    Inhibit_Alarms: False
-    Alarm_Type: operational-violation
-    Probable_Cause: communication-subsystem-failure
-    Service_Affecting: True
-    Suppression: True
-    Management_Affecting_Severity: warning
-    Degrade_Affecting_Severity: major
-
 200.013:
     Type: Alarm
     Description: <hostname> compute service of the only available controller is not poperational. Auto-recovery is disabled. Deggrading host instead.
