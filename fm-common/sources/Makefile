@@ -54,7 +54,7 @@ install:
 	install -m 755 -d $(DESTDIR)$(LIBDIR)
 	install -m 755 -d $(DESTDIR)$(INCDIR)
 	install -m 755 -d $(DESTDIR)$(CGCS_DOC_DEPLOY)
-	install -m 755 fmClientCli $(DESTDIR)$(BINDIR)
+	install -m 750 fmClientCli $(DESTDIR)$(BINDIR)
 	install -m 755 fm_db_sync_event_suppression.py $(DESTDIR)$(BINDIR)
 	install -m 755 fm_log.py $(DESTDIR)$(BINDIR)
 	install -m 644 fmDbAPI.h $(DESTDIR)$(INCDIR)
