@@ -17,6 +17,7 @@ import sys
 from oslo_utils import importutils
 
 import fmclient
+from fmclient.common import exceptions
 from fmclient.common import utils
 from fmclient import exc
 from fmclient import client
@@ -292,6 +293,8 @@ class FmShell(object):
             args.func(client, args)
         except exc.Unauthorized:
             raise exc.CommandError("Invalid Identity credentials.")
+        except exceptions.HTTPForbidden:
+            raise exc.CommandError("Error: Forbidden.")
 
     def do_bash_completion(self, args):
         """Prints all of the commands and options to stdout.

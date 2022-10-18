@@ -85,6 +85,15 @@ class HTTPClientError(HttpError):
     message = _("HTTP Client Error")
 
 
+class HTTPForbidden(HTTPClientError):
+    """HTTP 403 - Forbidden
+
+    Exception for cases in which the server understands the request
+    but refuses to authorize it.
+    """
+    message = _("HTTP Client Error: Forbidden")
+
+
 class HTTPNotFound(HTTPClientError):
     """HTTP 404 - Not Found
 
@@ -172,6 +181,8 @@ def from_response(response, method, url=None):
     except KeyError:
         if 500 <= response.status_code < 600:
             cls = HttpServerError
+        elif 403 == response.status_code:
+            cls = HTTPForbidden
         elif 404 == response.status_code:
             cls = HTTPNotFound
         elif 400 <= response.status_code < 500:
