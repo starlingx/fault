@@ -20,6 +20,7 @@ Build-Depends: debhelper-compat (= 13),
  python3-setuptools,
  python3-sqlalchemy,
  python3-wsme,
+ python3-wheel,
  tsconfig
 Standards-Version: 4.5.1
 Rules-Requires-Root: no
@@ -34,3 +35,8 @@ Depends: ${python3:Depends},
  python3-paste
 Description: Fault Management Openstack REST API
  This package contains the Openstack REST API for fault management.
+
+Package: fm-rest-api-wheel
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Description: Contains python wheels for fm-rest-api

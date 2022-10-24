@@ -11,6 +11,9 @@ export INITDIR=$(ROOT)/etc/init.d
 	dh $@ --with=python3 --buildsystem=pybuild
 
 override_dh_auto_install:
+	python3 setup.py install -f --install-layout=deb --root=$(CURDIR)/$(ROOT)
+	python3 setup.py bdist_wheel  --universal  \
+		-d $(CURDIR)/debian/fm-rest-api-wheel/usr/share/python-wheels
 	install -d -m 755 $(INITDIR)
 	install -p -D -m 755 scripts/fm-api $(INITDIR)/fm-api
 	install -d -m 755 $(PMONDIR)

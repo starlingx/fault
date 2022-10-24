@@ -15,7 +15,11 @@ override_dh_auto_install:
 		LIBDIR=/usr/lib \
 		INCDIR=/usr/include \
 		CGCS_DOC_DEPLOY=/opt/deploy/cgcs_doc install
-	python3 setup.py install --install-layout=deb --root $(ROOT)
+	python3 setup.py install --install-layout=deb --skip-build --root $(ROOT)
+
+	python3 setup.py bdist_wheel \
+		--universal \
+		-d $(CURDIR)/debian/fm-common-wheel/usr/share/python-wheels
 
 override_dh_fixperms:
 	dh_fixperms -XfmClientCli
