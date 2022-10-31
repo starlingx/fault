@@ -2,7 +2,7 @@ Source: fm-api
 Section: admin
 Priority: optional
 Maintainer: Starlingx Developers <starlingx-discuss@lists.starlingx.io>
-Build-Depends: debhelper-compat (= 13), dh-python, python3-setuptools, python3-all
+Build-Depends: debhelper-compat (= 13), dh-python, python3-setuptools, python3-all, python3-wheel
 Standards-Version: 4.4.1
 Homepage: https://www.starlingx.io
 
@@ -14,3 +14,8 @@ Description: Starlingx fault management api
  active alarms.
  .
  This package installs the library for Python 3.
+
+Package: fm-api-wheel
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}
+Description: Contains python wheels for fm-api
