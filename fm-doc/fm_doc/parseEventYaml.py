@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Wind River Systems, Inc.
+# Copyright (c) 2016-2022 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -29,6 +29,7 @@ import constants
 #   Suppression: True
 #   Management_Affecting_Severity: warning
 #   Degrade_Affecting_Severity: none
+#   Context: starlingx
 #
 
 type_FieldName = 'Type'
@@ -71,6 +72,9 @@ managementAffectingSeverity_FieldValues = constants.ALARM_SEVERITY.append('none'
 degradeAffecting_FieldName = 'Degrade_Affecting_Severity'
 degradeAffecting_FieldValues = constants.ALARM_SEVERITY.append('none')
 
+context_FieldName = 'Context'
+context_FieldValues = constants.ALARM_CONTEXT
+
 alarmFields = {
     type_FieldName: type_FieldValues,
     description_FieldName: description_FieldValues,
@@ -84,7 +88,8 @@ alarmFields = {
     serviceAffecting_FieldName: serviceAffecting_FieldValues,
     suppression_FieldName: suppression_FieldValues,
     managementAffectingSeverity_FieldName: managementAffectingSeverity_FieldValues,
-    degradeAffecting_FieldName: degradeAffecting_FieldValues
+    degradeAffecting_FieldName: degradeAffecting_FieldValues,
+    context_FieldName: context_FieldValues
 }
 
 logFields = {
@@ -94,7 +99,8 @@ logFields = {
     severity_FieldName: severity_FieldValues,
     alarmType_FieldName: alarmType_FieldValues,
     probableCause_FieldName: probableCause_FieldValues,
-    serviceAffecting_FieldName: serviceAffecting_FieldValues
+    serviceAffecting_FieldName: serviceAffecting_FieldValues,
+    context_FieldName: context_FieldValues
 }
 
 
