@@ -12,7 +12,6 @@
         - openstack-tox-linters
         - openstack-tox-pep8
         - fault-tox-pylint
-        - stx-fault-build
         - fault-rest-api-py27
         - fault-rest-api-py39
     gate:
@@ -25,19 +24,6 @@
     post:
       jobs:
         - stx-fault-upload-git-mirror
-
-
-# Perform just a build
-- job:
-    name: stx-fault-build
-    parent: tox
-    description: Run build for fault
-    irrelevant-files:
-      - api-ref/*
-      - docs/*
-      - releasenotes/*
-    vars:
-      tox_envlist: build
 
 - job:
     name: flock-devstack-fault
