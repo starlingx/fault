@@ -1,1 +1,1 @@
-tools/fm.bash_completion usr/share/bash-completion/completions/fm
+usr/share/bash-completion/completions/fm.bash

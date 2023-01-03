@@ -11,4 +11,5 @@ export ROOT=$(CURDIR)/debian/tmp
 override_dh_install:
 	python3 setup.py install -f --install-layout=deb --root=$(ROOT)
 	python3 setup.py bdist_wheel --universal -d ${CURDIR}/debian/python-fmclient-wheel/usr/share/python-wheels
+	install -p -D -m 644 tools/fm.bash_completion ${ROOT}/usr/share/bash-completion/completions/fm.bash
 	dh_install
