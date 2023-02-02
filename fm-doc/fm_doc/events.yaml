@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2022 Wind River Systems, Inc.
+# Copyright (c) 2013-2023 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -3125,11 +3125,12 @@
 800.001:
     Type: Alarm
     Description: |-
-        Storage Alarm Condition:
-        1 mons down, quorum 1,2 controller-1,storage-0
+        Possible data loss. Any mds, mon or osd is unavailable in storage replication group.
     Entity_Instance_ID: cluster=<dist-fs-uuid>
     Severity: [critical, major]
-    Proposed_Repair_Action: "If problem persists, contact next level of support."
+    Proposed_Repair_Action: "Manually restart Ceph processes and check the state of the Ceph cluster with
+                             'ceph -s'
+                             If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -3149,7 +3150,10 @@
     Entity_Instance_ID: cluster=<dist-fs-uuid>.peergroup=<group-x>
     Severity: [critical]
     Proposed_Repair_Action: "Ensure storage hosts from replication group are unlocked and available.
+                             Check replication group state with 'system host-list'
                              Check if OSDs of each storage host are up and running.
+                             Manually restart Ceph processes and check the state of the Ceph OSDs with
+                             'ceph osd stat' OR 'ceph osd tree'
                              If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
@@ -3169,7 +3173,10 @@
     Entity_Instance_ID: cluster=<dist-fs-uuid>.peergroup=<group-x>
     Severity: [major]
     Proposed_Repair_Action: "Ensure storage hosts from replication group are unlocked and available.
+                             Check replication group state with 'system host-list'
                              Check if OSDs of each storage host are up and running.
+                             Manually restart Ceph processes and check the state of the Ceph OSDs with
+                             'ceph osd stat' AND/OR 'ceph osd tree'
                              If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
@@ -3298,6 +3305,9 @@
     Entity_Instance_ID: <hostname>.lvmthinpool=<VG name>/<Pool name>
     Severity: critical
     Proposed_Repair_Action: "Increase Storage Space Allotment for Cinder on the 'lvm' backend.
+                             Try the following commands:
+                             'vgextend <VG name> <PV name>' or 'vgextend -L +<size extension> <PV name>
+                             Check status with 'vgdisplay'
                              Consult the System Administration Manual for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action:
@@ -3318,6 +3328,10 @@
     Entity_Instance_ID: storage_backend=<storage-backend-name>
     Severity: critical
     Proposed_Repair_Action: "Update backend setting to reapply configuration.
+                             Use the following commands to try again:
+                             'system storage-backend-delete <storage-backend-name>'
+                             AND
+                             'system storage-backend-add <storage-backend-name>'
                              Consult the System Administration Manual for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action:
