@@ -5,7 +5,6 @@
       - publish-stx-docs
       - stx-api-ref-jobs
       - stx-release-notes-jobs
-      - stx-lint-specfile-jobs
       - stx-bandit-jobs
     check:
       jobs:
@@ -42,7 +41,7 @@
     parent: tox
     description: |
       Run pylint for python files in fault
-    nodeset: ubuntu-bionic
+    nodeset: debian-bullseye
     required-projects:
       - starlingx/config
     vars:

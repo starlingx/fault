@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 #
-# Copyright (c) 2014 Wind River Systems, Inc.
+# Copyright (c) 2014-2022 Wind River Systems, Inc.
 #
 # Author:
 #
