@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2022 Wind River Systems, Inc.
+# Copyright (c) 2013-2023 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -110,9 +110,6 @@ FM_ALARM_ID_STORAGE_BACKEND_FAILED = ALARM_GROUP_STORAGE + ".104"
 
 # Kubernetes Resource Alarms
 FM_ALARM_ID_K8S_RESOURCE_PV = ALARM_GROUP_K8S + ".001"
-
-# Host-Services alarm id
-FM_ALARM_ID_HOST_SERVICES_FAILED = ALARM_GROUP_HOST_SERVICES + ".001"
 
 # Host-Services log id
 FM_LOG_ID_HOST_SERVICES_FAILED = ALARM_GROUP_HOST_SERVICES + ".101"
