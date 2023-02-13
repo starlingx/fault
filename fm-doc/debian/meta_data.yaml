@@ -5,3 +5,5 @@ src_path: fm_doc
 revision:
   dist: $STX_DIST
   PKG_GITREVCOUNT: true
+  SRC_GITREVCOUNT:
+    SRC_BASE_SRCREV: 707340e52146fe96a056e8d50067f0c6f896e713
