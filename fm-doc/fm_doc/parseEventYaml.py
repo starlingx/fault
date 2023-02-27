@@ -186,7 +186,7 @@ if not os.path.isfile(sys.argv[1]):
 
 with open(sys.argv[1], 'r') as stream:
     try:
-        events = yaml.load(stream)
+        events = yaml.safe_load(stream)
         exitValue = 0
 
         for key in events:

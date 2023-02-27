@@ -94,7 +94,7 @@ exitValue = 0
 
 with open(sys.argv[1], 'r') as stream:
     try:
-        events = yaml.load(stream)
+        events = yaml.safe_load(stream)
         events_alarm_list = get_events_alarm_list(events)
 
     except yaml.YAMLError as exc:
