@@ -892,6 +892,22 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+210.002:
+    Type: Alarm
+    Description: System Restore in progress.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Run 'system restore-complete' to complete restore if running restore manually.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 
 #---------------------------------------------------------------------------
 #   SYSTEM CONFIGURATION
