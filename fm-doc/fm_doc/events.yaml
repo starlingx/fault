@@ -59,7 +59,10 @@
 #   Degrade_Affecting_Severity: < none | critical | major | minor >
 #       // lowest alarm level of this type sets a host to 'degraded'
 #   Context: < none | starlingx | openstack >
-#       // identifies where the alarm/log is used
+#       // Identifies where the alarm/log is used. If it should be ignored by
+#       // the documentation generating scripts, the value has to be 'none'.
+#       // If any of the other values is used, the alarm/log will be included
+#       // in the documentation and classified by the chosen value.
 #
 #
 #   Other Notes:
@@ -130,7 +133,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 100.103:
     Type: Alarm
@@ -206,7 +209,7 @@
     Suppression: False
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
-    Context: starlingx
+    Context: openstack
 
 #--------
 # 100.105: Retired (with R2 release): previously monitored /etc/nova/instances
@@ -338,7 +341,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: major
-    Context: starlingx
+    Context: openstack
 
 100.113:
     Type: Alarm
@@ -358,7 +361,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: major
-    Context: starlingx
+    Context: openstack
 
 100.114:
     Type: Alarm
@@ -396,7 +399,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
-    Context:
+    Context: none
 
 100.116:
     Type: Alarm
@@ -414,7 +417,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
-    Context:
+    Context: none
 
 100.117:
     Type: Alarm
@@ -432,7 +435,7 @@
     Suppression: True
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: critical
-    Context:
+    Context: none
 
 100.118:
     Type: Alarm
@@ -991,7 +994,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 270.102:
     Type: Log
@@ -1001,7 +1004,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 270.103:
     Type: Log
@@ -1011,7 +1014,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 
 275.001:
@@ -1022,7 +1025,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 
 #---------------------------------------------------------------------------
@@ -1075,7 +1078,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 #---------------------------------------------------------------------------
 #   NETWORK
@@ -1115,7 +1118,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
-    Context: starlingx
+    Context: openstack
 
 
 300.003:
@@ -1247,7 +1250,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
-    Context:
+    Context: none
 
 
 300.015:
@@ -1481,7 +1484,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 500.101:
     Type: Alarm
@@ -1563,7 +1566,7 @@
     Alarm_Type: integrity-violation
     Probable_Cause: information-modification-detected
     Service_Affecting: False
-    Context:
+    Context: none
 
 
 #---------------------------------------------------------------------------
@@ -1810,7 +1813,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 700.016:
     Type: Alarm
@@ -2954,7 +2957,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 700.212:
     Type: Log
@@ -2964,7 +2967,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 700.213:
     Type: Log
@@ -2974,7 +2977,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 700.214:
     Type: Log
@@ -3365,7 +3368,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 #---------------------------------------------------------------------------
 #   SOFTWARE
@@ -3465,7 +3468,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: starlingx
 
 900.007:
     Type: Alarm
@@ -3481,7 +3484,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 900.008:
     Type: Alarm
@@ -4003,7 +4006,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 900.402:
     Type: Alarm
@@ -4019,7 +4022,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 900.403:
     Type: Alarm
@@ -4035,7 +4038,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context:
+    Context: none
 
 900.411:
     Type: Log
@@ -4045,7 +4048,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.412:
     Type: Log
@@ -4055,7 +4058,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.413:
     Type: Log
@@ -4065,7 +4068,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.414:
     Type: Log
@@ -4075,7 +4078,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.415:
     Type: Log
@@ -4085,7 +4088,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.416:
     Type: Log
@@ -4095,7 +4098,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.417:
     Type: Log
@@ -4105,7 +4108,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.418:
     Type: Log
@@ -4115,7 +4118,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.419:
     Type: Log
@@ -4125,7 +4128,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.420:
     Type: Log
@@ -4135,7 +4138,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.421:
     Type: Log
@@ -4145,7 +4148,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context:
+    Context: none
 
 900.501:
     Type: Alarm
