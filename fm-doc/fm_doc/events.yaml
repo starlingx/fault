@@ -983,6 +983,22 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+260.002:
+    Type: Alarm
+    Description: "Deployment Manager resource not synchronized: <name>"
+    Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
+    Severity: minor
+    Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: configuration-out-of-date
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 #---------------------------------------------------------------------------
 #   VM Compute Services
 #---------------------------------------------------------------------------
