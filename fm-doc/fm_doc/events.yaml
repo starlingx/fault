@@ -965,11 +965,11 @@
     Context: starlingx
 
 #---------------------------------------------------------------------------
-#   Deployment Manager Monitor
+#   DEPLOYMENT
 #---------------------------------------------------------------------------
 260.001:
     Type: Alarm
-    Description: "Deployment Manager resource not reconciled: <name>"
+    Description: "Deployment resource not reconciled: <name>"
     Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
     Severity: major
     Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
@@ -985,7 +985,7 @@
 
 260.002:
     Type: Alarm
-    Description: "Deployment Manager resource not synchronized: <name>"
+    Description: "Deployment resource not synchronized: <name>"
     Entity_Instance_ID: resource=<crd-resource>,name=<resource-name>
     Severity: minor
     Proposed_Repair_Action: Monitor and if condition persists, validate deployment configuration.
@@ -995,7 +995,7 @@
     Probable_Cause: configuration-out-of-date
     Service_Affecting: False
     Suppression: True
-    Management_Affecting_Severity: warning
+    Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
     Context: starlingx
 
