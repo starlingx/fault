@@ -3484,7 +3484,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context: none
+    Context: starlingx
 
 900.008:
     Type: Alarm
