@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016-2022 Wind River Systems, Inc.
+# Copyright (c) 2016-2023 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -103,12 +103,20 @@ logFields = {
     context_FieldName: context_FieldValues
 }
 
+nonEmptyFields = {
+    context_FieldName
+}
+
 
 def checkField(fieldKey, fieldValues, key, event):
     if fieldKey not in event:
         print("\n    ERROR: %s missing \'%s\' field." % (key, fieldKey))
         return False
     # print("START: %s :END" % event[fieldKey])
+
+    if fieldKey in nonEmptyFields and not event[fieldKey]:
+        print("\n    ERROR: \'%s\' can not be empty." % (fieldKey))
+        return False
 
     if type(event[fieldKey]) is str:
         if not fieldValues:
