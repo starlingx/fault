@@ -3534,6 +3534,38 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+900.010:
+    Type: Alarm
+    Description: System Config update in progress
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Wait for system config update to complete
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.011:
+    Type: Alarm
+    Description: System Config update aborted, configurations may not be fully updated
+    Entity_Instance_ID: host=<hostname>
+    Severity: minor
+    Proposed_Repair_Action: Lock the host, wait for the host resource in the deployment namespace to become in-sync, then unlock the host
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply in progress
@@ -4318,6 +4350,164 @@
     Type: Log
     Description: Kubernetes rootca update auto-apply aborted
     Entity_Instance_ID: orchestration=kube-rootca-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.601:
+    Type: Alarm
+    Description: System config update auto-apply in progress
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: major
+    Proposed_Repair_Action: Wait for system config update auto-apply to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.602:
+    Type: Alarm
+    Description: System config update auto-apply aborting
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: major
+    Proposed_Repair_Action: Wait for system config update auto-apply abort to complete; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.603:
+    Type: Alarm
+    Description: System config update auto-apply failed. Command "sw-manager kube-upgrade-strategy apply" failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Proposed_Repair_Action: Attempt to apply system config update manually; if problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: True
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.611:
+    Type: Log
+    Description: System config update auto-apply start
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.612:
+    Type: Log
+    Description: System config update auto-apply in progress
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.613:
+    Type: Log
+    Description: System config update auto-apply rejected
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.614:
+    Type: Log
+    Description: System config update auto-apply cancelled
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.615:
+    Type: Log
+    Description: System config update auto-apply failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.616:
+    Type: Log
+    Description: System config update auto-apply completed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.617:
+    Type: Log
+    Description: System config update auto-apply abort
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.618:
+    Type: Log
+    Description: System config update auto-apply aborting
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.619:
+    Type: Log
+    Description: System config update auto-apply abort rejected
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.620:
+    Type: Log
+    Description: System config update auto-apply abort failed
+    Entity_Instance_ID: orchestration=system-config-update
+    Severity: critical
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Context: starlingx
+
+900.621:
+    Type: Log
+    Description: System config update auto-apply aborted
+    Entity_Instance_ID: orchestration=system-config-update
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
