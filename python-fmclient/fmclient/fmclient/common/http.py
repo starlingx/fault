@@ -104,7 +104,7 @@ class _BaseHTTPClient(object):
               resp.request.path_url != '/versions'):
             # NOTE(flaper87): Eventually, we'll remove the check on `versions`
             # which is a bug (1491350) on the server.
-            raise exc.from_response(resp)
+            raise exc.from_response(resp)  # pylint: disable=no-value-for-parameter
 
         content_type = resp.headers.get('Content-Type')
 

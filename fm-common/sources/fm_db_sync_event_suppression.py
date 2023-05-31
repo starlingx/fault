@@ -107,7 +107,7 @@ if not os.path.isfile(EVENT_TYPES_FILE):
 
 try:
     with open(EVENT_TYPES_FILE, 'r') as stream:
-        event_types = yaml.load(stream)
+        event_types = yaml.safe_load(stream)
 except Exception as exp:
     LOG.error(exp)
     raise RuntimeError(exp)
