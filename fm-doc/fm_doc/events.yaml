@@ -199,7 +199,7 @@
     Entity_Instance_ID: fs_name=<image-conversion>
     Severity: critical
     Proposed_Repair_Action: "Add image-conversion filesystem on both controllers.
-                             Consult the System Administration Manual for more details.
+                             Consult the documentation for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action: degrade
     Inhibit_Alarms:
@@ -3315,29 +3315,6 @@
     Degrade_Affecting_Severity: none
     Context: openstack
 
-800.103:
-    Type: Alarm
-    Description: |-
-        Storage Alarm Condition:
-        [ Metadata usage for LVM thin pool <VG name>/<Pool name> exceeded threshold and automatic extension failed,
-          Metadata usage for LVM thin pool <VG name>/<Pool name> exceeded threshold ]; threshold x%, actual y%.
-    Entity_Instance_ID: <hostname>.lvmthinpool=<VG name>/<Pool name>
-    Severity: critical
-    Proposed_Repair_Action: "Increase Storage Space Allotment for Cinder on the 'lvm' backend.
-                             Try the following commands:
-                             'vgextend <VG name> <PV name>' or 'vgextend -L +<size extension> <PV name>
-                             Check status with 'vgdisplay'
-                             Consult the System Administration Manual for more details.
-                             If problem persists, contact next level of support."
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: operational-violation
-    Probable_Cause: threshold-crossed
-    Service_Affecting: False
-    Suppression: False
-    Management_Affecting_Severity: major
-    Degrade_Affecting_Severity: none
-    Context: starlingx
 
 800.104:
     Type: Alarm
@@ -3351,7 +3328,7 @@
                              'system storage-backend-delete <storage-backend-name>'
                              AND
                              'system storage-backend-add <storage-backend-name>'
-                             Consult the System Administration Manual for more details.
+                             Consult the documentation for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
