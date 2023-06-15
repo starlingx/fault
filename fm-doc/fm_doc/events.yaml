@@ -199,7 +199,7 @@
     Entity_Instance_ID: fs_name=<image-conversion>
     Severity: critical
     Proposed_Repair_Action: "Add image-conversion filesystem on both controllers.
-                             Consult the documentation for more details.
+                             See the |prod-long| documentation at |docs-url| for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action: degrade
     Inhibit_Alarms:
@@ -3328,7 +3328,7 @@
                              'system storage-backend-delete <storage-backend-name>'
                              AND
                              'system storage-backend-add <storage-backend-name>'
-                             Consult the documentation for more details.
+                             See the |prod-long| documentation at |docs-url| for more details.
                              If problem persists, contact next level of support."
     Maintenance_Action:
     Inhibit_Alarms:
