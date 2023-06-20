@@ -932,21 +932,6 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
-250.002:
-    Type: Alarm
-    Description: <hostname> Ceph cache tiering configuration is out-of-date.
-    Entity_Instance_ID: cluster=<dist-fs-uuid>
-    Severity: major
-    Proposed_Repair_Action: Apply Ceph service parameter settings.
-    Maintenance_Action:
-    Inhibit_Alarms:
-    Alarm_Type: operational-violation
-    Probable_Cause: unspecified-reason
-    Service_Affecting: False
-    Suppression: False
-    Management_Affecting_Severity: warning
-    Degrade_Affecting_Severity: none
-    Context: starlingx
 
 250.003:
     Type: Alarm
