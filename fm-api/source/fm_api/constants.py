@@ -68,6 +68,8 @@ ALARM_GROUP_SW_MGMT = "900"
 # General Alarm id
 FM_ALARM_ID_FS_USAGE = ALARM_GROUP_GENERAL + ".104"
 FM_ALARM_ID_IMAGE_CONVERSION = ALARM_GROUP_GENERAL + ".105"
+FM_ALARM_ID_CONTROLLERS_KERNEL_MISMATCH = ALARM_GROUP_GENERAL + ".120"
+FM_ALARM_ID_PROVISIONED_KERNEL_MISMATCH = ALARM_GROUP_GENERAL + ".121"
 
 # Maintenance Log id
 FM_LOG_ID_HOST_DISCOVERED = ALARM_GROUP_MAINTENANCE + ".020"
@@ -618,3 +620,13 @@ FM_SERVICE_AFFECTING_INDEX = 11
 FM_SUPPRESSION_INDEX = 12
 FM_INHIBIT_ALARMS_INDEX = 13
 MAX_ALARM_ATTRIBUTES = 14
+
+# Proposed Repair actions
+FM_PRA_CONTROLLERS_KERNEL_MISMATCH = ("Modify controllers using "
+                                      "'system host-kernel-modify' "
+                                      "so that both are running the "
+                                      "desired 'standard' or "
+                                      "'lowlatency' kernel.")
+FM_PRA_PROVISIONED_KERNEL_MISMATCH = ("Retry 'system host-kernel-modify' "
+                                      "and if condition persists, "
+                                      "contact next level of support.")

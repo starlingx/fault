@@ -493,6 +493,38 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+100.120:
+    Type: Alarm
+    Description: Controllers running mismatched kernels.
+    Entity_Instance_ID: host=<hostname>.kernel=<kernel>
+    Severity: minor
+    Proposed_Repair_Action: "Modify controllers using 'system host-kernel-modify' so that both are running the desired 'standard' or 'lowlatency' kernel."
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+100.121:
+    Type: Alarm
+    Description: Host not running the provisioned kernel.
+    Entity_Instance_ID: host=<hostname>.kernel=<kernel>
+    Severity: major
+    Proposed_Repair_Action: "Retry 'system host-kernel-modify' and if condition persists, contact next level of support."
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 100.150:
     Type: Alarm
     Description:
