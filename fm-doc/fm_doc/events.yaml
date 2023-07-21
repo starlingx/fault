@@ -1310,7 +1310,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: major
-    Context: openstack
+    Context: starlingx
 
 
 400.002:
@@ -1334,7 +1334,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context: openstack
+    Context: starlingx
 
 
 400.003:
