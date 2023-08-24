@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2022 Wind River Systems, Inc.
+// Copyright (c) 2017-2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -45,7 +45,9 @@ const std::string EVENT_SEVERITY = "wrsEventSeverity";
 const std::string EVENT_REASON_TEXT = "wrsEventReasonText";
 const std::string EVENT_EVENT_TYPE = "wrsEventEventType";
 const std::string EVENT_CAUSE = "wrsEventProbableCause";
+const std::string EVENT_REPAIR_ACTION = "wrsEventProposedRepairAction";
 const std::string EVENT_SERVICE_AFFECTING = "wrsEventServiceAffecting";
+const std::string EVENT_SUPPRESSION = "wrsEventSuppressionAllowed";
 
 const std::string SNMPv2_MIB = "SNMPv2-MIB";
 const std::string WARM_START = "warmStart";
