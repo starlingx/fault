@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2022 Wind River Systems, Inc.
+// Copyright (c) 2014-2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -232,8 +232,12 @@ static std::string format_trap_json(int type, SFmAlarmDataT &data){
                 fm_db_util_int_to_string(data.alarm_type));
         add_value_json_trap(result, EVENT_CAUSE,
                 fm_db_util_int_to_string(data.probable_cause));
+        add_value_json_trap(result, EVENT_REPAIR_ACTION,
+                "N/A");
         add_value_json_trap(result, EVENT_SERVICE_AFFECTING,
                 fm_db_util_int_to_string(data.service_affecting));
+        add_value_json_trap(result, EVENT_SUPPRESSION,
+                fm_db_util_int_to_string(0));
     } else if (operation_type == WARM_START){
         // nothing to add to cmd
     } else {
