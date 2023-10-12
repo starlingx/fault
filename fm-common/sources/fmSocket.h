@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014 Wind River Systems, Inc.
+// Copyright (c) 2014,2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -67,6 +67,7 @@ public:
 
 
 	int get_fd() { return m_fd; }
+	bool fd_valid();
 	bool recvfrom(void *data, long &len, CFmSockAddr &addr );
 
 	static int select(int *rfd, int rlen, int *wfds, int wlen,int timeout,int timeoutusec, bool &timedout);

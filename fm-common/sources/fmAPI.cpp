@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017 Wind River Systems, Inc.
+// Copyright (c) 2017,2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -105,6 +105,18 @@ static bool dequeue(fm_buff_t &req) {
 
 static bool fm_lib_reconnect() {
   char addr[INET6_ADDRSTRLEN];
+
+  if (m_connected) {
+    // Check fd is valid
+    // When fm manager is restarted, it is possible to
+    // have broken pipe. This checks fd is valid or not.
+    // If not, set m_connected false, so that it will
+    // try to connect in the following while loop.
+    if (!m_client.fd_valid()) {
+      FM_WARNING_LOG("Invalid file descriptor. Attempting to reconnect...");
+      m_connected = false;
+    }
+  }
 
   while (!m_connected) {
     struct addrinfo hints;

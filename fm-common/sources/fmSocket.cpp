@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017 Wind River Systems, Inc.
+// Copyright (c) 2017,2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <sys/poll.h>
 #include <sys/select.h>
 #include <errno.h>
 #include <unistd.h>
@@ -257,6 +258,21 @@ int CFmSocket::select(int *rfd, int rlen, int *wfds, int wlen,int timeout, int t
 
 int CFmSocket::select_read(int fd,int timeout, bool &timedout){
 	return select(&fd,1,NULL,0,timeout,0,timedout);
+}
+
+bool CFmSocket::fd_valid(){
+	struct pollfd pfd = {.fd = m_fd, .events = POLLRDHUP};
+	if ((poll(&pfd, 1, 0)) < 0) {
+		return false;
+	} else {
+		if (pfd.revents & POLLRDHUP) {
+			// broken pipe
+			FM_ERROR_LOG("A broken pipe error occurred\n");
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
 
 bool CFmSocket::recvfrom(void *data, long &len, CFmSockAddr &addr) {
