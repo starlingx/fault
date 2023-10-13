@@ -1113,6 +1113,42 @@
     Degrade_Affecting_Severity: none
     Context: none
 
+280.004:
+    Type: Alarm
+    Description: |-
+        Critical: Peer <peer_uuid> is in disconnected state. The following subcloud peer groups are impacted: <peer-groups>.
+        Major:    Peer <peer_uuid> connections in disconnected state.
+    Entity_Instance_ID: |-
+        peer=<peer_uuid>
+    Severity: [critical, major]
+    Proposed_Repair_Action: "Check the connectivity between the current system and the reported peer site. If the peer system is down, migrate the affected peer group(s) to the current system for continued subcloud management."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: communication
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+280.005:
+    Type: Alarm
+    Description: |-
+        Subcloud peer group <peer_group_name> is managed by remote system <peer_uuid> with a lower priority.
+    Entity_Instance_ID: peer_group=<peer_group_name>,peer=<peer_uuid>
+    Severity: [major]
+    Proposed_Repair_Action: "Check the reported peer group state. Migrate it back to the current system if the state is 'rehomed' and the current system is stable. Otherwise, wait until these conditions are met."
+    Maintenance_Action:
+    Inhibit_Alarms: False
+    Alarm_Type: other
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: True
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 #---------------------------------------------------------------------------
 #   NETWORK
 #---------------------------------------------------------------------------
