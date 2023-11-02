@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2018 Wind River Systems, Inc.
+// Copyright (c) 2014-2018, 2023 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -64,6 +64,9 @@ static char * formattedEvent(CFmDbEventLog::data_type event_map, char * output, 
 
     outputLen = strlen(output);
     snprintf(output + outputLen, outputSize - outputLen,    "\"%s\" : \"%s\", ", "state",             escape_json(event_map["state"].c_str(), buffer, bufLen));
+
+    outputLen = strlen(output);
+    snprintf(output + outputLen, outputSize - outputLen,    "\"%s\" : \"%s\", ", "proposed_repair_action", escape_json(event_map["proposed_repair_action"].c_str(), buffer, bufLen));
 
     outputLen = strlen(output);
     snprintf(output + outputLen, outputSize - outputLen,    "\"%s\" : \"%s\" }", "timestamp",         escape_json(event_map["timestamp"].c_str(), buffer, bufLen));
