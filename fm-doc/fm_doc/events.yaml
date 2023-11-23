@@ -787,6 +787,21 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+200.016:
+    Type: Alarm
+    Description: Issue in creation or unsealing of LUKS volume
+    Entity_Instance_ID: host=<hostname>
+    Severity: critical
+    Proposed_Repair_Action: If auto-recovery is consistently unable to recover host to the unlocked-enabled state contact next level of support or lock and replace failing host.
+    Maintenance_Action: None
+    Inhibit_Alarms: False
+    Alarm_Type: operational-violation
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
 
 200.020:
     Type: Log
