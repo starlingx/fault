@@ -544,6 +544,7 @@
     Degrade_Affecting_Severity: critical
     Context: starlingx
 
+
 #---------------------------------------------------------------------------
 #   MAINTENANCE
 #---------------------------------------------------------------------------
@@ -4557,5 +4558,25 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
+    Context: starlingx
+
+900.701:
+    Type: Alarm
+    Description: Node <hostname> tainted.
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: |-
+            "Execute 'kubectl taint nodes <hostname> services=disabled:NoExecute-'
+            If it fails, Execute 'system host-lock <hostname>' followed by
+            'system host-unlock <hostname>'.
+            If issue still persists, contact next level of support."
+    Maintenance_Action: none
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unknown
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: major
     Context: starlingx
 ...
