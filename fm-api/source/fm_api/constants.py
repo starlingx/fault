@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2023 Wind River Systems, Inc.
+# Copyright (c) 2013-2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -114,6 +114,7 @@ FM_ALARM_ID_STORAGE_BACKEND_FAILED = ALARM_GROUP_STORAGE + ".104"
 
 # Kubernetes Resource Alarms
 FM_ALARM_ID_K8S_RESOURCE_PV = ALARM_GROUP_K8S + ".001"
+FM_ALARM_ID_K8S_CLUSTER_DOWN = ALARM_GROUP_K8S + ".002"
 
 # Deployment Alarm id
 

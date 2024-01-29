@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2023 Wind River Systems, Inc.
+# Copyright (c) 2013-2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -3428,6 +3428,23 @@
     Service_Affecting: False
     Suppression: False
     Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: none
+
+850.002:
+    Type: Alarm
+    Description: Kubernetes cluster unreachable
+    Entity_Instance_ID: kubernetes=k8s-health-check-failed
+    Severity: major
+    Proposed_Repair_Action: "If problem persists
+                             contact next level of support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: communication
+    Probable_Cause: out-of-service
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
     Context: none
 
