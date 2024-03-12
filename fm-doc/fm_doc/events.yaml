@@ -997,6 +997,22 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+250.004:
+    Type: Alarm
+    Description: "IPsec certificates renewal failed on host[, reason = <reason_text>]"
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Check cron.log and ipsec-auth.log, fix the issue and rerun the renewal cron job.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: operational-violation
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 #---------------------------------------------------------------------------
 #   DEPLOYMENT
 #---------------------------------------------------------------------------
