@@ -3961,6 +3961,22 @@
     Service_Affecting: False
     Context: starlingx
 
+900.231:
+    Type: Alarm
+    Description: Software deploy state out of sync
+    Entity_Instance_ID: orchestration=sw-upgrade
+    Severity: major
+    Proposed_Repair_Action: Wait for the deployment on the active controller to complete. If problem persists contact next level of support
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 900.301:
     Type: Alarm
     Description: Firmware Update auto-apply in progress
