@@ -566,6 +566,22 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+200.003:
+    Type: Alarm
+    Description: <hostname> pxeboot network communication failure.
+    Entity_Instance_ID: host=<hostname>
+    Severity: minor
+    Proposed_Repair_Action: Administratively Lock and Unlock host to recover. If problem persists, contact next level of support.
+    Maintenance_Action: none
+    Inhibit_Alarms: False
+    Alarm_Type: communication
+    Probable_Cause: unknown
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 200.004:
     Type: Alarm
     Description: |-
