@@ -3661,6 +3661,38 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+900.020:
+    Type: Alarm
+    Description: Deploy host completed with success
+    Entity_Instance_ID: host=<hostname>
+    Severity: warning
+    Proposed_Repair_Action: Unlock host
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.021:
+    Type: Alarm
+    Description: Deploy host failed
+    Entity_Instance_ID: host=<hostname>
+    Severity: major
+    Proposed_Repair_Action: Check the logs for errors, fix the issues manually and retry
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply in progress
