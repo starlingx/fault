@@ -3416,7 +3416,6 @@
     Degrade_Affecting_Severity: none
     Context: openstack
 
-
 800.104:
     Type: Alarm
     Description: |-
@@ -3435,6 +3434,26 @@
     Inhibit_Alarms:
     Alarm_Type: equipment
     Probable_Cause: configuration-or-customization-error
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+800.105:
+    Type: Alarm
+    Description: |-
+        Filesystem Alarm Condition:
+        <controllerfs_name> controller filesystem was not created/deleted successfully.
+    Entity_Instance_ID: host=<hostname>.controllerfs=<controllerfs_name>
+    Severity: major
+    Proposed_Repair_Action: "Use the create or delete command again:
+                             'system controllerfs-delete' or 'system controllerfs-add'.
+                             If problem persists, contact next level of support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: unspecified-reason
     Service_Affecting: True
     Suppression: False
     Management_Affecting_Severity: major
