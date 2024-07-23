@@ -3712,6 +3712,22 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+900.022:
+    Type: Alarm
+    Description: Clean up deployment data
+    Entity_Instance_ID: host=<hostname>
+    Severity: warning
+    Proposed_Repair_Action: software deploy delete
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: equipment
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: none
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply in progress
