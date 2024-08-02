@@ -81,6 +81,17 @@ def get_all(instance_id):
         print("No alarm returned")
 
 
+def get_all_by_id_n_eid(alarm_id, instance_id):
+    ll = ser.get_faults_by_id_n_eid(alarm_id, instance_id)
+    if ll is not None:
+        print("Total alarm returned: %d\n"
+              % len(ll))
+        for i in ll:
+            print_alarm(i)
+    else:
+        print("No alarm returned")
+
+
 def get_list(alarm_id):
     ll = ser.get_faults_by_id(alarm_id)
     if ll is not None:
@@ -105,3 +116,5 @@ if __name__ == "__main__":
         sys.exit(del_all(sys.argv[2]))
     elif sys.argv[1] == "get_list":
         sys.exit(get_list(sys.argv[2]))
+    elif sys.argv[1] == "get_list_id_eid":
+        sys.exit(get_all_by_id_n_eid(sys.argv[2], sys.argv[3]))

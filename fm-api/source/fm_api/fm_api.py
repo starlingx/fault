@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -185,6 +185,19 @@ class FaultAPIs(FaultAPIsBase):
             except (RuntimeError, SystemError, TypeError):
                 return None
 
+    def set_faults(self, data):
+        buff_list = []
+        with fm_api_lock:
+            for alarm_data in data:
+                self._check_required_attributes(alarm_data)
+                self._validate_attributes(alarm_data)
+                buff = self._alarm_to_str(alarm_data)
+                buff_list.append(buff)
+            try:
+                return fm_core.set_fault_list(buff_list)
+            except (RuntimeError, SystemError, TypeError):
+                return None
+
     def clear_fault(self, alarm_id, entity_instance_id):
         with fm_api_lock:
             sep = constants.FM_CLIENT_STR_SEP
@@ -235,6 +248,22 @@ class FaultAPIs(FaultAPIsBase):
         with fm_api_lock:
             try:
                 resp = fm_core.get_by_eid(entity_instance_id)
+                if resp:
+                    data = []
+                    for i in resp:
+                        data.append(self._str_to_alarm(i))
+                    return data
+            except (RuntimeError, SystemError, TypeError):
+                pass
+            return None
+
+    def get_faults_by_id_n_eid(self, alarm_id, entity_instance_id):
+        with fm_api_lock:
+            sep = constants.FM_CLIENT_STR_SEP
+            buff = (sep + self._check_val(alarm_id) + sep +
+                    self._check_val(entity_instance_id) + sep)
+            try:
+                resp = fm_core.get_by_id_n_eid(buff)
                 if resp:
                     data = []
                     for i in resp:

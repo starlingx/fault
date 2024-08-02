@@ -31,6 +31,8 @@ protected:
 			std::vector<char> &rdata);
 	virtual void handle_get_faults_by_id(int fd, SFmMsgHdrT *hdr,
 			std::vector<char> &rdata);
+	virtual void handle_get_faults_by_id_n_eid(int fd, SFmMsgHdrT *hdr,
+			std::vector<char> &rdata);
 public:
 	void send_response(int fd, SFmMsgHdrT *hdr, void *data, size_t len);
 };
