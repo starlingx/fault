@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2018 Wind River Systems, Inc.
+// Copyright (c) 2017-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -288,6 +288,97 @@ void get_db_alarms_by_id(CFmDBSession &sess, sFmGetReq &req, void *context){
 	}
 }
 
+/**
+ * Retrieves faults from the database based on the specified alarm ID and entity instance ID.
+ *
+ * This function queries the database for alarms that match the provided alarm ID
+ * and entity instance ID. The results are then sent back to the client through
+ * the provided socket server processor.
+ *
+ * **Parameters:**
+ * - `sess`: A reference to a `CFmDBSession` object representing the database session.
+ * - `req`: A reference to an `sFmGetReq` structure containing the request data.
+ * - `context`: A pointer to a context object.
+ *
+ * **Process Flow:**
+ *    - The function initializes a buffer with the request data and extracts the header and data
+ * sections.
+ *    - It casts the data section to an `AlarmFilter` pointer and the context to an
+ * `FmSocketServerProcessor` pointer.
+ *    - Database Query
+ *    - If alarms are found, it fills a vector with the alarm data.
+ *    - Sets the number of alarms found in the buffer and copies the alarm data into the buffer.
+ *    - It sends the response back to the client using the `send_response` method of the
+ * `FmSocketServerProcessor`.
+ *
+ *    - If no alarms are found, it logs a message and sets the response code to
+ * `FM_ERR_ENTITY_NOT_FOUND`.
+ *
+ * **Returns:**
+ * - The function does not return a value but sends a response back to the client
+ * through the provided socket server processor.
+ */
+void get_db_alarms_by_id_n_eid(CFmDBSession &sess, sFmGetReq &req, void *context){
+
+	fm_buff_t buff = req.data;
+	SFmMsgHdrT *hdr = (SFmMsgHdrT *)&buff[0];
+	void * data = &buff[sizeof(SFmMsgHdrT)];
+	AlarmFilter *filter = (AlarmFilter *)data;
+	FmSocketServerProcessor *srv = (FmSocketServerProcessor *)context;
+	CFmDbAlarmOperation op;
+	fm_db_result_t res;
+	std::vector<SFmAlarmDataT> alarmv;
+
+	FM_DEBUG_LOG("handle get_db_alarms_by_id_n_eid:%s\n", filter->alarm_id);
+
+	hdr->msg_rc = FM_ERR_OK;
+	res.clear();
+	if (op.get_alarms_by_id_n_eid(sess, *filter, res) != true){
+		hdr->msg_rc = FM_ERR_DB_OPERATION_FAILURE;
+	}else if (res.size() > 0){
+		int ix = 0;
+		int resp_len = res.size();
+		SFmAlarmDataT alarm;
+		alarmv.clear();
+		// Fill the tuple data vector for the response.
+		for ( ; ix < resp_len ; ++ix ) {
+			CFmDbAlarm::convert_to(res[ix],&alarm);
+			alarmv.push_back(alarm);
+		}
+	} else {
+		FM_DEBUG_LOG("No alarms found for alarm id (%s), "
+					 "entity_instance_id (%s)\n",
+					 filter->alarm_id, filter->entity_instance_id);
+		hdr->msg_rc = FM_ERR_ENTITY_NOT_FOUND;
+	}
+
+	if ((hdr->msg_rc==FM_ERR_OK) && (alarmv.size() > 0)){
+		int found_num_alarms=alarmv.size();
+		FM_DEBUG_LOG("Get faults: found alarms: (%d)", found_num_alarms);
+
+		// (num of alarms found * size of alarm structure) +
+		// space to report number of alarms found.
+		int total_len =(found_num_alarms * sizeof(SFmAlarmDataT)) + sizeof(uint32_t);
+
+		void * buffer = malloc(total_len);
+		if (buffer==NULL) {
+			hdr->msg_rc =FM_ERR_SERVER_NO_MEM;
+			srv->send_response(req.fd,hdr,NULL,0);
+			return;
+		}
+		uint32_t *alen = (uint32_t*) buffer;
+		*alen = found_num_alarms;
+
+		SFmAlarmDataT * alarms = (SFmAlarmDataT*) ( ((char*)buffer)+sizeof(uint32_t));
+
+		memcpy(alarms,&(alarmv[0]),alarmv.size() * sizeof(SFmAlarmDataT));
+		srv->send_response(req.fd,hdr,buffer,total_len);
+		free(buffer);
+	} else {
+		srv->send_response(req.fd,hdr,NULL,0);
+	}
+}
+
 void fm_handle_job_request(CFmDBSession &sess, sFmJobReq &req){
 	CFmDbAlarmOperation op;
 	CFmEventSuppressionOperation event_suppression_op;
@@ -333,6 +424,7 @@ void fm_handle_get_request(CFmDBSession &sess, sFmGetReq &req,
 	case EFmGetFault:get_db_alarm(sess,req,context); break;
 	case EFmGetFaults:get_db_alarms(sess,req,context); break;
 	case EFmGetFaultsById:get_db_alarms_by_id(sess,req,context); break;
+	case EFmGetFaultsByIdnEid:get_db_alarms_by_id_n_eid(sess,req,context); break;
 	default:
 		FM_ERROR_LOG("Unexpected job request, action:%u\n",hdr->action);
 		break;
@@ -471,8 +563,29 @@ void FmSocketServerProcessor::handle_delete_faults(int fd,
 	send_response(fd,hdr,NULL,0);
 }
 
-void FmSocketServerProcessor::handle_delete_fault(int fd,
-		SFmMsgHdrT *hdr, std::vector<char> &rdata, CFmDBSession &sess) {
+/**
+ * Handles the deletion of faults based on the specified filter.
+ *
+ * This function processes the request to delete faults from the database.
+ * It first validates the request, then retrieves matching alarms and deletes
+ * them from the database. If multiple alarms are found, it handles each
+ * alarm separately and enqueues a job for each cleared alarm.
+ *
+ * **Parameters:**
+ * - `fd`: The file descriptor for the client connection.
+ * - `hdr`: A pointer to an `SFmMsgHdrT` structure containing the message header.
+ * - `rdata`: A reference to a vector of characters containing the request data.
+ * - `sess`: A reference to a `CFmDBSession` object representing the database session.
+ *
+ * **Returns:**
+ * - The function does not return a value but sends a response back to the client through
+ * the provided file descriptor.
+ */
+void FmSocketServerProcessor::handle_delete_fault(
+	int fd,
+	SFmMsgHdrT *hdr,
+	std::vector<char> &rdata,
+	CFmDBSession &sess) {
 
 	CFmDbAlarmOperation op;
 	sFmJobReq req;
@@ -480,42 +593,70 @@ void FmSocketServerProcessor::handle_delete_fault(int fd,
 	SFmAlarmDataT alarm;
 	fm_db_result_t res;
 
-	is_request_valid(hdr->msg_size,AlarmFilter);
+	is_request_valid(hdr->msg_size, AlarmFilter);
 	void * data = &(rdata[sizeof(SFmMsgHdrT)]);
 	AlarmFilter *filter = (AlarmFilter *)(data);
 	hdr->msg_rc = FM_ERR_OK;
 	res.clear();
-	if ((op.get_alarm(sess, *filter, res)) != true){
+	if ((op.get_alarms_eid_not_strict(sess, *filter, res)) != true) {
 		hdr->msg_rc = FM_ERR_DB_OPERATION_FAILURE;
-	}else{
-		if (res.size() > 0){
-			if(op.delete_alarm(sess, *filter) > 0){
-				FM_INFO_LOG("Deleted alarm: (%s) (%s)\n",
-						filter->alarm_id, filter->entity_instance_id);
-				CFmDbAlarm::convert_to(res[0],&alarm);
-				fm_uuid_create(alarm.uuid);
-				req.type = FM_ALARM_CLEAR;
-				req.set = false;
-				req.data = alarm;
-				enqueue_job(req);
-			}else{
+	} else {
+		if (res.size() > 0) {
+			if (op.delete_alarm(sess, *filter) > 0) {
+				FM_INFO_LOG("Deleted alarm(s): (%s) (%s)\n",
+				            filter->alarm_id, filter->entity_instance_id);
+				if (res.size() == 1) {
+					// normal workflow, just one alarm match
+					CFmDbAlarm::convert_to(res[0], &alarm);
+					fm_uuid_create(alarm.uuid);
+					req.type = FM_ALARM_CLEAR;
+					req.set = false;
+					req.data = alarm;
+					enqueue_job(req);
+				} else {
+					//  Multiple alarms received
+					for (const auto &entry : res) {
+						SFmAlarmDataT alarm;
+						CFmDbAlarm::data_type entry_copy = entry;
+						CFmDbAlarm::convert_to(entry_copy, &alarm);
+						fm_uuid_create(alarm.uuid);
+						req.type = FM_ALARM_CLEAR;
+						req.set = false;
+						req.data = alarm;
+						enqueue_job(req);
+					}
+				}
+			} else {
 				hdr->msg_rc = FM_ERR_DB_OPERATION_FAILURE;
+				FM_INFO_LOG("Deleted alarm failed: (%s) (%s) (%s)\n",
+				            filter->alarm_id, filter->entity_instance_id,
+				            fm_error_from_int((EFmErrorT)hdr->msg_rc).c_str());
 			}
-		}else{
+		} else {
 			hdr->msg_rc = FM_ERR_ENTITY_NOT_FOUND;
 			FM_INFO_LOG("Deleted alarm failed: (%s) (%s) (%s)\n",
-					filter->alarm_id, filter->entity_instance_id,
-					fm_error_from_int((EFmErrorT)hdr->msg_rc).c_str());
+			            filter->alarm_id, filter->entity_instance_id,
+			            fm_error_from_int((EFmErrorT)hdr->msg_rc).c_str());
 		}
 	}
 	FM_INFO_LOG("Response to delete fault: %u\n", hdr->msg_rc);
-	send_response(fd,hdr,NULL,0);
+	send_response(fd, hdr, NULL, 0);
 }
 
 void FmSocketServerProcessor::handle_get_faults_by_id(int fd,
 		SFmMsgHdrT *hdr, std::vector<char> &rdata) {
 
 	is_request_valid(hdr->msg_size,fm_alarm_id);
+	sFmGetReq req;
+	req.fd = fd;
+	req.data = rdata;
+	enqueue_get(req);
+}
+
+void FmSocketServerProcessor::handle_get_faults_by_id_n_eid(int fd,
+		SFmMsgHdrT *hdr, std::vector<char> &rdata) {
+
+	is_request_valid(hdr->msg_size,AlarmFilter);
 	sFmGetReq req;
 	req.fd = fd;
 	req.data = rdata;
@@ -555,6 +696,7 @@ void FmSocketServerProcessor::handle_socket_data(int fd,
 	case EFmGetFault:handle_get_fault(fd,hdr,rdata); break;
 	case EFmGetFaults:handle_get_faults(fd,hdr,rdata); break;
 	case EFmGetFaultsById:handle_get_faults_by_id(fd,hdr,rdata); break;
+	case EFmGetFaultsByIdnEid:handle_get_faults_by_id_n_eid(fd,hdr,rdata); break;
 	default:
 		FM_ERROR_LOG("Unexpected client request, action:%u\n",hdr->action);
 		break;

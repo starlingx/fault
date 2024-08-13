@@ -436,14 +436,14 @@ bool fm_db_util_build_sql_delete(const char* db_table, AlarmFilter *db_data,
 	char sql[FM_MAX_SQL_STATEMENT_MAX];
 
 	if (strlen(db_data->entity_instance_id) == 0){
-		snprintf(sql, sizeof(sql), "DElETE FROM %s WHERE %s = '%s' AND %s = ' '",
+		snprintf(sql, sizeof(sql), "DELETE FROM %s WHERE %s = '%s' AND %s = ' '",
 			db_table, FM_ALARM_COLUMN_ALARM_ID, db_data->alarm_id,
 			FM_ALARM_COLUMN_ENTITY_INSTANCE_ID);
 	}
 	else{
-		snprintf(sql, sizeof(sql), "DElETE FROM %s WHERE %s = '%s' AND %s = '%s'",
+		snprintf(sql, sizeof(sql), "DELETE FROM %s WHERE %s = '%s' AND %s like '%s%s'",
 			db_table, FM_ALARM_COLUMN_ALARM_ID, db_data->alarm_id,
-			FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, db_data->entity_instance_id);
+			FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, db_data->entity_instance_id,"%");
 	}
 	db_cmd.assign(sql);
 	return true;
@@ -456,7 +456,7 @@ bool fm_db_util_build_sql_delete_row(const char* db_table, int id,
 
 	char sql[FM_MAX_SQL_STATEMENT_MAX];
 
-	snprintf(sql, sizeof(sql), "DElETE FROM %s WHERE %s = %d",
+	snprintf(sql, sizeof(sql), "DELETE FROM %s WHERE %s = %d",
 			db_table, FM_ALARM_COLUMN_ID, id);
 	db_cmd.assign(sql);
 	return true;
@@ -467,7 +467,7 @@ bool fm_db_util_build_sql_delete_all(const char* db_table, const char *id,
 
 	char sql[FM_MAX_SQL_STATEMENT_MAX];
 
-	snprintf(sql, sizeof(sql), "DElETE FROM %s WHERE %s like '%s%s'", db_table,
+	snprintf(sql, sizeof(sql), "DELETE FROM %s WHERE %s like '%s%s'", db_table,
 			FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, id,"%");
 	db_cmd.assign(sql);
 	return true;

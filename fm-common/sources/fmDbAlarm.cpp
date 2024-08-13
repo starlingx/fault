@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2018 Wind River Systems, Inc.
+// Copyright (c) 2014-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -250,47 +250,29 @@ bool CFmDbAlarmOperation::get_alarm(CFmDBSession &sess, AlarmFilter &af, fm_db_r
 	return true;
 }
 
-bool CFmDbAlarmOperation::get_alarms(CFmDBSession &sess,const char *id, fm_db_result_t & alarms) {
+/** Function similar to 'get_alarm', the only difference is that this could match
+ *  several rows, since this is using the LIKE % clause.
+ */
+bool CFmDbAlarmOperation::get_alarms_eid_not_strict(CFmDBSession &sess, AlarmFilter &af, fm_db_result_t & alarms) {
+
 	std::string sql;
-
 	char query[FM_MAX_SQL_STATEMENT_MAX];
-	fm_db_result_t res;
-	res.clear();
 
-	sql = FM_DB_SELECT_FROM_TABLE(FM_ALARM_TABLE_NAME);
-	sql += " ";
-
-	sql += " INNER JOIN ";
-	sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
-	sql += " ON ";
-	sql += FM_ALARM_TABLE_NAME;
-	sql += ".";
-	sql += FM_ALARM_COLUMN_ALARM_ID;
-	sql += " = ";
-	sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
-	sql += ".";
-	sql += FM_EVENT_SUPPRESSION_COLUMN_ALARM_ID;
-
-	sql += " WHERE ";
-	sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
-	sql += ".";
-	sql += FM_EVENT_SUPPRESSION_COLUMN_SUPPRESSION_STATUS;
-	sql += " = '";
-	sql += FM_EVENT_SUPPRESSION_UNSUPPRESSED;
-	sql += "'";
-
-	if (id != NULL){
-		snprintf(query, sizeof(query),"%s like '%s%s'", FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, id,"%");
-		if (NULL!=query) {
-			sql += " AND ";
-			sql += query;
-		}
+	if (strlen(af.entity_instance_id) == 0){
+		snprintf(query, sizeof(query),"%s = '%s' AND %s = ' '",
+				FM_ALARM_COLUMN_ALARM_ID, af.alarm_id,
+				FM_ALARM_COLUMN_ENTITY_INSTANCE_ID);
 	}
-
-	FM_DEBUG_LOG("CMD:(%s)\n", sql.c_str());
-	if ((sess.query(sql.c_str(), alarms)) != true)
+	else {
+		snprintf(query, sizeof(query), "%s = '%s' AND %s LIKE '%s%%'",
+				FM_ALARM_COLUMN_ALARM_ID, af.alarm_id,
+				FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, af.entity_instance_id);
+	}
+	fm_db_util_build_sql_query((const char*)FM_ALARM_TABLE_NAME, query, sql);
+	FM_DEBUG_LOG("get_alarm:(%s)\n", sql.c_str());
+	if ((sess.query(sql.c_str(), alarms)) != true){
 		return false;
-
+	}
 	return true;
 }
 
@@ -309,6 +291,71 @@ bool CFmDbAlarmOperation::get_alarms_by_id(CFmDBSession &sess,const char *id, fm
 	}
 
 	return true;
+}
+
+bool CFmDbAlarmOperation::get_alarms(CFmDBSession &sess, const char *entity_instance_id, fm_db_result_t &alarms) {
+    std::string sql = CFmDbAlarmOperation::build_base_alarm_query(entity_instance_id);
+
+    FM_DEBUG_LOG("CMD:(%s)\n", sql.c_str());
+    if (!sess.query(sql.c_str(), alarms))
+        return false;
+
+    return true;
+}
+
+bool CFmDbAlarmOperation::get_alarms_by_id_n_eid(CFmDBSession &sess, const AlarmFilter &af, fm_db_result_t &alarms) {
+    std::string sql = CFmDbAlarmOperation::build_base_alarm_query(af.entity_instance_id);
+
+    if (strlen(af.alarm_id) > 0) {
+        char query[FM_MAX_SQL_STATEMENT_MAX];
+        snprintf(query, sizeof(query), "%s.%s = '%s'", FM_ALARM_TABLE_NAME,
+		         FM_ALARM_COLUMN_ALARM_ID, af.alarm_id);
+        sql += " AND ";
+        sql += query;
+    }else{
+		FM_INFO_LOG("Alarm_id not provided \n");
+		return false;
+	}
+
+    FM_DEBUG_LOG("CMD:(%s)\n", sql.c_str());
+    if (!sess.query(sql.c_str(), alarms))
+        return false;
+
+    return true;
+}
+
+std::string CFmDbAlarmOperation::build_base_alarm_query(const char *entity_instance_id) {
+    std::string sql;
+    char query[FM_MAX_SQL_STATEMENT_MAX];
+
+    sql = FM_DB_SELECT_FROM_TABLE(FM_ALARM_TABLE_NAME);
+    sql += " INNER JOIN ";
+    sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
+    sql += " ON ";
+    sql += FM_ALARM_TABLE_NAME;
+    sql += ".";
+    sql += FM_ALARM_COLUMN_ALARM_ID;
+    sql += " = ";
+    sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
+    sql += ".";
+    sql += FM_EVENT_SUPPRESSION_COLUMN_ALARM_ID;
+
+    sql += " WHERE ";
+    sql += FM_EVENT_SUPPRESSION_TABLE_NAME;
+    sql += ".";
+    sql += FM_EVENT_SUPPRESSION_COLUMN_SUPPRESSION_STATUS;
+    sql += " = '";
+    sql += FM_EVENT_SUPPRESSION_UNSUPPRESSED;
+    sql += "'";
+
+    if (entity_instance_id != nullptr) {
+        snprintf(query, sizeof(query), "%s.%s LIKE '%s%s'", FM_ALARM_TABLE_NAME,
+		         FM_ALARM_COLUMN_ENTITY_INSTANCE_ID, entity_instance_id, "%");
+        sql += " AND ";
+        sql += query;
+    }
+
+    return sql;
 }
 
 bool CFmDbAlarmOperation::get_all_alarms(CFmDBSession &sess, SFmAlarmDataT **alarms, size_t *len ) {

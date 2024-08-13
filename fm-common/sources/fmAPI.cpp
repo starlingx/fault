@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017,2023 Wind River Systems, Inc.
+// Copyright (c) 2017,2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -287,7 +287,24 @@ EFmErrorT fm_set_fault(const SFmAlarmDataT *alarm,
   return FM_ERR_OK;
 }
 
-
+/**
+ * Clears fault entries based on the specified filter.
+ *
+ * This function sends a request to the FM server which performs the
+ * query for the clear_fault operation.
+ * In addition, this allows the removal of multiple rows with a single query.
+ *
+ * **Parameters:**
+ * - `filter`: A pointer to an `AlarmFilter` structure. This includes `alarm_id`
+ * and `entity_instance_id`.
+ *
+ * **Returns:**
+ * - `FM_ERR_OK` if the operation was successful.
+ * - `FM_ERR_NOCONNECT` if the function failed to connect to the server or if the
+ *   connection was lost during the operation.
+ * - Other error codes as defined in the `EFmErrorT` enumeration if the operation
+ *   encountered other issues.
+ */
 EFmErrorT fm_clear_fault(AlarmFilter *filter) {
 
   CFmMutexGuard m(getAPIMutex());
@@ -457,6 +474,90 @@ EFmErrorT fm_get_faults_by_id(fm_alarm_id *alarm_id,
       m_connected = false;
       return FM_ERR_COMMUNICATIONS;
     }
+    pkt_size-=sizeof(uint32_t);
+
+    char *dptr = (char*)ptr_to_data(buff);
+
+    uint32_t *len = (uint32_t*)dptr;
+    dptr+=sizeof(uint32_t);
+    if (*max_alarms_to_get < *len) {
+      return FM_ERR_NOT_ENOUGH_SPACE;
+    }
+    if (pkt_size < (*len*sizeof(SFmAlarmDataT)) ) {
+      return FM_ERR_COMMUNICATIONS;
+    }
+    *max_alarms_to_get = *len;
+    memcpy(alarm,dptr,pkt_size);
+  } else {
+    m_connected = false;
+    return FM_ERR_NOCONNECT;
+  }
+
+  return FM_ERR_OK;
+}
+
+/**
+ * Retrieves alarms based on a filter with alarm_id and
+ * entity_instance_id.
+ *
+ * This function sends a request to the FM server to retrieve faults
+ * information matching the given filter criteria.
+ * The entity_instance_id parameter can now be a prefix (not complete),
+ * enabling the matching of multiple alarms with the same alarm_id
+ *
+ * **Parameters:**
+ * - `filter`: A pointer to an `AlarmFilter` structure. This includes `alarm_id`
+ * and `entity_instance_id`.
+ * - `alarm`: A pointer to an array of `SFmAlarmDataT` structures where
+ * the retrieved alarms will be stored.
+ * - `max_alarms_to_get`: On input, specifies the maximum number of alarms
+ * to retrieve. On output, specifies the number of alarms actually retrieved.
+ *
+ * **Returns:**
+ * An error code indicating the result of the operation. Possible values include:
+ * - `FM_ERR_OK`: Operation was successful.
+ * - `FM_ERR_NOCONNECT`: Failed to connect to the FM core.
+ * - Other error codes as defined in the `EFmErrorT` enumeration.
+ */
+EFmErrorT fm_get_faults_by_id_n_eid(AlarmFilter *filter,
+                              SFmAlarmDataT *alarm,
+                              unsigned int *max_alarms_to_get) {
+
+  CFmMutexGuard m(getAPIMutex());
+  if (!fm_lib_reconnect()) return FM_ERR_NOCONNECT;
+  fm_check_thread_pending_request();
+
+  fm_buff_t buff;
+  buff.clear();
+  EFmErrorT erc = fm_msg_utils_prep_requet_msg(buff, EFmGetFaultsByIdnEid,
+                                               filter,sizeof(*filter));
+  if (erc!=FM_ERR_OK) return erc;
+
+  // if it was not correctly sent by the API, set to the expected value
+  if (*max_alarms_to_get == 0){
+      *max_alarms_to_get = DEF_MAX_ALARMS;
+  }
+
+  if (m_client.write_packet(buff)) {
+    if (!m_client.read_packet(buff)) {
+      m_connected = false;
+      return FM_ERR_NOCONNECT;
+    }
+
+    if (ptr_to_hdr(buff)->msg_rc != FM_ERR_OK){
+      *max_alarms_to_get = 0;
+      EFmErrorT rc = (EFmErrorT)ptr_to_hdr(buff)->msg_rc;
+      return rc;
+    }
+
+    uint32_t pkt_size = ptr_to_hdr(buff)->msg_size;
+    if (pkt_size < sizeof(uint32_t)) {
+      FM_ERROR_LOG("Received invalid pkt size: %u\n",pkt_size );
+      m_connected = false;
+      return FM_ERR_COMMUNICATIONS;
+    }
+    // Decrement pkt_size by the size of the length field in the header
+    // to get the size of the actual alarm data
     pkt_size-=sizeof(uint32_t);
 
     char *dptr = (char*)ptr_to_data(buff);

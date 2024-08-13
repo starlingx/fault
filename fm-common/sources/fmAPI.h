@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017 Wind River Systems, Inc.
+// Copyright (c) 2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -26,6 +26,8 @@ typedef unsigned char    FMBoolTypeT;
 #define FM_TRUE      1   //any non-zero value is also considered to be True
 
 #define FM_FALSE     0
+
+static const size_t DEF_MAX_ALARMS (1000);
 
 typedef enum{
   FM_ALARM_STATE_CLEAR = 0,
@@ -203,6 +205,10 @@ EFmErrorT fm_get_faults(fm_ent_inst_t *inst_id, SFmAlarmDataT *alarm,
 
 EFmErrorT fm_get_faults_by_id(fm_alarm_id *alarm_id, SFmAlarmDataT *alarm,
                               unsigned int *max_alarms_to_get);
+
+EFmErrorT fm_get_faults_by_id_n_eid(AlarmFilter *filter,
+                                    SFmAlarmDataT *alarm,
+                                    unsigned int *max_alarms_to_get);
 
 
 /*

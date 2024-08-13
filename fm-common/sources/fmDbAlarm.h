@@ -66,9 +66,16 @@ public:
 
 	bool get_alarms_by_id(CFmDBSession &sess, const char *id, fm_db_result_t & alarms);
 
+	bool get_alarms_by_id_n_eid(CFmDBSession &sess, const AlarmFilter &af, fm_db_result_t &alarms);
+
+	bool get_alarms_eid_not_strict(CFmDBSession &sess, AlarmFilter &af, fm_db_result_t & alarms);
+
 	bool mask_unmask_alarms(CFmDBSession &sess, SFmAlarmDataT &a, bool mask = true);
 
 	bool add_alarm_history(CFmDBSession &sess, SFmAlarmDataT &a, bool set);
+
+private:
+    static std::string build_base_alarm_query(const char *entity_instance_id);
 };
 
 #endif /* FMDBALARM_H_ */
