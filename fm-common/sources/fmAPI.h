@@ -27,7 +27,7 @@ typedef unsigned char    FMBoolTypeT;
 
 #define FM_FALSE     0
 
-static const size_t DEF_MAX_ALARMS (1000);
+static const size_t DEF_MAX_ALARMS = 1000;
 
 typedef enum{
   FM_ALARM_STATE_CLEAR = 0,
