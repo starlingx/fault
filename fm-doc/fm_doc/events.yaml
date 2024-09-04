@@ -1946,7 +1946,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context: openstack
+    Context: starlingx
 
 700.017:
     Type: Alarm
