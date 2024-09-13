@@ -31,6 +31,7 @@ class ApiError(Exception):
 
         try:
             super(ApiError, self).__init__(self.message % kwargs)
+            LOG.debug(f"AlarmNotFound initialized with code: {self.kwargs.get('code', self.code)}")
             self.message = self.message % kwargs
         except Exception:
             LOG.exception('Exception in string format operation, '
@@ -38,7 +39,7 @@ class ApiError(Exception):
             raise
 
     def __str__(self):
-        return repr(self.value)
+        return f"[HTTP {self.code}] {self.message % self.kwargs}"
 
     def __unicode__(self):
         return self.message
