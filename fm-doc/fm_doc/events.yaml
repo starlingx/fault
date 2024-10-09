@@ -3728,6 +3728,38 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+900.023:
+    Type: Alarm
+    Description: Software release deploy operation in progress.
+    Entity_Instance_ID: host=controller
+    Severity: minor
+    Proposed_Repair_Action: Complete release deploy.
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: environmental
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
+900.024:
+    Type: Alarm
+    Description: A release with state 'unavailable' is present.
+    Entity_Instance_ID: host=controller
+    Severity: warning
+    Proposed_Repair_Action: Delete obsolete releases using "software delete <release>".
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: environmental
+    Probable_Cause: unspecified-reason
+    Service_Affecting: False
+    Suppression: False
+    Management_Affecting_Severity: warning
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 900.101:
     Type: Alarm
     Description: Software patch auto-apply in progress
