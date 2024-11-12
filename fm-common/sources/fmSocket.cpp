@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017,2023 Wind River Systems, Inc.
+// Copyright (c) 2017,2023-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -77,6 +77,15 @@ bool CFmSocket::create_socket() {
         return false;
     }
     //FM_DEBUG_LOG("SO_KEEPALIVE set on socket\n");
+
+    struct timeval timeout;
+    timeout.tv_sec  = SOCKET_TIMEOUT_DEFAULT ;
+    timeout.tv_usec = 0 ;
+    if(setsockopt(m_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout) < 0) {
+        FM_ERROR_LOG("Failed to setsockopt SO_RCVTIMEO timeout, error: (%d) (%s)", errno, strerror(errno));
+        close();
+        return false;
+    }
 
     return true;
 }
@@ -390,13 +399,23 @@ bool FmSocketServer::server_reset() {
 		FM_INFO_LOG("Failed to create socket for port:(%d)\n", server_port);
 		return false;
 	}
+
+	// Set socket reusable
+	FM_INFO_LOG("Setting socket fd:%d as re-useable", m_fd);
+	int optval = 1;
+	setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+
+	// Set socket read timeout
+	struct timeval timeout;
+	timeout.tv_sec  = SOCKET_TIMEOUT_DEFAULT ;
+	timeout.tv_usec = 0 ;
+	FM_INFO_LOG("Setting socket fd:%d with %d second read timeout", m_fd, timeout.tv_sec );
+	setsockopt(m_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof timeout);
+
 	switch (address_family) {
 		//When address is IPv4
 		case AF_INET:
 		{
-			int optval = 1;
-			setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
-
 			struct sockaddr_in addr;
 			addr.sin_family = AF_INET;
 			addr.sin_addr.s_addr = inet_addr(server_addr.c_str());
@@ -421,9 +440,6 @@ bool FmSocketServer::server_reset() {
 		//When address is IPv6
 		case AF_INET6:
 		{
-			int optval = 1;
-			setsockopt(m_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
-
 			struct sockaddr_in6 addr;
 			addr.sin6_family = AF_INET6;
 			inet_pton(AF_INET6,server_addr.c_str(),&(addr.sin6_addr));

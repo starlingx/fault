@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014,2023 Wind River Systems, Inc.
+// Copyright (c) 2014,2023-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -18,6 +18,8 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <map>
+
+#define SOCKET_TIMEOUT_DEFAULT (5)
 
 typedef struct CFmSockAddr_s {
 	int type;
