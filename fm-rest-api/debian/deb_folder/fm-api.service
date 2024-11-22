@@ -11,5 +11,8 @@ ExecStart=/etc/init.d/fm-api start
 ExecStop=/etc/init.d/fm-api stop
 PIDFile=/var/run/fm-api.pid
 
+# cgroup engineering
+CPUShares=512
+
 [Install]
 WantedBy=multi-user.target
