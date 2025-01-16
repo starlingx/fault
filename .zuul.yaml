@@ -8,19 +8,33 @@
       - stx-bandit-jobs
     check:
       jobs:
-        - openstack-tox-linters
-        - openstack-tox-pep8
+        - fault-tox-linters
+        - fault-tox-pep8
         - fault-tox-pylint
         - fault-rest-api-py39
     gate:
       jobs:
-        - openstack-tox-linters
-        - openstack-tox-pep8
+        - fault-tox-linters
+        - fault-tox-pep8
         - fault-tox-pylint
         - fault-rest-api-py39
     post:
       jobs:
         - stx-fault-upload-git-mirror
+
+- job:
+    name: fault-tox-linters
+    parent: openstack-tox-linters
+    description: |
+      Run tox linters on specific nodeset
+    nodeset: debian-bullseye
+
+- job:
+    name: fault-tox-pep8
+    parent: openstack-tox-pep8
+    description: |
+      Run pep8 tests (flake8) on specific nodeset
+    nodeset: debian-bullseye
 
 - job:
     name: fault-rest-api-py39
