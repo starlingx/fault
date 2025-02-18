@@ -1,10 +1,11 @@
 #
-# Copyright (c) 2022 Wind River Systems, Inc.
+# Copyright (c) 2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 from oslo_policy import policy
+from fm.api.policies import base
 
 POLICY_ROOT = 'fm_api:event_log:%s'
 
@@ -12,7 +13,7 @@ POLICY_ROOT = 'fm_api:event_log:%s'
 event_log_rules = [
     policy.DocumentedRuleDefault(
         name=POLICY_ROOT % 'get',
-        check_str='role:reader',
+        check_str='rule:' + base.READER_OR_OPERATOR,
         description="Get event logs.",
         operations=[
             {
