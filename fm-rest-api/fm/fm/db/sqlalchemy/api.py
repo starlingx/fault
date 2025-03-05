@@ -1,13 +1,16 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 """SQLAlchemy storage backend."""
 
+import functools
+import sys
 import threading
 
+import eventlet
 from oslo_log import log
 from oslo_config import cfg
 from oslo_utils import uuidutils
@@ -67,12 +70,12 @@ def get_backend():
 
 
 def _session_for_read():
-    _context = threading.local()
+    _context = eventlet.greenthread.getcurrent()
     return enginefacade.reader.using(_context)
 
 
 def _session_for_write():
-    _context = threading.local()
+    _context = eventlet.greenthread.getcurrent()
     LOG.debug("_session_for_write CONTEXT=%s" % _context)
     return enginefacade.writer.using(_context)
 
@@ -96,15 +99,65 @@ def _paginate_query(model, limit=None, marker=None, sort_key=None,
     return query.all()
 
 
+def db_session_cleanup(cls):
+    """Class decorator that automatically adds session cleanup to all non-special methods."""
+
+    def method_decorator(method):
+        @functools.wraps(method)
+        def wrapper(self, *args, **kwargs):
+            _context = eventlet.greenthread.getcurrent()
+
+            try:
+                return method(self, *args, **kwargs)
+            finally:
+                if (hasattr(_context, "_db_session_context") and
+                        _context._db_session_context is not None):
+                    try:
+                        if hasattr(_context, "_db_session_context"):
+                            exc_info = sys.exc_info()
+                            _context._db_session_context.__exit__(*exc_info)
+                    except Exception as e:
+                        LOG.warning(f"Error closing database session: {e}")
+
+                    # Clear the session
+                    _context._db_session = None
+                    _context._db_session_context = None
+
+        return wrapper
+
+    for attr_name in dir(cls):
+        # Skip special methods
+        if not attr_name.startswith("__"):
+            attr = getattr(cls, attr_name)
+            if callable(attr):
+                setattr(cls, attr_name, method_decorator(attr))
+
+    return cls
+
+
 def model_query(model, *args, **kwargs):
     """Query helper for simpler session usage.
 
+    If the session is already provided in the kwargs, use it. Otherwise,
+    try to get it from thread context. If it's not there, create a new one.
+
     :param session: if present, the session to use
     """
+    session = kwargs.get('session')
+    if not session:
+        _context = eventlet.greenthread.getcurrent()
+        if hasattr(_context, '_db_session') and _context._db_session is not None:
+            session = _context._db_session
+        else:
+            session_context = _session_for_read()
+            session = session_context.__enter__()
+            _context._db_session = session
+            # Need to store the session context to call __exit__ method later
+            _context._db_session_context = session_context
 
-    with _session_for_read() as session:
         query = session.query(model, *args)
-        return query
+
+    return session.query(model, *args)
 
 
 def add_event_log_filter_by_event_suppression(query, include_suppress):
@@ -170,6 +223,7 @@ def add_alarm_degrade_affecting_by_event_suppression(query):
     return query
 
 
+@db_session_cleanup
 class Connection(api.Connection):
     """SqlAlchemy connection."""
 
@@ -208,7 +262,12 @@ class Connection(api.Connection):
         except NoResultFound:
             raise exceptions.AlarmNotFound(alarm=uuid)
 
-        return result
+        alarm = result[0]
+        alarm.suppression_status = result[1]
+        alarm.mgmt_affecting = result[2]
+        alarm.degrade_affecting = result[3]
+
+        return alarm
 
     def alarm_get_by_ids(self, alarm_id, entity_instance_id):
         query = model_query(models.Alarm)
@@ -227,8 +286,13 @@ class Connection(api.Connection):
         except NoResultFound:
             return None
 
-        return result
+        alarm = result[0]
+        alarm.mgmt_affecting = result[1]
+        alarm.degrade_affecting = result[2]
 
+        return alarm
+
+    @objects.objectify(objects.alarm)
     def alarm_get_all(self, uuid=None, alarm_id=None, entity_type_id=None,
                       entity_instance_id=None, severity=None, alarm_type=None,
                       limit=None, include_suppress=False):
@@ -257,7 +321,13 @@ class Connection(api.Connection):
             query = query.limit(limit)
         alarm_list = []
         try:
-            alarm_list = query.all()
+            results = query.all()
+            for result in results:
+                alarm = result[0]
+                alarm.suppression_status = result[1]
+                alarm.mgmt_affecting = result[2]
+                alarm.degrade_affecting = result[3]
+                alarm_list.append(alarm)
         except UnicodeDecodeError:
             LOG.error("UnicodeDecodeError occurred, "
                       "return an empty alarm list.")
@@ -267,7 +337,6 @@ class Connection(api.Connection):
     def alarm_get_list(self, limit=None, marker=None,
                        sort_key=None, sort_dir=None,
                        include_suppress=False):
-
         query = model_query(models.Alarm)
         query = add_alarm_filter_by_event_suppression(query, include_suppress)
         query = add_alarm_mgmt_affecting_by_event_suppression(query)
@@ -363,7 +432,10 @@ class Connection(api.Connection):
         except NoResultFound:
             raise exceptions.EventLogNotFound(eventLog=uuid)
 
-        return result
+        event = result[0]
+        event.suppression_status = result[1]
+
+        return event
 
     def _addEventTypeToQuery(self, query, evtType="ALL"):
         if evtType is None or not (evtType in ["ALL", "ALARM", "LOG"]):
@@ -415,7 +487,11 @@ class Connection(api.Connection):
 
         hist_list = []
         try:
-            hist_list = query.all()
+            result = query.all()
+            for hist in result:
+                event = hist[0]
+                event.suppression_status = hist[1]
+                hist_list.append(event)
         except UnicodeDecodeError:
             LOG.error("UnicodeDecodeError occurred, "
                       "return an empty event log list.")
@@ -425,7 +501,6 @@ class Connection(api.Connection):
     def event_log_get_list(self, limit=None, marker=None,
                            sort_key=None, sort_dir=None, evtType="ALL",
                            include_suppress=False):
-
         query = model_query(models.EventLog)
         query = self._addEventTypeToQuery(query, evtType)
         query = add_event_log_filter_by_event_suppression(query,
