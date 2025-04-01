@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -83,6 +83,15 @@ class HTTPClientError(HttpError):
     Exception for cases in which the client seems to have erred.
     """
     message = _("HTTP Client Error")
+
+
+class HTTPUnauthorized(HTTPClientError):
+    """HTTP 401 - Unauthorized
+
+    Exception for cases in which the request lacks valid authentication
+    credentials.
+    """
+    message = _("HTTP Client Error: Unauthorized")
 
 
 class HTTPForbidden(HTTPClientError):
@@ -181,6 +190,8 @@ def from_response(response, method, url=None):
     except KeyError:
         if 500 <= response.status_code < 600:
             cls = HttpServerError
+        elif 401 == response.status_code:
+            cls = HTTPUnauthorized
         elif 403 == response.status_code:
             cls = HTTPForbidden
         elif 404 == response.status_code:

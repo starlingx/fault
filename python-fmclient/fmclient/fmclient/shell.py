@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2022 Wind River Systems, Inc.
+# Copyright (c) 2018-2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -9,6 +9,8 @@ Command-line interface for Fault Management
 """
 
 from __future__ import print_function
+from datetime import datetime
+from datetime import timedelta
 import argparse
 import httplib2
 import logging
@@ -36,6 +38,9 @@ def env(*args, **kwargs):
 
 
 class FmShell(object):
+
+    # Key name for store cache data
+    CACHE_KEY = 'fmclient:session'
 
     def get_base_parser(self):
         parser = argparse.ArgumentParser(
@@ -186,6 +191,16 @@ class FmShell(object):
                             help='Disables SSL/TLS certificate verification '
                                  '(Env: FMCLIENT_INSECURE)')
 
+        parser.add_argument('--refresh-cache',
+                            action='store_true',
+                            default=False,
+                            help='Forces the update of the cached settings')
+
+        parser.add_argument('--no-cache',
+                            action='store_true',
+                            default=env('FMCLIENT_NO_CACHE', default=False),
+                            help='Disables cache feature (Env: FMCLIENT_NO_CACHE)')
+
         return parser
 
     def get_subcommand_parser(self, version):
@@ -249,30 +264,47 @@ class FmShell(object):
             return 0
 
         if not (args.os_auth_token and args.fm_url):
-            if not args.os_username:
-                raise exc.CommandError("You must provide a username via "
-                                       "either --os-username or via "
-                                       "env[OS_USERNAME]")
 
-            if not args.os_password:
-                raise exc.CommandError("You must provide a password via "
-                                       "either --os-password or via "
-                                       "env[OS_PASSWORD]")
+            os_auth_token = None
+            fm_url = None
 
-            if not (args.os_project_id or args.os_project_name):
-                raise exc.CommandError("You must provide a project name via "
-                                       "either --os-project-name or via "
-                                       "env[OS_PROJECT_NAME]")
+            if not (args.refresh_cache or args.no_cache):
+                os_auth_token, fm_url = \
+                    utils.load_auth_session_keyring_by_name(self.CACHE_KEY)
+                if os_auth_token and fm_url:
+                    self.keyring = True
 
-            if not args.os_auth_url:
-                raise exc.CommandError("You must provide an auth url via "
-                                       "either --os-auth-url or via "
-                                       "env[OS_AUTH_URL]")
+            # Reuses the last authorization token and FM endpoint obtained from
+            # keystone when available in the cache (keyring)
+            if os_auth_token and fm_url:
+                args.os_auth_token = os_auth_token
+                args.fm_url = fm_url
 
-            if not args.os_region_name:
-                raise exc.CommandError("You must provide an region name via "
-                                       "either --os-region-name or via "
-                                       "env[OS_REGION_NAME]")
+            else:
+                if not args.os_username:
+                    raise exc.CommandError("You must provide a username via "
+                                           "either --os-username or via "
+                                           "env[OS_USERNAME]")
+
+                if not args.os_password:
+                    raise exc.CommandError("You must provide a password via "
+                                           "either --os-password or via "
+                                           "env[OS_PASSWORD]")
+
+                if not (args.os_project_id or args.os_project_name):
+                    raise exc.CommandError("You must provide a project name via "
+                                           "either --os-project-name or via "
+                                           "env[OS_PROJECT_NAME]")
+
+                if not args.os_auth_url:
+                    raise exc.CommandError("You must provide an auth url via "
+                                           "either --os-auth-url or via "
+                                           "env[OS_AUTH_URL]")
+
+                if not args.os_region_name:
+                    raise exc.CommandError("You must provide an region name via "
+                                           "either --os-region-name or via "
+                                           "env[OS_REGION_NAME]")
 
         client_args = (
             'os_auth_token', 'fm_url', 'os_username', 'os_password',
@@ -289,10 +321,40 @@ class FmShell(object):
 
         client = fmclient.client.get_client(api_version, **kwargs)
 
+        if not args.no_cache and isinstance(client.http_client,
+                                            fmclient.common.http.SessionClient) \
+           and client.http_client.session.auth.auth_ref:
+
+            # Set the key timeout based on the token validity (in seconds)
+            expires_at = client.http_client.session.auth.auth_ref.expires
+            now = datetime.now().astimezone() + timedelta(seconds=10)
+            timeout = str(int((expires_at - now).total_seconds()))
+
+            utils.persist_auth_session_keyring(
+                self.CACHE_KEY,
+                client.http_client.session.get_token(),
+                client.http_client.endpoint_override,
+                timeout)
+
         try:
             args.func(client, args)
-        except exc.Unauthorized:
-            raise exc.CommandError("Invalid Identity credentials.")
+        except exceptions.HTTPUnauthorized:
+            if not self.keyring:
+                raise exc.CommandError("Invalid Identity credentials.")
+            args.os_auth_token = None
+            args.fm_url = None
+            self.keyring = False
+            utils.revoke_keyring_by_name(self.CACHE_KEY)
+            kwargs = {}
+            for key in client_args:
+                client_key = key.replace("os_", "", 1)
+                kwargs[client_key] = getattr(args, key)
+
+            client = fmclient.client.get_client(api_version, **kwargs)
+            try:
+                args.func(client, args)
+            except exceptions.HTTPUnauthorized:
+                raise exc.CommandError("Invalid Identity credentials.")
         except exceptions.HTTPForbidden:
             raise exc.CommandError("Error: Forbidden.")
 
