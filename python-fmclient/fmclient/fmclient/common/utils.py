@@ -637,7 +637,9 @@ def _is_service_impacting_command(command):
         return True
 
     service_impacting_fm_commands = [
-        "event-suppress"
+        "event-suppress",
+        "event-unsuppress",
+        "event-unsuppress-all"
     ]
 
     return command in service_impacting_fm_commands
