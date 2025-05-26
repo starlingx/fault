@@ -3498,7 +3498,7 @@
     Suppression: False
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: none
-    Context: none
+    Context: starlingx
 
 #---------------------------------------------------------------------------
 #   SOFTWARE
