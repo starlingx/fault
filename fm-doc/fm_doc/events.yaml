@@ -3920,10 +3920,10 @@
 
 900.201:
     Type: Alarm
-    Description: Software upgrade auto-apply in progress
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply in progress
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: major
-    Proposed_Repair_Action: Wait for software upgrade auto-apply to complete; if problem persists contact next level of support
+    Proposed_Repair_Action: Wait for software deploy auto-apply to complete; if problem persists contact next level of support
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -3936,10 +3936,10 @@
 
 900.202:
     Type: Alarm
-    Description: Software upgrade auto-apply aborting
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply aborting
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: major
-    Proposed_Repair_Action: Wait for software upgrade auto-apply abort to complete; if problem persists contact next level of support
+    Proposed_Repair_Action: Wait for software deploy auto-apply abort to complete; if problem persists contact next level of support
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -3952,10 +3952,10 @@
 
 900.203:
     Type: Alarm
-    Description: Software upgrade auto-apply failed. Command "sw-manager update-strategy apply" failed
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply failed. Command "sw-manager update-strategy apply" failed
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
-    Proposed_Repair_Action: Attempt to apply software upgrade manually; if problem persists contact next level of support
+    Proposed_Repair_Action: Attempt to apply software deploy manually; if problem persists contact next level of support
     Maintenance_Action:
     Inhibit_Alarms:
     Alarm_Type: equipment
@@ -3968,8 +3968,8 @@
 
 900.211:
     Type: Log
-    Description: Software upgrade auto-apply start
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply start
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -3978,8 +3978,8 @@
 
 900.212:
     Type: Log
-    Description: Software upgrade auto-apply in progress
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply in progress
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -3988,8 +3988,8 @@
 
 900.213:
     Type: Log
-    Description: Software upgrade auto-apply rejected
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply rejected
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -3998,8 +3998,8 @@
 
 900.214:
     Type: Log
-    Description: Software upgrade auto-apply cancelled
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply cancelled
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4008,8 +4008,8 @@
 
 900.215:
     Type: Log
-    Description: Software upgrade auto-apply failed
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply failed
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4018,8 +4018,8 @@
 
 900.216:
     Type: Log
-    Description: Software upgrade auto-apply completed
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply completed
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4028,8 +4028,8 @@
 
 900.217:
     Type: Log
-    Description: Software upgrade auto-apply abort
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply abort
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4038,8 +4038,8 @@
 
 900.218:
     Type: Log
-    Description: Software upgrade auto-apply aborting
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply aborting
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4048,8 +4048,8 @@
 
 900.219:
     Type: Log
-    Description: Software upgrade auto-apply abort rejected
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply abort rejected
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4058,8 +4058,8 @@
 
 900.220:
     Type: Log
-    Description: Software upgrade auto-apply abort failed
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply abort failed
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4068,8 +4068,8 @@
 
 900.221:
     Type: Log
-    Description: Software upgrade auto-apply aborted
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Description: Software deploy auto-apply aborted
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: critical
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
@@ -4079,7 +4079,7 @@
 900.231:
     Type: Alarm
     Description: Software deploy state out of sync
-    Entity_Instance_ID: orchestration=sw-upgrade
+    Entity_Instance_ID: orchestration=sw-deploy
     Severity: major
     Proposed_Repair_Action: Wait for the deployment on the active controller to complete. If problem persists contact next level of support
     Maintenance_Action:
