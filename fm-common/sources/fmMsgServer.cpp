@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2025 Wind River Systems, Inc.
+// Copyright (c) 2017-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -467,7 +467,7 @@ void FmSocketServerProcessor::send_response(int fd, SFmMsgHdrT *hdr, void *data,
 }
 
 void FmSocketServerProcessor::handle_create_fault(int fd,
-		SFmMsgHdrT *hdr, std::vector<char> &rdata, CFmDBSession &sess, bool send_response_flag) {
+		SFmMsgHdrT *hdr, std::vector<char> &rdata, CFmDBSession &sess) {
 
 	is_request_valid(hdr->msg_size,SFmAlarmDataT);
 	void * data = &(rdata[sizeof(SFmMsgHdrT)]);
@@ -504,78 +504,24 @@ void FmSocketServerProcessor::handle_create_fault(int fd,
 		}
 		FM_INFO_LOG("Send response for create log, uuid:(%s) (%u)\n",
 					alarm->uuid, hdr->msg_rc);
-		if (send_response_flag)
-			send_response(fd,hdr,alarm->uuid,sizeof(alarm->uuid));
+		send_response(fd,hdr,alarm->uuid,sizeof(alarm->uuid));
 	} else {
 		a.create_data(alarm);
 		//a.print();
-		if (op.create_alarm(sess, a)) {
-			std::string uuid_str = a.find_field(FM_ALARM_COLUMN_UUID);
-			strncpy(alarm->uuid, uuid_str.c_str(), sizeof(alarm->uuid));
-			FM_INFO_LOG("Alarm created/updated/kept: (%s) (%s) (%d) (%s)\n",
-						alarm->alarm_id, alarm->entity_instance_id, alarm->severity, alarm->uuid);
+		if (op.create_alarm(sess,a)){
+			FM_INFO_LOG("Alarm created/updated: (%s) (%s) (%d) (%s)\n",
+					alarm->alarm_id, alarm->entity_instance_id, alarm->severity, alarm->uuid);
 			req.type = alarm->severity;
 			enqueue_job(req);
-		} else {
-			FM_ERROR_LOG("Fail to create/update alarm: (%s) (%s)\n",
-						alarm->alarm_id, alarm->entity_instance_id);
+		}else{
+			FM_ERROR_LOG("Fail to created/updated alarm: (%s) (%s)\n",
+					alarm->alarm_id, alarm->entity_instance_id);
 			hdr->msg_rc = FM_ERR_DB_OPERATION_FAILURE;
 		}
-
-		if (send_response_flag) {
-			FM_INFO_LOG("Send response for create fault, uuid:(%s) (%u)\n",
-						alarm->uuid, hdr->msg_rc);
-			send_response(fd, hdr, alarm->uuid, strlen(alarm->uuid));
-		}
+		FM_INFO_LOG("Send response for create fault, uuid:(%s) (%u)\n", 
+				alarm->uuid, hdr->msg_rc);
+		send_response(fd,hdr,alarm->uuid,sizeof(alarm->uuid));
 	}
-}
-
-void FmSocketServerProcessor::handle_create_fault_list(int fd,
-	SFmMsgHdrT *hdr, std::vector<char> &rdata, CFmDBSession &sess) {
-
-	// Validate the basic message size first
-	// We cannot use is_request_valid because the size is variable based
-	// on the number of alarms, so we just verify if the sent size is a
-	// multiple of sizeof(SFmAlarmDataT)
-	if (hdr->msg_size % sizeof(SFmAlarmDataT) != 0) {
-		FM_ERROR_LOG("Invalid message size: %u, expected multiple of %zu",
-			hdr->msg_size, sizeof(SFmAlarmDataT));
-		hdr->msg_rc = FM_ERR_INVALID_REQ;
-		send_response(fd, hdr, NULL, 0);
-		return;
-	}
-
-	const size_t num_alarms = hdr->msg_size / sizeof(SFmAlarmDataT);
-
-	FM_INFO_LOG("Processing create fault list with %u entries", num_alarms);
-
-	size_t offset = sizeof(SFmMsgHdrT);
-	for (uint32_t i = 0; i < num_alarms; ++i) {
-		// Create a new message header and data to isolate each alarm information when
-		// passing to the handle_create_fault function
-		SFmMsgHdrT alarm_hdr = *hdr;
-		alarm_hdr.msg_size = sizeof(SFmAlarmDataT);
-		std::vector<char> alarm_data(sizeof(SFmMsgHdrT) + sizeof(SFmAlarmDataT));
-		memcpy(alarm_data.data(), &alarm_hdr, sizeof(SFmMsgHdrT));
-		memcpy(alarm_data.data() + sizeof(SFmMsgHdrT), &rdata[offset], sizeof(SFmAlarmDataT));
-
-		// We don't want for handle_create_fault to send any response back to the client or else it
-		// will receive the response for the first call only, so we set send_response_flag to false
-		handle_create_fault(fd, &alarm_hdr, alarm_data, sess, false);
-
-		if (alarm_hdr.msg_rc != FM_ERR_OK) {
-			FM_ERROR_LOG("Failed to create fault entry %u, stopping processing", i);
-			hdr->msg_rc = alarm_hdr.msg_rc;
-			send_response(fd, hdr, NULL, 0);
-			return;
-		}
-
-		// Move the offset to the next alarm
-		offset += sizeof(SFmAlarmDataT);
-	}
-
-	FM_INFO_LOG("Successfully processed all %u fault entries", num_alarms);
-	send_response(fd, hdr, NULL, 0);
 }
 
 void FmSocketServerProcessor::handle_delete_faults(int fd,
@@ -639,8 +585,7 @@ void FmSocketServerProcessor::handle_delete_fault(
 	int fd,
 	SFmMsgHdrT *hdr,
 	std::vector<char> &rdata,
-	CFmDBSession &sess,
-    bool send_response_flag) {
+	CFmDBSession &sess) {
 
 	CFmDbAlarmOperation op;
 	sFmJobReq req;
@@ -695,60 +640,6 @@ void FmSocketServerProcessor::handle_delete_fault(
 		}
 	}
 	FM_INFO_LOG("Response to delete fault: %u\n", hdr->msg_rc);
-	if (send_response_flag)
-		send_response(fd, hdr, NULL, 0);
-}
-
-void FmSocketServerProcessor::handle_delete_fault_list(int fd,
-	SFmMsgHdrT *hdr, std::vector<char> &rdata, CFmDBSession &sess) {
-
-	// Validate the basic message size first
-	// We cannot use is_request_valid because the size is variable based
-	// on the number of entities, so we just verify if the sent size is a
-	// multiple of sizeof(AlarmFilter)
-	if (hdr->msg_size % sizeof(AlarmFilter) != 0) {
-		FM_ERROR_LOG("Invalid message size: %u, expected multiple of %zu",
-			hdr->msg_size, sizeof(AlarmFilter));
-		hdr->msg_rc = FM_ERR_INVALID_REQ;
-		send_response(fd, hdr, NULL, 0);
-		return;
-	}
-
-	const size_t num_alarms = hdr->msg_size / sizeof(AlarmFilter);
-
-	FM_INFO_LOG("Processing delete fault list with %u entries", num_alarms);
-
-	size_t offset = sizeof(SFmMsgHdrT);
-
-	// Process each alarm entry
-	for (uint32_t i = 0; i < num_alarms; ++i) {
-		// Create a new message header and data to isolate each alarm information when
-		// passing to the handle_delete_fault function
-		SFmMsgHdrT alarm_hdr = *hdr;
-		alarm_hdr.msg_size = sizeof(AlarmFilter);
-		std::vector<char> alarm_data(sizeof(SFmMsgHdrT) + sizeof(AlarmFilter));
-		memcpy(alarm_data.data(), &alarm_hdr, sizeof(SFmMsgHdrT));
-		memcpy(alarm_data.data() + sizeof(SFmMsgHdrT), &rdata[offset], sizeof(AlarmFilter));
-
-		// We don't want for handle_delete_fault to send any response, so we set
-		// send_response_flag to false
-		handle_delete_fault(fd, &alarm_hdr, alarm_data, sess, false);
-
-		// Ignore FM_ERR_ENTITY_NOT_FOUND since an absent alarm doesn't raise API errors
-		if (alarm_hdr.msg_rc != FM_ERR_OK &&
-		    alarm_hdr.msg_rc != FM_ERR_ENTITY_NOT_FOUND) {
-			FM_ERROR_LOG("Failed to delete fault entry %u with rc %u, stopping processing",
-				i, alarm_hdr.msg_rc);
-			hdr->msg_rc = alarm_hdr.msg_rc;
-			send_response(fd, hdr, NULL, 0);
-			return;
-		}
-
-		// Move the offset to the next alarm
-		offset += sizeof(AlarmFilter);
-	}
-
-	FM_INFO_LOG("Successfully deleted all %u fault entries", num_alarms);
 	send_response(fd, hdr, NULL, 0);
 }
 
@@ -806,8 +697,6 @@ void FmSocketServerProcessor::handle_socket_data(int fd,
 	case EFmGetFaults:handle_get_faults(fd,hdr,rdata); break;
 	case EFmGetFaultsById:handle_get_faults_by_id(fd,hdr,rdata); break;
 	case EFmGetFaultsByIdnEid:handle_get_faults_by_id_n_eid(fd,hdr,rdata); break;
-	case EFmCreateFaultList:handle_create_fault_list(fd,hdr,rdata, sess); break;
-	case EFmDeleteFaultList:handle_delete_fault_list(fd,hdr,rdata,sess); break;
 	default:
 		FM_ERROR_LOG("Unexpected client request, action:%u\n",hdr->action);
 		break;

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014, 2025 Wind River Systems, Inc.
+// Copyright (c) 2014 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -29,7 +29,6 @@ enum EFmAlarmIndexMap {
   FM_ALM_IX_SERVICE_AFFECT,
   FM_ALM_IX_SUPPRESSION,
   FM_ALM_IX_INHIBIT_ALARM,
-  FM_ALM_IX_KEEP_EXISTING_ALARM,
   FM_ALM_IX_MAX
 };
 

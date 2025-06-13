@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2025 Wind River Systems, Inc.
+// Copyright (c) 2014-2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -41,8 +41,7 @@ static const char * field_map[] = {
 	FM_ALARM_COLUMN_SERVICE_AFFECTING,
 	FM_ALARM_COLUMN_SUPPRESSION,
 	FM_ALARM_COLUMN_INHIBIT_ALARMS,
-	FM_ALARM_KEEP_EXISTING_ALARM,
-	FM_ALARM_COLUMN_MASKED //19
+	FM_ALARM_COLUMN_MASKED //18
 };
 
 void add_both_tables(const char *str, int id, itos_t &t1,stoi_t &t2 ) {
@@ -82,8 +81,6 @@ static void init_tables() {
 		add_both_tables(FM_ALARM_COLUMN_SERVICE_AFFECTING,FM_ALM_IX_SERVICE_AFFECT,db_alarm_field_ix_to_str,db_alarm_field_str_to_ix);
 		add_both_tables(FM_ALARM_COLUMN_SUPPRESSION,FM_ALM_IX_SUPPRESSION,db_alarm_field_ix_to_str,db_alarm_field_str_to_ix);
 		add_both_tables(FM_ALARM_COLUMN_INHIBIT_ALARMS,FM_ALM_IX_INHIBIT_ALARM,db_alarm_field_ix_to_str,db_alarm_field_str_to_ix);
-
-		add_both_tables(FM_ALARM_KEEP_EXISTING_ALARM,FM_ALM_IX_KEEP_EXISTING_ALARM,db_alarm_field_ix_to_str,db_alarm_field_str_to_ix);
 		has_inited = true;
 	}
 	pthread_mutex_unlock(&mutex);
@@ -178,12 +175,6 @@ bool CFmDbAlarmOperation::create_alarm(CFmDBSession &sess,CFmDbAlarm &a) {
 		data.erase(it);
 	}
 
-	// Remove keep_existing_alarm field as it's a control field, not a DB column
-	it = data.find(FM_ALARM_KEEP_EXISTING_ALARM);
-	if (it != data.end()){
-		data.erase(it);
-	}
-
 	std::string query;
 	FM_DB_UT_NAME_VAL(query,FM_ALARM_COLUMN_ALARM_ID,
 			data[FM_ALARM_COLUMN_ALARM_ID]);
@@ -209,12 +200,6 @@ bool CFmDbAlarmOperation::create_alarm(CFmDBSession &sess,CFmDbAlarm &a) {
 	if (result.size() == 0){
 		fm_db_util_build_sql_insert((const char*)FM_ALARM_TABLE_NAME, data, sql_params);
 	}else{
-		if (a.find_field(FM_ALARM_KEEP_EXISTING_ALARM) == "True") {
-			FM_DEBUG_LOG("Alarm exists and keep_existing_alarm was provided, not updating...\n");
-			// Since alarm was kept, we need to set the uuid to the one from db
-			a.set_field(FM_ALARM_COLUMN_UUID, result[0][FM_ALARM_COLUMN_UUID]);
-			return true;
-		}
 		fm_db_single_result_t alm = result[0];
 		fm_db_util_build_sql_update((const char*)FM_ALARM_TABLE_NAME,
 				alm[FM_ALARM_COLUMN_ID],data, sql_params);
@@ -566,12 +551,6 @@ bool CFmDbAlarmOperation::add_alarm_history(CFmDBSession &sess,
 	}
 
 	it = data.find(FM_ALARM_COLUMN_ID);
-	if (it != data.end()){
-		data.erase(it);
-	}
-
-	// Remove keep_existing_alarm field as it's a control field, not a DB column
-	it = data.find(FM_ALARM_KEEP_EXISTING_ALARM);
 	if (it != data.end()){
 		data.erase(it);
 	}

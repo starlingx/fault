@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2018, 2024-2025 Wind River Systems, Inc.
+// Copyright (c) 2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -106,27 +106,27 @@ static PyObject * _fm_set_list(PyObject * self, PyObject *args) {
 	   structures, which are filled and sent to the C++ core. */
 
 	std::string alarm;
+	fm_uuid_t tmp_uuid;
+	PyObject *uuidList = PyList_New(0);
 	EFmErrorT rc = FM_ERR_INVALID_REQ;
 
 	PyObject *listObj = nullptr;
 	if (!PyArg_ParseTuple(args, "O", &listObj)) {
 		ERROR_LOG("Failed to parse args.");
-		Py_RETURN_FALSE;
+		Py_RETURN_NONE;
 	}
 
 	if (!PyList_Check(listObj)) {
 		ERROR_LOG("Expected a list.");
-		Py_RETURN_FALSE;
+		Py_RETURN_NONE;
 	}
 
 	Py_ssize_t num_items = PyList_Size(listObj);
-	std::vector<SFmAlarmDataT> alarms_vector;
-
 	for (Py_ssize_t i = 0; i < num_items; i++) {
 		PyObject *item = PyList_GetItem(listObj, i);
 		if (!PyUnicode_Check(item)) {
 			ERROR_LOG("List items must be strings.");
-			Py_RETURN_FALSE;
+			Py_RETURN_NONE;
 		}
 
 		const char *alm_str = PyUnicode_AsUTF8(item);
@@ -137,24 +137,25 @@ static PyObject * _fm_set_list(PyObject * self, PyObject *args) {
 			ERROR_LOG("Failed to convert string to alarm.");
 			continue;
 		}
-		alarms_vector.push_back(alm_data);
+
+		rc = fm_set_fault(&alm_data, &tmp_uuid);
+		if (rc == FM_ERR_OK) {
+			PyObject *uuidStr = PyUnicode_FromString(tmp_uuid);
+			PyList_Append(uuidList, uuidStr);
+			Py_DECREF(uuidStr);
+		} else if (rc == FM_ERR_NOCONNECT) {
+			WARNING_LOG("Failed to connect to FM manager");
+		} else {
+			ERROR_LOG("Failed to generate an alarm: (%s) (%s)",
+					  alm_data.alarm_id, alm_data.entity_instance_id);
+		}
 	}
 
-	if (alarms_vector.empty()) {
-		WARNING_LOG("No valid alarms to process.");
-		Py_RETURN_NONE;
-	}
-
-	rc = fm_set_fault_list(&alarms_vector);
 	if (rc == FM_ERR_OK) {
-		Py_RETURN_TRUE;
-	} else if (rc == FM_ERR_NOCONNECT) {
-		WARNING_LOG("Failed to connect to FM manager");
-	} else {
-		ERROR_LOG("Failed to set fault list, error code: %d", rc);
+		return uuidList;
 	}
 
-	Py_RETURN_FALSE;
+	Py_RETURN_NONE;
 }
 
 static PyObject * _fm_get(PyObject * self, PyObject *args) {
@@ -424,60 +425,12 @@ static PyObject * _fm_clear_all(PyObject * self, PyObject *args) {
 	Py_RETURN_FALSE;
 }
 
-static PyObject * _fm_clear_list(PyObject * self, PyObject *args) {
-
-	std::string alm_str, filter_str;
-	EFmErrorT rc;
-
-	PyObject *listObj = nullptr;
-	if (!PyArg_ParseTuple(args, "O", &listObj)) {
-		ERROR_LOG("Failed to parse args.");
-		Py_RETURN_FALSE;
-	}
-
-	Py_ssize_t num_items = PyList_Size(listObj);
-	std::vector<AlarmFilter> alarms_vector;
-
-	for (Py_ssize_t i = 0; i < num_items; i++) {
-		PyObject *item = PyList_GetItem(listObj, i);
-		if (!PyUnicode_Check(item)) {
-			ERROR_LOG("List items must be strings.");
-			Py_RETURN_FALSE;
-		}
-		const char *alm_str = PyUnicode_AsUTF8(item);
-
-		AlarmFilter af;
-		if (!fm_alarm_filter_from_string(alm_str, &af)) {
-			ERROR_LOG("Invalid alarm filter: (%s)", filter_str.c_str());
-			Py_RETURN_FALSE;
-		}
-		alarms_vector.push_back(af);
-	}
-
-	rc = fm_clear_fault_list(&alarms_vector);
-	if (rc == FM_ERR_OK) {
-		Py_RETURN_TRUE;
-	}
-
-	if (rc == FM_ERR_ENTITY_NOT_FOUND) {
-		DEBUG_LOG("No alarms found to clear from list");
-		Py_RETURN_NONE;
-	} else if (rc == FM_ERR_NOCONNECT) {
-		WARNING_LOG("Failed to connect to FM manager");
-	} else {
-		ERROR_LOG("Failed to clear alarm list, error code: (%d)", rc);
-	}
-	Py_RETURN_FALSE;
-}
-
 static PyMethodDef _methods [] = {
 		{ "set", _fm_set, METH_VARARGS, "Set or update an alarm" },
 		{ "get", _fm_get, METH_VARARGS, "Get alarms by filter" },
 		{ "clear", _fm_clear, METH_VARARGS, "Clear an alarm by filter" },
 		{ "clear_all", _fm_clear_all, METH_VARARGS,
 				"Clear alarms that match the entity instance id"},
-		{ "clear_list", _fm_clear_list, METH_VARARGS,
-				"Clear alarms list that match the entity instance id"},
 		{ "get_by_aid", (PyCFunction)_fm_get_by_aid, METH_VARARGS | METH_KEYWORDS,
 				"Get alarms by alarm id" },
 		{ "get_by_eid", (PyCFunction)_fm_get_by_eid, METH_VARARGS | METH_KEYWORDS,
