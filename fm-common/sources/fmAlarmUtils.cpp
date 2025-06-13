@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014, 2025 Wind River Systems, Inc.
+// Copyright (c) 2014 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -359,15 +359,6 @@ static void fm_inhibit_alarm(SFmAlarmDataT *a, std::string &s,
 }
 
 
-static void fm_keep_existing_alarm(SFmAlarmDataT *a, std::string &s,
-                                   bool is_get) {
-    if (is_get)
-        s = tostr(a->keep_existing_alarm, bool_to_str);
-    else
-        a->keep_existing_alarm = (((s == "t") || (s == "True"))? 1 :0);
-}
-
-
 typedef void (*set_get_field_type)(SFmAlarmDataT *a, std::string &s, bool is_get);
 
 
@@ -388,8 +379,7 @@ struct alarm_struct_update_t {
     { FM_ALM_IX_REPAIR_ACTION, fm_repair },
     { FM_ALM_IX_SERVICE_AFFECT, fm_service_affect },
     { FM_ALM_IX_SUPPRESSION, fm_suppression },
-    { FM_ALM_IX_INHIBIT_ALARM, fm_inhibit_alarm },
-    { FM_ALM_IX_KEEP_EXISTING_ALARM, fm_keep_existing_alarm }
+    { FM_ALM_IX_INHIBIT_ALARM, fm_inhibit_alarm }
 };
 
 

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2025 Wind River Systems, Inc.
+# Copyright (c) 2013-2024 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -44,10 +44,6 @@ class APIException(Exception):
 # suppression: true/false (allowed/not-allowed), default to false
 # uuid: unique identifier of an active alarm instance, filled by FM system
 # Timestamp: when the alarm has been raised/updated, filled by FM system
-# inhibit_alarms: hierarchical suppression of alarms if it is set to true
-#                 true/false, default to false
-# keep_existing_alarm: keep original alarm when creating an alarm that already exist
-#                      true/false, default to false
 # See CGCS FM Guide for the alarm model specification
 class Fault(object):
 
@@ -55,8 +51,7 @@ class Fault(object):
                  entity_instance_id, severity, reason_text,
                  alarm_type, probable_cause, proposed_repair_action,
                  service_affecting=False, suppression=False,
-                 uuid=None, timestamp=None, inhibit_alarms=False,
-                 keep_existing_alarm=False):
+                 uuid=None, timestamp=None):
         self.alarm_id = alarm_id
         self.alarm_state = alarm_state
         self.entity_type_id = self._unicode(entity_type_id)
@@ -70,8 +65,6 @@ class Fault(object):
         self.suppression = suppression
         self.uuid = uuid
         self.timestamp = timestamp
-        self.inhibit_alarms = inhibit_alarms
-        self.keep_existing_alarm = keep_existing_alarm
 
     def as_dict(self):
         return copy.copy(self.__dict__)
@@ -102,10 +95,7 @@ class FaultAPIsBase(object):
                 sep + data.alarm_type + sep + data.probable_cause + sep +
                 self._check_val(data.proposed_repair_action) + sep +
                 str(data.service_affecting) + sep +
-                str(data.suppression) + sep +
-                str(data.inhibit_alarms) + sep +
-                str(data.keep_existing_alarm) + sep
-                )
+                str(data.suppression) + sep)
 
     @staticmethod
     def _str_to_alarm(alarm_str):
@@ -396,37 +386,3 @@ class FaultAPIsV2(FaultAPIsBase):
                 return data
             else:
                 return None
-
-    def set_faults(self, data: list[Fault]) -> bool:
-        """Set a list of provided faults
-
-        :param data: list of Fault objects
-        """
-        buff_list = []
-        for alarm_data in data:
-            self._check_required_attributes(alarm_data)
-            self._validate_attributes(alarm_data)
-            buff = self._alarm_to_str(alarm_data)
-            buff_list.append(buff)
-
-        with fm_api_lock:
-            resp = fm_core.set_fault_list(buff_list)
-        if resp is False:
-            raise APIException("Failed to execute set_faults.")
-        return resp
-
-    def clear_faults_list(self, faults_list: list[tuple[str, str]]) -> bool:
-        """Clear a list of provided faults
-
-        :param faults_list: list of tuples (alarm_id, entity_instance_id)
-        """
-        buff_list = []
-        sep = constants.FM_CLIENT_STR_SEP
-        for alarm_id, entity_instance_id in faults_list:
-            buff_list.append(sep + self._check_val(alarm_id) + sep +
-                             self._check_val(entity_instance_id) + sep)
-        with fm_api_lock:
-            resp = fm_core.clear_list(buff_list)
-        if resp is False:
-            raise APIException("Failed to execute clear_faults_list.")
-        return resp

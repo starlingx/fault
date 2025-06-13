@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014, 2024-2025 Wind River Systems, Inc.
+// Copyright (c) 2024 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -37,8 +37,6 @@ typedef enum {
   EFmReturnUUID,
   EFmGetFaultsById,
   EFmGetFaultsByIdnEid,
-  EFmCreateFaultList,
-  EFmDeleteFaultList,
   EFmActMax
 }EFmMsgActionsT;
 

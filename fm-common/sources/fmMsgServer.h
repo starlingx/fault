@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014, 2025 Wind River Systems, Inc.
+// Copyright (c) 2014 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -19,9 +19,9 @@ protected:
 			CFmDBSession &sess);
 
 	virtual void handle_create_fault(int fd, SFmMsgHdrT *hdr,
-			std::vector<char> &rdata, CFmDBSession &sess, bool send_response_flag = true);
+			std::vector<char> &rdata, CFmDBSession &sess);
 	virtual void handle_delete_fault(int fd, SFmMsgHdrT *hdr,
-			std::vector<char> &rdata, CFmDBSession &sess, bool send_response_flag = true);
+			std::vector<char> &rdata, CFmDBSession &sess);
 	virtual void handle_delete_faults(int fd, SFmMsgHdrT *hdr,
 			std::vector<char> &rdata,CFmDBSession &sess);
 
@@ -33,10 +33,6 @@ protected:
 			std::vector<char> &rdata);
 	virtual void handle_get_faults_by_id_n_eid(int fd, SFmMsgHdrT *hdr,
 			std::vector<char> &rdata);
-	virtual void handle_create_fault_list(int fd, SFmMsgHdrT *hdr,
-		std::vector<char> &rdata, CFmDBSession &sess);
-	virtual void handle_delete_fault_list(int fd, SFmMsgHdrT *hdr,
-		std::vector<char> &rdata,CFmDBSession &sess);
 public:
 	void send_response(int fd, SFmMsgHdrT *hdr, void *data, size_t len);
 };
