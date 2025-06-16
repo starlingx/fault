@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017,2024 Wind River Systems, Inc.
+// Copyright (c) 2017, 2024-2025 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -287,6 +287,37 @@ EFmErrorT fm_set_fault(const SFmAlarmDataT *alarm,
   return FM_ERR_OK;
 }
 
+
+EFmErrorT fm_set_fault_list(const std::vector<SFmAlarmDataT> *alarm) {
+  CFmMutexGuard m(getAPIMutex());
+  if (!fm_lib_reconnect()) return FM_ERR_NOCONNECT;
+
+  fm_buff_t buff;
+  buff.clear();
+
+  // Calculate the total size of all alarm data
+  size_t total_size = alarm->size() * sizeof(SFmAlarmDataT);
+  const void* data_ptr = alarm->data();
+  EFmErrorT erc = fm_msg_utils_prep_requet_msg(buff, EFmCreateFaultList,
+                                               data_ptr, total_size);
+  if (erc != FM_ERR_OK) return erc;
+
+  if (m_client.write_packet(buff)) {
+    if (!m_client.read_packet(buff)) {
+      m_connected = false;
+      return FM_ERR_NOCONNECT;
+    }
+
+    HANDLE_SERVER_RC(ptr_to_hdr(buff));
+  } else {
+    m_connected = false;
+    return FM_ERR_NOCONNECT;
+  }
+
+  return FM_ERR_OK;
+}
+
+
 /**
  * Clears fault entries based on the specified filter.
  *
@@ -351,6 +382,36 @@ EFmErrorT fm_clear_all(fm_ent_inst_t *inst_id) {
   } else {
     m_connected = false;
     FM_ERROR_LOG("Write ERR: return FM_ERR_NOCONNECT");
+    return FM_ERR_NOCONNECT;
+  }
+  return FM_ERR_OK;
+}
+
+
+EFmErrorT fm_clear_fault_list(std::vector<AlarmFilter> *filter) {
+
+  CFmMutexGuard m(getAPIMutex());
+  if (!fm_lib_reconnect()) return FM_ERR_NOCONNECT;
+
+  fm_buff_t buff;
+  buff.clear();
+
+  // Calculate the total size of all alarm data
+  size_t total_size = filter->size() * sizeof(AlarmFilter);
+  const void* data_ptr = filter->data();
+
+  EFmErrorT erc = fm_msg_utils_prep_requet_msg(buff, EFmDeleteFaultList,
+                                               data_ptr, total_size);
+  if (erc!=FM_ERR_OK) return erc;
+
+  if (m_client.write_packet(buff)) {
+    if (!m_client.read_packet(buff)) {
+      m_connected = false;
+      return FM_ERR_NOCONNECT;
+    }
+    HANDLE_SERVER_RC(ptr_to_hdr(buff));
+  } else {
+    m_connected = false;
     return FM_ERR_NOCONNECT;
   }
   return FM_ERR_OK;
