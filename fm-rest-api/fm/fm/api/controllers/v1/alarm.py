@@ -220,8 +220,7 @@ class AlarmController(rest.RestController):
                        fm_constants.FM_ALARM_SEVERITY_MINOR: 0,
                        fm_constants.FM_ALARM_SEVERITY_WARNING: 0}
         # filter masked alarms and sum by severity
-        for a in ialm:
-            ialm_instance = a[0]
+        for ialm_instance in ialm:
             if str(ialm_instance['masked']) != 'True':
                 if ialm_instance['severity'] in ialm_counts:
                     ialm_counts[ialm_instance['severity']] += 1

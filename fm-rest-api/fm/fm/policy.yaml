@@ -1,15 +1,16 @@
 ---
 # The commented lines below contains the default values for presented rules.
 
-# admin_in_system_projects: role:admin and (project_name:admin or project_name:services)
-# reader_in_system_projects: role:reader and (project_name:admin or project_name:services)
+# admin_or_configurator: (role:admin or role:configurator) and
+# (project_name:admin or project_name:services)
+# reader_or_operator_or_configurator: role:reader or role:operator or configurator
 
-# fm_api:alarm:create: rule:admin_in_system_projects
-# fm_api:alarm:delete: rule:admin_in_system_projects
-# fm_api:alarm:get: role:reader
-# fm_api:alarm:modify: rule:admin_in_system_projects
+# fm_api:alarm:create: rule:admin_or_configurator
+# fm_api:alarm:delete: rule:admin_or_configurator
+# fm_api:alarm:get: rule:reader_or_operator_configurator
+# fm_api:alarm:modify: rule:admin_or_configurator
 
-# fm_api:event_log:get: role:reader
+# fm_api:event_log:get: rule:reader_or_operator_configurator
 
-# fm_api:event_suppression:get: role:reader
-# fm_api:event_suppression:modify: rule:admin_in_system_projects
+# fm_api:event_suppression:get: rule:reader_or_operator_configurator
+# fm_api:event_suppression:modify: rule:admin_or_configurator

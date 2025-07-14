@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -32,6 +32,8 @@ import argparse
 import dateutil
 import prettytable
 import textwrap
+import signal
+import sys
 
 from datetime import datetime
 from dateutil import parser
@@ -46,6 +48,7 @@ from fmclient.common import wrapping_formatters
 
 
 SENSITIVE_HEADERS = ('X-Auth-Token', )
+CONFIRMATION_YES = "yes"
 
 
 class HelpFormatter(argparse.HelpFormatter):
@@ -228,7 +231,12 @@ def define_command(subparsers, command, callback, cmd_mapper):
                                       formatter_class=HelpFormatter)
     subparser.add_argument('-h', '--help', action='help',
                            help=argparse.SUPPRESS)
-
+    if _is_service_impacting_command(command):
+        subparser.add_argument(
+            '--yes', action='store_true',
+            help=f"Automatically confirm the action: {command}"
+        )
+        callback = prompt_cli_confirmation(callback, command.split("-")[0])
     # Are we a list command?
     if _does_command_need_no_wrap(callback):
         # then decorate it with wrapping data formatter functionality
@@ -578,3 +586,64 @@ def print_list(objs, fields, field_labels, formatters={}, sortby=0,
     return print_long_list(objs, fields, field_labels, formatters=formatters, sortby=sortby,
                            reversesort=reversesort, no_wrap_fields=no_wrap_fields,
                            no_paging=True, printer=printer)
+
+
+def input_with_timeout(prompt, timeout):
+    def timeout_handler(signum, frame):
+        raise TimeoutError
+
+    # Set the timeout handler
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(timeout)  # Set the alarm for the timeout
+
+    try:
+        # Try to get input from the user
+        result = input(prompt)
+        signal.alarm(0)  # Cancel the alarm if input is received in time
+        return result
+    except TimeoutError:
+        print("\nError: No response received within the time limit.")
+        sys.exit(1)
+
+
+def prompt_cli_confirmation(func, target_object, timeout=10):
+    """Decorator that asks for user confirmation before running the function."""
+    def wrapper(*args, **kwargs):
+        YELLOW = '\033[93m'
+        RESET = '\033[0m'
+        BOLD = '\033[1m'
+        if not _is_cli_confirmation_param_enabled():
+            return func(*args, **kwargs)
+        if hasattr(args[1], 'yes') and args[1].yes:
+            # Skip confirmation if --yes was passed
+            return func(*args, **kwargs)
+
+        confirmation = input_with_timeout(
+            f"{BOLD}{YELLOW}WARNING: This is a high-risk operation that may cause a "
+            f"service interruption or remove critical resources {RESET}\n"
+            f"{BOLD}{YELLOW}Do you want to continue? ({CONFIRMATION_YES}/No): {RESET}",
+            timeout,
+        )
+
+        if not confirmation or confirmation.lower() != CONFIRMATION_YES:
+            print("Operation cancelled by the user.")
+            sys.exit(1)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def _is_service_impacting_command(command):
+    if 'delete' in command:
+        return True
+
+    service_impacting_fm_commands = [
+        "event-suppress",
+        "event-unsuppress",
+        "event-unsuppress-all"
+    ]
+
+    return command in service_impacting_fm_commands
+
+
+def _is_cli_confirmation_param_enabled():
+    return env("CLI_CONFIRMATIONS", default="disabled") == "enabled"

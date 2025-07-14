@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022 Wind River Systems, Inc.
+# Copyright (c) 2022,2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,7 +13,7 @@ POLICY_ROOT = 'fm_api:alarm:%s'
 alarm_rules = [
     policy.DocumentedRuleDefault(
         name=POLICY_ROOT % 'create',
-        check_str='rule:' + base.ADMIN_IN_SYSTEM_PROJECTS,
+        check_str='rule:' + base.ADMIN_OR_CONFIGURATOR,
         description="Create an alarm.",
         operations=[
             {
@@ -24,7 +24,7 @@ alarm_rules = [
     ),
     policy.DocumentedRuleDefault(
         name=POLICY_ROOT % 'delete',
-        check_str='rule:' + base.ADMIN_IN_SYSTEM_PROJECTS,
+        check_str='rule:' + base.ADMIN_OR_CONFIGURATOR,
         description="Delete an alarm.",
         operations=[
             {
@@ -35,7 +35,7 @@ alarm_rules = [
     ),
     policy.DocumentedRuleDefault(
         name=POLICY_ROOT % 'get',
-        check_str='role:reader',
+        check_str='rule:' + base.READER_OR_OPERATOR_OR_CONFIGURATOR,
         description="Get alarms.",
         operations=[
             {
@@ -58,7 +58,7 @@ alarm_rules = [
     ),
     policy.DocumentedRuleDefault(
         name=POLICY_ROOT % 'modify',
-        check_str='rule:' + base.ADMIN_IN_SYSTEM_PROJECTS,
+        check_str='rule:' + base.ADMIN_OR_CONFIGURATOR,
         description="Modify an alarm.",
         operations=[
             {
