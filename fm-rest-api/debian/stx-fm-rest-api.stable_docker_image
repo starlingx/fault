@@ -3,7 +3,7 @@ LABEL=stx-fm-rest-api
 # Set PROJECT=infra and PROJECT_REPO=nil because we are not cloning a repo
 PROJECT=infra
 PROJECT_REPO=nil
-DIST_PACKAGES="postgresql fm-common"
+DIST_PACKAGES="postgresql fm-common sysinv"
 DIST_REPOS="OS"
 
 PIP_PACKAGES="
