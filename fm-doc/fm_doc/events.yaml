@@ -1159,7 +1159,7 @@
     Suppression: False
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context: none
+    Context: starlingx
 
 280.004:
     Type: Alarm
