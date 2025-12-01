@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2025 Wind River Systems, Inc.
+# Copyright (c) 2018-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -200,6 +200,11 @@ class FmShell(object):
                             action='store_true',
                             default=env('FMCLIENT_NO_CACHE', default=False),
                             help='Disables cache feature (Env: FMCLIENT_NO_CACHE)')
+        parser.add_argument('--stx-auth-type',
+                            default=utils.env('STX_AUTH_TYPE', default='keystone'),
+                            choices=['keystone', 'oidc'],
+                            help='Authentication type: keystone or oidc '
+                                 '(Env: STX_AUTH_TYPE)',)
 
         return parser
 
@@ -287,7 +292,7 @@ class FmShell(object):
                                            "either --os-username or via "
                                            "env[OS_USERNAME]")
 
-                if not args.os_password:
+                if not args.os_password and args.stx_auth_type == 'keystone':
                     raise exc.CommandError("You must provide a password via "
                                            "either --os-password or via "
                                            "env[OS_PASSWORD]")
@@ -313,7 +318,7 @@ class FmShell(object):
             'os_tenant_name', 'os_region_name', 'os_user_domain_id',
             'os_user_domain_name', 'os_project_domain_id',
             'os_project_domain_name', 'os_service_type', 'os_endpoint_type',
-            'timeout', 'insecure'
+            'timeout', 'insecure', 'stx_auth_type'
         )
         kwargs = {}
         for key in client_args:
@@ -340,7 +345,7 @@ class FmShell(object):
         try:
             args.func(client, args)
         except exceptions.HTTPUnauthorized:
-            if not self.keyring:
+            if not hasattr(self, 'keyring') or not self.keyring:
                 raise exc.CommandError("Invalid Identity credentials.")
             args.os_auth_token = None
             args.fm_url = None

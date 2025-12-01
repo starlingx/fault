@@ -10,7 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -20,6 +20,8 @@ import re
 
 from keystonemiddleware import auth_token
 from oslo_log import log
+from platform_util.oidc import oidc_utils
+import webob
 
 from fm.common import exceptions
 from fm.common import utils
@@ -49,6 +51,9 @@ class AuthTokenMiddleware(auth_token.AuthProtocol):
             LOG.error(msg)
             raise exceptions.ConfigInvalid(error_msg=msg)
 
+        self.oidc_token_cache = {}
+        self.oidc_auth_params = None
+
         super(AuthTokenMiddleware, self).__init__(app, conf)
 
     def __call__(self, env, start_response):
@@ -61,6 +66,38 @@ class AuthTokenMiddleware(auth_token.AuthProtocol):
 
         if env['is_public_api']:
             return self._app(env, start_response)
+
+        if 'HTTP_OIDC_TOKEN' in env:
+            if self.oidc_auth_params is None:
+                self.oidc_auth_params = oidc_utils.get_apiserver_oidc_args()
+            # if it's still None, then the system isn't configured correctly
+            # some or all of the oidc-related params are missing
+            if self.oidc_auth_params is None:
+                error_response = webob.Response(status=401)
+                return error_response(env, start_response)
+
+            try:
+                claims = oidc_utils.validate_oidc_token(
+                    env['HTTP_OIDC_TOKEN'],
+                    self.oidc_token_cache,
+                    self.oidc_auth_params['oidc-issuer-url'],
+                    self.oidc_auth_params['oidc-client-id'])
+                if claims is None:
+                    error_response = webob.Response(status=401)
+                    return error_response(env, start_response)
+
+                username = oidc_utils.get_username_from_oidc_token(
+                    claims,
+                    self.oidc_auth_params['oidc-username-claim'])
+                roles = oidc_utils.get_keystone_roles_for_oidc_token(
+                    claims,
+                    self.oidc_auth_params['oidc-username-claim'],
+                    self.oidc_auth_params['oidc-groups-claim'])
+                env['oidc_token_roles'] = roles
+                return self._app(env, start_response)
+            except Exception as e:
+                error_response = webob.Response(status=401)
+                return error_response(env, start_response)
 
         return super(AuthTokenMiddleware, self).__call__(env, start_response)
 

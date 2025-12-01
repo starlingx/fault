@@ -143,6 +143,9 @@ class HTTPClient(_BaseHTTPClient):
         self.session = requests.Session()
         self.session.headers["User-Agent"] = USER_AGENT
 
+        self.oidc_token = kwargs.get('oidc_token')
+        self.stx_auth_type = kwargs.get('stx_auth_type')
+
         if self.language_header:
             self.session.headers["Accept-Language"] = self.language_header
 
@@ -223,6 +226,10 @@ class HTTPClient(_BaseHTTPClient):
         # add identity header to the request
         if not headers.get('X-Auth-Token'):
             headers['X-Auth-Token'] = self.auth_token
+
+        if self.stx_auth_type == 'oidc':
+            headers['User-Agent'] = USER_AGENT
+            headers['OIDC-Token'] = self.oidc_token
 
         if self.global_request_id:
             headers.setdefault(REQ_ID_HEADER, self.global_request_id)

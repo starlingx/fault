@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2022 Wind River Systems, Inc.
+# Copyright (c) 2018-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -65,7 +65,12 @@ class ContextHook(hooks.PecanHook):
         domain_id = headers.get('X-User-Domain-Id')
         domain_name = headers.get('X-User-Domain-Name')
         auth_token = headers.get('X-Auth-Token')
-        roles = headers.get('X-Roles', '').split(',')
+
+        if 'HTTP_OIDC_TOKEN' in environ:
+            roles = environ['oidc_token_roles']
+        else:
+            roles = headers.get('X-Roles', '').split(',')
+
         catalog_header = headers.get('X-Service-Catalog')
         service_catalog = None
         if catalog_header:

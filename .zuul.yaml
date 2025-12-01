@@ -44,6 +44,7 @@
     nodeset: debian-bullseye
     required-projects:
       - starlingx/config
+      - starlingx/utilities
     vars:
       bindep_profile: test py39
       python_version: 3.9
