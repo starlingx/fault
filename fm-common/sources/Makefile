@@ -18,8 +18,13 @@ LDLIBS += -lpython3.6m
 INCLUDES += -I/usr/include/python3.6m
 CCFLAGS += -Werror
 else ifeq ($(OS_ID),debian)
+ifeq ($(OS_VERSION_ID),13)
+LDLIBS += -lpython3.13
+INCLUDES += -I/usr/include/python3.13
+else
 LDLIBS += -lpython3.9
 INCLUDES += -I/usr/include/python3.9
+endif
 else
 INCLUDES += -I/usr/include/python2.7
 LDLIBS += -lpython2.7
