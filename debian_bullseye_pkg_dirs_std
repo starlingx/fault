@@ -2,5 +2,5 @@ fm-api
 fm-common
 fm-doc
 fm-mgr
-fm-rest-api
+fm-rest-api/bullseye
 python-fmclient
