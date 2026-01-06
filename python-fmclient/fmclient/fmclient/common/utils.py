@@ -379,7 +379,10 @@ class WRPrettyTable(prettytable.PrettyTable):
             header_row_data.append(fieldname)
 
         # output actual header row data, word wrap when necessary
-        bits.append(self._stringify_row(header_row_data, options))
+        try:
+            bits.append(self._stringify_row(header_row_data, options))
+        except TypeError:
+            bits.append(self._stringify_row(header_row_data, options, self._hrule))
 
         if options["border"] and options["hrules"] != NONE:
             bits.append("\n")

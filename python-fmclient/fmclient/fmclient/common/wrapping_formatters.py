@@ -27,7 +27,10 @@ import textwrap
 
 from fmclient.common.cli_no_wrap import is_nowrap_set
 from fmclient.common.cli_no_wrap import set_no_wrap
-from prettytable import _get_size
+try:
+    from prettytable import _get_size
+except ImportError:
+    from prettytable.prettytable import _get_size
 from six.moves import range
 
 UUID_MIN_LENGTH = 36
