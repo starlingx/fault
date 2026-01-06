@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014-2018 Wind River Systems, Inc.
+// Copyright (c) 2014-2018, 2025 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -47,6 +47,9 @@
 #define FM_ALARM_COLUMN_SUPPRESSION               "suppression"
 #define FM_ALARM_COLUMN_INHIBIT_ALARMS            "inhibit_alarms"
 #define FM_ALARM_COLUMN_MASKED                    "masked"
+
+// Not a table column, but can be sent as an alarm parameter
+#define FM_ALARM_KEEP_EXISTING_ALARM              "keep_existing_alarm"
 
 /* Event Log Table Columns */
 #define FM_EVENT_LOG_COLUMN_CREATED_AT               "created_at"

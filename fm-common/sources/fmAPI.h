@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2024 Wind River Systems, Inc.
+// Copyright (c) 2017, 2024-2025 Wind River Systems, Inc.
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
+#include <vector>
 
 #ifdef __cplusplus
 extern "C" {
@@ -160,6 +161,7 @@ typedef struct{
   FMBoolTypeT service_affecting;
   FMBoolTypeT suppression;  //'allowed' or 'not-allowed'
   FMBoolTypeT inhibit_alarms; //hierarchical suppression of alarms if it is set to true
+  FMBoolTypeT keep_existing_alarm; //keep original alarm when creating an alarm that already exist
 }SFmAlarmDataT;
 
 typedef enum{
@@ -194,9 +196,13 @@ typedef struct {
 */
 EFmErrorT fm_set_fault(const SFmAlarmDataT *alarm, fm_uuid_t *uuid);
 
+EFmErrorT fm_set_fault_list(const std::vector<SFmAlarmDataT> *alarm);
+
 EFmErrorT fm_clear_fault(AlarmFilter *filter);
 
 EFmErrorT fm_clear_all(fm_ent_inst_t *inst_id);
+
+EFmErrorT fm_clear_fault_list(std::vector<AlarmFilter> *filter);
 
 EFmErrorT fm_get_fault(AlarmFilter *filter, SFmAlarmDataT *alarm);
 

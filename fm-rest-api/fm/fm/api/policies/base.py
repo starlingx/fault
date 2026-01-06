@@ -1,26 +1,26 @@
 #
-# Copyright (c) 2024 Wind River Systems, Inc.
+# Copyright (c) 2022,2025 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 from oslo_policy import policy
 
-ADMIN_IN_SYSTEM_PROJECTS = 'admin_in_system_projects'
-READER_OR_OPERATOR = 'reader_or_operator'
+ADMIN_OR_CONFIGURATOR = 'admin_or_configurator'
+READER_OR_OPERATOR_OR_CONFIGURATOR = 'reader_or_operator_or_configurator'
 
 
 base_rules = [
     policy.RuleDefault(
-        name=ADMIN_IN_SYSTEM_PROJECTS,
-        check_str='role:admin and (project_name:admin or ' +
+        name=ADMIN_OR_CONFIGURATOR,
+        check_str='(role:admin or role:configurator) and (project_name:admin or ' +
                   'project_name:services)',
-        description="Base rule.",
+        description='admin or configurator in system projects',
     ),
     policy.RuleDefault(
-        name=READER_OR_OPERATOR,
-        check_str='role:reader or role:operator',
-        description="Base rule."
+        name=READER_OR_OPERATOR_OR_CONFIGURATOR,
+        check_str='role:reader or role:operator or role:configurator',
+        description='reader or operator or configurator',
     )
 ]
 
