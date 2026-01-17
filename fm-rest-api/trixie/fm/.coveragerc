@@ -1,0 +1,8 @@
+[run]
+branch = True
+source = fm
+omit = fm/tests/*
+
+[report]
+ignore_errors = True
+

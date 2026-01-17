@@ -1,0 +1,31 @@
+# The order of packages is significant, because pip processes them in the order
+# of appearance. Changing the order has an impact on the overall integration
+# process, which may cause wedges in the gate later.
+hacking>=1.1.0,<=2.0.0 # Apache-2.0
+bashate
+bandit
+coverage
+pylint
+PyYAML >= 3.1.0
+yamllint<1.26.1
+stestr != 3.0.0
+testtools!=1.2.0,>=0.9.36
+iso8601
+mock
+cython
+oslo.log
+oslo.i18n  # Apache-2.0
+oslo.config>=3.7.0 # Apache-2.0
+oslo.concurrency>=3.7.1 # Apache-2.0
+oslo.db>=4.1.0 # Apache-2.0
+oslo.service>=1.10.0 # Apache-2.0
+oslo.utils>=3.5.0 # Apache-2.0
+oslo.serialization>=1.10.0,!=2.19.1      # Apache-2.0
+oslo_policy
+oslo_versionedobjects
+python-keystoneclient>=3.8.0  # Apache-2.0
+keystonemiddleware>=4.12.0  # Apache-2.0
+pecan>=1.0.0
+WSME>=0.5b2
+httplib2
+keyring <= 22.0.1
