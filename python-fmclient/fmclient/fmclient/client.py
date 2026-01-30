@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+import ipaddress
 import six.moves.urllib.parse as urlparse
 
 from oslo_utils import importutils
@@ -77,7 +78,11 @@ def get_client(version, endpoint=None, session=None, auth_token=None,
         if interface.lower() == 'internalurl':
             endpoint_protocol = 'http://'
         endpoint_ipaddress_parsed = urlparse.urlparse(auth_url)
-        endpoint = endpoint_protocol + endpoint_ipaddress_parsed.hostname
+        endpoint_hostname = endpoint_ipaddress_parsed.hostname
+        ip = ipaddress.ip_address(endpoint_hostname)
+        if isinstance(ip, ipaddress.IPv6Address):
+            endpoint_hostname = f'[{endpoint_hostname}]'
+        endpoint = endpoint_protocol + endpoint_hostname
         if endpoint_ipaddress_parsed.port is not None:
             endpoint = endpoint + ':18002'
 
