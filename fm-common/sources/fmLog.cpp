@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <syslog.h>
+#include <pthread.h>
 
 #include "fmLog.h"
 #include "fmDbAlarm.h"
