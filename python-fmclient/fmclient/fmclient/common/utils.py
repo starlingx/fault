@@ -656,7 +656,8 @@ def _is_cli_confirmation_param_enabled():
 
 def persist_auth_session_keyring(name: str,
                                  token: str,
-                                 endpoint: str = None,
+                                 auth_url: str = None,
+                                 fm_url: str = None,
                                  timeout: int = None) -> int:
     """ Stores the authentication data into keyring.
     Authentication data can be retrieved later and reused, avoiding unnecessary calls
@@ -666,15 +667,19 @@ def persist_auth_session_keyring(name: str,
 
     :param name: Key name
     :param token: Authentication token
-    :param endpoint: Endpoint URL
+    :param auth_url: Authentication (Keystone) URL
+    :param fm_url: FM Endpoint URL
     :param timeout: Timeout interval in seconds to expire the key. Default: never expires.
     """
 
     try:
         session = {'token': token}
 
-        if endpoint is not None:
-            session['endpoint'] = endpoint
+        if auth_url is not None:
+            session['auth_url'] = auth_url
+
+        if fm_url is not None:
+            session['fm_url'] = fm_url
 
         # Persist the key
         stdout = subprocess.run(['/usr/bin/keyctl', 'add', 'user', name, json.dumps(session), '@s'],  # nosec
@@ -690,7 +695,7 @@ def persist_auth_session_keyring(name: str,
 
         return keyring_entry_id
 
-    except subprocess.CalledProcessError as ex:
+    except subprocess.CalledProcessError:
         pass
 
 
@@ -711,8 +716,8 @@ def load_auth_session_keyring_by_name(key_name: str):
         # Retrieve session data
         return load_auth_session_keyring_by_id(keyring_entry_id)
 
-    except subprocess.CalledProcessError as ex:
-        return (None, None)
+    except subprocess.CalledProcessError:
+        return (None, None, None)
 
 
 def load_auth_session_keyring_by_id(key_id: int):
@@ -729,10 +734,10 @@ def load_auth_session_keyring_by_id(key_id: int):
 
         session = json.loads(stdout.decode('utf-8').strip('\n'))
 
-        return (session.get('token'), session.get('endpoint'))
+        return (session.get('token'), session.get('auth_url'), session.get('fm_url'))
 
-    except subprocess.CalledProcessError as ex:
-        return (None, None)
+    except subprocess.CalledProcessError:
+        return (None, None, None)
 
 
 def revoke_keyring_by_name(key_name: str):

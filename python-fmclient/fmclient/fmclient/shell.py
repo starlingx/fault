@@ -266,18 +266,20 @@ class FmShell(object):
         if not (args.os_auth_token and args.fm_url):
 
             os_auth_token = None
+            os_auth_url = None
             fm_url = None
 
             if not (args.refresh_cache or args.no_cache):
-                os_auth_token, fm_url = utils.load_auth_session_keyring_by_name(
-                    self._cache_key(args.os_username))
-
-                if os_auth_token and fm_url:
-                    self.keyring = True
+                os_auth_token, os_auth_url, fm_url = \
+                    utils.load_auth_session_keyring_by_name(
+                        self._cache_key(args.os_username))
 
             # Reuses the last authorization token and FM endpoint obtained from
             # keystone when available in the cache (keyring)
-            if os_auth_token and fm_url:
+            if os_auth_token and fm_url and os_auth_url \
+               and os_auth_url == args.os_auth_url:
+
+                self.keyring = True
                 args.os_auth_token = os_auth_token
                 args.fm_url = fm_url
 
@@ -322,8 +324,9 @@ class FmShell(object):
 
         client = fmclient.client.get_client(api_version, **kwargs)
 
-        if not args.no_cache and isinstance(client.http_client,
-                                            fmclient.common.http.SessionClient) \
+        # Store the auth token in the cache (keyring) for reuse in future calls
+        if not args.no_cache \
+           and isinstance(client.http_client, fmclient.common.http.SessionClient) \
            and client.http_client.session.auth.auth_ref:
 
             # Set the key timeout based on the token validity (in seconds)
@@ -334,6 +337,7 @@ class FmShell(object):
             utils.persist_auth_session_keyring(
                 self._cache_key(args.os_username),
                 client.http_client.session.get_token(),
+                args.os_auth_url,
                 client.http_client.endpoint_override,
                 timeout)
 
