@@ -60,15 +60,17 @@ class ContextHook(hooks.PecanHook):
         environ = state.request.environ
         user_name = headers.get('X-User-Name')
         user_id = headers.get('X-User-Id')
-        project_name = headers.get('X-Project-Name')
         project_id = headers.get('X-Project-Id')
         domain_id = headers.get('X-User-Domain-Id')
-        domain_name = headers.get('X-User-Domain-Name')
         auth_token = headers.get('X-Auth-Token')
 
         if 'HTTP_OIDC_TOKEN' in environ:
+            project_name = "admin"
+            domain_name = "Default"
             roles = environ['oidc_token_roles']
         else:
+            project_name = headers.get('X-Project-Name')
+            domain_name = headers.get('X-User-Domain-Name')
             roles = headers.get('X-Roles', '').split(',')
 
         catalog_header = headers.get('X-Service-Catalog')
