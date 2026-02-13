@@ -49,7 +49,7 @@
       bindep_profile: test py39
       python_version: 3.9
       tox_envlist: py39
-      tox_extra_args: -c fm-rest-api/bullseye/fm/tox.ini
+      tox_extra_args: -c fm-rest-api/fm/tox.ini
 
 - job:
     name: fault-tox-pylint
