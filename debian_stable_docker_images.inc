@@ -1,1 +1,1 @@
-fm-rest-api/bullseye
+fm-rest-api
