@@ -1,6 +1,6 @@
 ---
 debname: python-fmclient
-debver: 1.0
+debver: 1.1
 src_path: fmclient
 revision:
   dist: $STX_DIST
