@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2018, 2025 Wind River Systems, Inc.
+# Copyright (c) 2018, 2025-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -79,7 +79,7 @@ def strip_version(endpoint):
     (scheme, netloc, path, __, __, __) = url_parts
     path = path.lstrip('/')
     # regex to match 'v1' or 'v2.0' etc
-    if re.match('v\d+\.?\d*', path):
+    if re.match(r'v\d+\.?\d*', path):
         version = float(path.lstrip('v'))
         endpoint = scheme + '://' + netloc
     return endpoint, version

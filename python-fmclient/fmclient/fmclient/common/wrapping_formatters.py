@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -647,7 +647,7 @@ def build_wrapping_formatters(objs, fields, field_labels, format_spec, add_blank
     if objs is None or len(objs) == 0:
         return {}
 
-    biggest_word_pattern = re.compile("[\.:,;\!\?\\ =-\_]")
+    biggest_word_pattern = re.compile(r"[\.:,;\!\?\\ =-\_]")
 
     def get_biggest_word(s):
         return max(biggest_word_pattern.split(s), key=len)
