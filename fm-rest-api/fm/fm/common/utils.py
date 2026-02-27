@@ -15,11 +15,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-# Copyright (c) 2013-2018 Wind River Systems, Inc.
+# Copyright (c) 2013-2018, 2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
+import functools
 import six
 from oslo_log import log
 from oslo_concurrency import lockutils
@@ -38,6 +39,22 @@ def synchronized(name, external=True):
                                   lock_file_prefix='fm-',
                                   external=external,
                                   lock_path=lock_path)
+
+
+@functools.lru_cache(maxsize=None)
+def get_debian_codename():
+    """
+    Returns the Debian codename, e.g., 'bullseye', 'bookworm', 'trixie'.
+    """
+    try:
+        with open("/etc/os-release") as f:
+            lines = f.readlines()
+        for line in lines:
+            if line.startswith("VERSION_CODENAME="):
+                return line.strip().split("=")[1]
+    except FileNotFoundError:
+        return None
+    return None
 
 
 def safe_rstrip(value, chars=None):

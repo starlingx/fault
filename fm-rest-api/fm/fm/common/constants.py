@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -17,3 +17,6 @@ DB_DEGRADE_AFFECTING = 3
 
 
 FM_LOCK_PATH = os.path.join(tsc.VOLATILE_PATH, "fm")
+
+OS_DEBIAN_BULLSEYE = 'bullseye'
+OS_DEBIAN_TRIXIE = 'trixie'
