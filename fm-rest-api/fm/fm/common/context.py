@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018,2022,2025 Wind River Systems, Inc.
+# Copyright (c) 2018,2022,2025-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -10,7 +10,9 @@ from keystoneauth1 import plugin
 from keystoneauth1.access import service_catalog as k_service_catalog
 
 from fm.api.policies import base as base_policy
+from fm.common import constants
 from fm.common import policy
+from fm.common.utils import get_debian_codename
 
 
 CONF = cfg.CONF
@@ -62,14 +64,26 @@ class RequestContext(context.RequestContext):
                                  authenticate a user against.
 
         """
-        super(RequestContext, self).__init__(auth_token=auth_token,
-                                             user=user_name,
-                                             tenant=project_name,
-                                             is_admin=is_admin,
-                                             read_only=read_only,
-                                             show_deleted=show_deleted,
-                                             request_id=request_id,
-                                             roles=roles)
+        codename = get_debian_codename()
+
+        if codename == constants.OS_DEBIAN_BULLSEYE:
+            super(RequestContext, self).__init__(auth_token=auth_token,
+                                                 user=user_name,
+                                                 tenant=project_name,
+                                                 is_admin=is_admin,
+                                                 read_only=read_only,
+                                                 show_deleted=show_deleted,
+                                                 request_id=request_id,
+                                                 roles=roles)
+        else:
+            super(RequestContext, self).__init__(auth_token=auth_token,
+                                                 user_id=user_name,
+                                                 project_id=project_name,
+                                                 is_admin=is_admin,
+                                                 read_only=read_only,
+                                                 show_deleted=show_deleted,
+                                                 request_id=request_id,
+                                                 roles=roles)
 
         self.user_name = user_name
         self.user_id = user_id
