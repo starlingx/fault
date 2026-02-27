@@ -3,4 +3,5 @@ etc/fm/policy.yaml
 etc/init.d
 usr/bin/
 usr/lib/python*/dist-packages/*
+fm/db/sqlalchemy/* usr/lib/python3/dist-packages/fm/db/sqlalchemy/
 usr/share/starlingx/pmon.d/fm-api.conf

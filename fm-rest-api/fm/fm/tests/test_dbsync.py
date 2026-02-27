@@ -25,5 +25,6 @@ class DbSyncTestCase(base.DbTestCase):
     def test_sync_and_version(self):
         migration.db_sync()
         engine = db_api.get_engine()
-        v = migration.get_backend().db_version(engine, migration.MIGRATE_REPO_PATH, None)
-        self.assertTrue(v > base.INIT_VERSION)
+        with engine.begin() as connection:
+            v = migration.get_backend().db_version(connection=connection)
+        self.assertIsNotNone(v)

@@ -21,7 +21,7 @@ _IMPL = None
 MIGRATE_REPO_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
     'sqlalchemy',
-    'migrate_repo',
+    'migrations',
 )
 
 
@@ -38,10 +38,9 @@ def db_sync(version=None, engine=None):
 
     if engine is None:
         engine = db_api.get_engine()
-    return get_backend().db_sync(engine=engine,
-                                 abs_path=MIGRATE_REPO_PATH,
-                                 version=version
-                                 )
+
+    from fm.db.sqlalchemy import migration as alembic_migration
+    return alembic_migration.db_sync(version=version)
 
 
 def upgrade(version=None):

@@ -21,6 +21,15 @@
 
 from setuptools import setup, find_packages
 
+# Determine which migration framework is available
+try:
+    import migrate  # noqa: F401
+    package_data_value = {'fm': ['db/sqlalchemy/migrate_repo/migrate.cfg'], }
+    migration_backend = 'sqlalchemy = oslo_db.sqlalchemy.migration'
+except ImportError:
+    package_data_value = {'fm': ['db/sqlalchemy/alembic.ini'], }
+    migration_backend = 'sqlalchemy = fm.db.sqlalchemy.migration'
+
 setup(
     name='fm',
     description='Titanium Cloud Fault Management',
@@ -29,11 +38,11 @@ setup(
     platforms=['any'],
     provides=['fm'],
     packages=find_packages(),
-    package_data={'fm': ['db/sqlalchemy/migrate_repo/migrate.cfg'], },
+    package_data=package_data_value,
     include_package_data=False,
     entry_points={
         'fm.database.migration_backend': [
-            'sqlalchemy = oslo_db.sqlalchemy.migration',
+            migration_backend,
         ],
         'console_scripts': [
             'fm-dbsync = fm.cmd.dbsync:main',
