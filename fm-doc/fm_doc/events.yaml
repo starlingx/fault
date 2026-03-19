@@ -456,19 +456,43 @@
 100.119:
     Type: Alarm
     Description: |-
-        <hostname> does not support the provisioned PTP mode
+        <hostname> PTP service is enabled but not running
+        OR
+        <hostname> is not locked to remote PTP Grand Master
         OR
         <hostname> PTP clocking is out-of-tolerance
         OR
-        <hostname> is not locked to remote PTP Primary source
+        <hostname> does not support the provisioned PTP Hardware timestamping mode
+        OR
+        <hostname> does not support the provisioned PTP Software timestamping mode
+        OR
+        <hostname> does not support the provisioned PTP Legacy timestamping mode
         OR
         <hostname> GNSS signal loss state:<state>
         OR
         <hostname> 1PPS signal loss state:<state>
-    Entity_Instance_ID: |-
-        host=<hostname>.ptp
         OR
-        host=<hostname>.ptp=no-lock
+        <hostname> phc2sys HA has no source clock
+        OR
+        <hostname> phc2sys HA automatic source selection has been disabled
+        OR
+        <hostname> phc2sys HA has selected a lower priority clock source
+        OR
+        <hostname> phc2sys HA source selection algorithm selected new active source
+        OR
+        <hostname> phc2sys HA source clock is not locked to a PRC
+        OR
+        <hostname> GNSS signal loss (gnss-monitor) state:<state>
+        OR
+        <hostname> GNSS satellite count below threshold
+        OR
+        <hostname> GNSS signal quality dB below threshold
+    Entity_Instance_ID: |-
+        host=<hostname>.instance=<instance>.ptp
+        OR
+        host=<hostname>.instance=<instance>.ptp=no-lock
+        OR
+        host=<hostname>.instance=<instance>.ptp=out-of-tolerance
         OR
         host=<hostname>.ptp=<interface>.unsupported=hardware-timestamping
         OR
@@ -476,12 +500,26 @@
         OR
         host=<hostname>.ptp=<interface>.unsupported=legacy-timestamping
         OR
-        host=<hostname>.ptp=out-of-tolerance
+        host=<hostname>.interface=<interface>.ptp=GNSS-signal-loss
         OR
-        host=<hostname>.instance=<instance>.ptp=out-of-tolerance
+        host=<hostname>.interface=<interface>.ptp=1PPS-signal-loss
         OR
-        host=<hostname>.interface=<interface>.ptp=signal-loss
-    Severity: [major, minor]
+        host=<hostname>.phc2sys=<instance>.phc2sys=no-source-clock
+        OR
+        host=<hostname>.phc2sys=<instance>.phc2sys=forced-clock-selection
+        OR
+        host=<hostname>.phc2sys=<instance>.phc2sys=source-clock-low-priority
+        OR
+        host=<hostname>.phc2sys=<instance>.interface=<interface>.phc2sys=source-failover
+        OR
+        host=<hostname>.phc2sys=<instance>.interface=<interface>.phc2sys=source-clock-no-prc-lock
+        OR
+        host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-signal-loss
+        OR
+        host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-satellite-count
+        OR
+        host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-signal-quality-db
+    Severity: [major, minor, warning]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action: none
     Inhibit_Alarms:
