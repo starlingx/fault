@@ -23,7 +23,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-# Copyright (c) 2018 Wind River Systems, Inc.
+# Copyright (c) 2018, 2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -39,7 +39,9 @@ from wsme import types as wtypes
 from oslo_utils import strutils
 from oslo_utils import timeutils
 from oslo_log import log
+from fm.common import constants
 from fm.common.i18n import _
+from fm.common.utils import get_debian_codename
 
 LOG = log.getLogger(__name__)
 
@@ -57,7 +59,14 @@ class _Base(wtypes.Base):
         return cls(links=links, **(m.as_dict()))
 
     def as_dict(self, db_model):
-        valid_keys = inspect.getargspec(db_model.__init__)[0]
+
+        codename = get_debian_codename()
+
+        if codename == constants.OS_DEBIAN_BULLSEYE:
+            valid_keys = inspect.getargspec(db_model.__init__)[0]
+        else:
+            valid_keys = inspect.getfullargspec(db_model.__init__)[0]
+
         if 'self' in valid_keys:
             valid_keys.remove('self')
         return self.as_dict_from_keys(valid_keys)
