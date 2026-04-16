@@ -133,7 +133,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: none
-    Context: none
+    Context: openstack
 
 100.103:
     Type: Alarm
@@ -399,7 +399,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
-    Context: none
+    Context: openstack
 
 100.116:
     Type: Alarm
@@ -417,7 +417,7 @@
     Suppression: True
     Management_Affecting_Severity: none
     Degrade_Affecting_Severity: critical
-    Context: none
+    Context: openstack
 
 100.117:
     Type: Alarm
@@ -435,7 +435,7 @@
     Suppression: True
     Management_Affecting_Severity: major
     Degrade_Affecting_Severity: critical
-    Context: none
+    Context: openstack
 
 100.118:
     Type: Alarm
@@ -1113,7 +1113,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 270.102:
     Type: Log
@@ -1123,7 +1123,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 270.103:
     Type: Log
@@ -1133,7 +1133,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 
 275.001:
@@ -1144,7 +1144,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 
 #---------------------------------------------------------------------------
@@ -1405,7 +1405,7 @@
     Suppression: False
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: critical
-    Context: none
+    Context: openstack
 
 
 300.015:
@@ -1968,7 +1968,7 @@
     Suppression: True
     Management_Affecting_Severity: warning
     Degrade_Affecting_Severity: none
-    Context: none
+    Context: openstack
 
 700.016:
     Type: Alarm
@@ -3112,7 +3112,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 700.212:
     Type: Log
@@ -3122,7 +3122,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 700.213:
     Type: Log
@@ -3132,7 +3132,7 @@
     Alarm_Type: equipment
     Probable_Cause: unspecified-reason
     Service_Affecting: False
-    Context: none
+    Context: openstack
 
 700.214:
     Type: Log
