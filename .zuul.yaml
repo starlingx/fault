@@ -12,12 +12,28 @@
         - fault-tox-pep8
         - fault-tox-pylint
         - fault-rest-api-py39
+        - fault-tox-coverage
+        - fault-tox-coverage-c
+        - fault-tox-linters-trixie
+        - fault-tox-pep8-trixie
+        - fault-tox-pylint-trixie
+        - fault-tox-bandit-trixie
+        - fault-tox-coverage-trixie
+        - fault-tox-coverage-c-trixie
     gate:
       jobs:
         - fault-tox-linters
         - fault-tox-pep8
         - fault-tox-pylint
         - fault-rest-api-py39
+        - fault-tox-coverage
+        - fault-tox-coverage-c
+        - fault-tox-linters-trixie
+        - fault-tox-pep8-trixie
+        - fault-tox-pylint-trixie
+        - fault-tox-bandit-trixie
+        - fault-tox-coverage-trixie
+        - fault-tox-coverage-c-trixie
     post:
       jobs:
         - stx-fault-upload-git-mirror
@@ -153,3 +169,81 @@
           64aX3OBojwptTJeXAT4jodcC33H4QYTycp/+aX1d64yb33aqwaf4xt/A2nQ+QWP7e/bJv
           majKLZFLg9Ii4zzhb5Saqf588tNlpqHmbBVHvTXrv5i4qMVQ4lkxzS6HbgbaVHiKEyLp9
           msuhPi1O+eSNzemjZ4hZGp9BqXPnAbWaBSb8RKCIkprKivYDXn3pBUljyjzZvU=
+
+- job:
+    name: fault-tox-coverage
+    parent: tox
+    description: |
+      Run all tests with coverage analysis
+    nodeset: debian-bullseye
+    vars:
+      tox_envlist: coverage
+    post-run: tests/playbooks/upload-coverage-reports.yaml
+
+- job:
+    name: fault-tox-coverage-c
+    parent: tox
+    description: |
+      Run C/C++ coverage analysis via gcov/lcov
+    nodeset: debian-bullseye
+    vars:
+      tox_envlist: coverage-c
+    post-run: tests/playbooks/upload-coverage-reports.yaml
+
+- job:
+    name: fault-tox-linters-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run linters (Trixie)
+    nodeset: debian-trixie-8GB
+    vars:
+      tox_envlist: linters-trixie
+      tox_inline_comments: false
+
+- job:
+    name: fault-tox-pep8-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run pep8 (Trixie)
+    nodeset: debian-trixie-8GB
+    vars:
+      tox_envlist: pep8-trixie
+
+- job:
+    name: fault-tox-pylint-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run pylint (Trixie)
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+    vars:
+      tox_envlist: pylint-trixie
+
+- job:
+    name: fault-tox-bandit-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run bandit security scan (Trixie)
+    nodeset: debian-trixie-8GB
+    vars:
+      tox_envlist: bandit-trixie
+
+- job:
+    name: fault-tox-coverage-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run all tests with coverage analysis (Trixie)
+    nodeset: debian-trixie-8GB
+    vars:
+      tox_envlist: coverage-trixie
+    post-run: tests/playbooks/upload-coverage-reports.yaml
+
+- job:
+    name: fault-tox-coverage-c-trixie
+    parent: openstack-tox-py313
+    description: |
+      Run C/C++ coverage analysis (Trixie)
+    nodeset: debian-trixie-8GB
+    vars:
+      tox_envlist: coverage-c-trixie
