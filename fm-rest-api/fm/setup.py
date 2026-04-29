@@ -21,13 +21,20 @@
 
 from setuptools import setup, find_packages
 
+package_data_value = {'fm': [
+    'db/sqlalchemy/migrate_repo/migrate.cfg',
+    'db/sqlalchemy/alembic.ini',
+    'db/sqlalchemy/migrations/*.py',
+    'db/sqlalchemy/migrations/*.mako',
+    'db/sqlalchemy/migrations/README',
+    'db/sqlalchemy/migrations/versions/*.py',
+]}
+
 # Determine which migration framework is available
 try:
     import migrate  # noqa: F401
-    package_data_value = {'fm': ['db/sqlalchemy/migrate_repo/migrate.cfg'], }
     migration_backend = 'sqlalchemy = oslo_db.sqlalchemy.migration'
 except ImportError:
-    package_data_value = {'fm': ['db/sqlalchemy/alembic.ini'], }
     migration_backend = 'sqlalchemy = fm.db.sqlalchemy.migration'
 
 setup(
