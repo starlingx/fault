@@ -79,7 +79,6 @@ class AuthTokenMiddleware(auth_token.AuthProtocol):
             try:
                 claims = oidc_utils.validate_oidc_token(
                     env['HTTP_OIDC_TOKEN'],
-                    self.oidc_token_cache,
                     self.oidc_auth_params['oidc-issuer-url'],
                     self.oidc_auth_params['oidc-client-id'])
                 if claims is None:
