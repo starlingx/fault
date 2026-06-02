@@ -8,7 +8,6 @@
 import os
 
 import sqlalchemy
-from oslo_db.sqlalchemy import enginefacade
 
 from alembic import command
 from alembic.config import Config
@@ -22,7 +21,7 @@ LEGACY_TO_ALEMBIC_REVISION = {
     1: "105601e356f1",
 }
 
-get_engine = enginefacade.get_legacy_facade().get_engine
+from fm.db.sqlalchemy.api import get_engine
 
 
 def db_sync(version=None):

@@ -12,7 +12,11 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
+#
+# Copyright (c) 2026 Wind River Systems, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 """Base classes for our unit tests.
 
 Allows overriding of config for use of fakes, and some black magic for
@@ -27,7 +31,6 @@ import mock
 import testtools
 
 from oslo_config import cfg
-from oslo_db.sqlalchemy import enginefacade
 from oslo_log import log as logging
 from fm.db import migration
 from fm.tests import conf_fixture
@@ -80,10 +83,7 @@ class TestCase(testtools.TestCase):
 
         global _DB_CACHE
         if not _DB_CACHE:
-            engine = enginefacade.get_legacy_facade().get_engine()
-            engine.dispose()
-            engine.connect()
-            migration.db_sync(engine=engine)
+            migration.db_sync()
 
     def tearDown(self):
         super(TestCase, self).tearDown()
