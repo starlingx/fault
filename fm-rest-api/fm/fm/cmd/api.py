@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018-2025 Wind River Systems, Inc.
+# Copyright (c) 2018-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -10,6 +10,8 @@ import sys
 import subprocess  # nosec B404
 
 import eventlet
+eventlet.monkey_patch(os=False)
+
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_service import systemd
@@ -41,7 +43,6 @@ CONF = cfg.CONF
 
 
 LOG = logging.getLogger(__name__)
-eventlet.monkey_patch(os=False)
 
 
 def _resolve_host_once(host, record_type):
