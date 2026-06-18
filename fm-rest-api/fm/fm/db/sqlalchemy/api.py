@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018, 2025 Wind River Systems, Inc.
+# Copyright (c) 2018, 2025-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -8,7 +8,6 @@
 
 import functools
 import sys
-import threading
 
 import eventlet
 from oslo_log import log
@@ -17,8 +16,8 @@ from oslo_utils import uuidutils
 
 from oslo_db import exception as db_exc
 from oslo_db.sqlalchemy import enginefacade
+from oslo_db.sqlalchemy import orm
 from oslo_db.sqlalchemy import utils as db_utils
-from oslo_db.sqlalchemy import session as db_session
 
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.orm.exc import NoResultFound
@@ -35,33 +34,13 @@ CONF = cfg.CONF
 
 LOG = log.getLogger(__name__)
 
-_LOCK = threading.Lock()
-_FACADE = None
-
-context_manager = enginefacade.transaction_context()
-context_manager.configure()
-
-
-def _create_facade_lazily():
-    global _LOCK
-    with _LOCK:
-        global _FACADE
-        if _FACADE is None:
-            _FACADE = db_session.EngineFacade(
-                CONF.database.connection,
-                **dict(CONF.database)
-            )
-        return _FACADE
-
 
 def get_engine():
-    facade = _create_facade_lazily()
-    return facade.get_engine()
+    return enginefacade.writer.get_engine()
 
 
 def get_session(**kwargs):
-    facade = _create_facade_lazily()
-    return facade.get_session(**kwargs)
+    return orm.get_maker(get_engine())()
 
 
 def get_backend():
