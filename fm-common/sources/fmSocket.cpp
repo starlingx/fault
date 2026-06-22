@@ -18,6 +18,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <netinet/tcp.h>
 
 #include "fmSocket.h"
 #include "fmThread.h"
@@ -85,6 +86,20 @@ bool CFmSocket::create_socket() {
         FM_ERROR_LOG("Failed to setsockopt SO_RCVTIMEO timeout, error: (%d) (%s)", errno, strerror(errno));
         close();
         return false;
+    }
+
+    /* Bound the kernel SYN retransmit budget so a hung or unreachable peer
+     * does not stall connect() for the default ~127 s. With TCP_SYNCNT=2
+     * the active-connect ceiling collapses to roughly 3-7 s on Linux, which
+     * is coherent with the SOCKET_TIMEOUT_DEFAULT used for SO_RCVTIMEO above.
+     * Failure to set this option is non-fatal: the socket still works,
+     * we just fall back to the kernel default. */
+    int syn_retries = 2;
+    if (setsockopt(m_fd, IPPROTO_TCP, TCP_SYNCNT,
+                   &syn_retries, sizeof(syn_retries)) < 0) {
+        FM_WARNING_LOG("Failed to setsockopt TCP_SYNCNT, error: (%d) (%s)",
+                       errno, strerror(errno));
+        /* not fatal - keep the socket */
     }
 
     return true;
@@ -170,6 +185,12 @@ bool CFmSocket::write_packet(int fd, const std::vector<char> &data) {
 bool CFmSocket::read_packet(int fd, std::vector<char> &data) {
 	int32_t len = 0;
 	long tlen = sizeof(len);
+	/* TODO: dead retry loop. The unconditional break makes
+	 * 'for (i=10; ...) {...; break;}' equivalent to a single read()
+	 * attempt. Misleads readers (looks like a 10-attempt retry) and
+	 * trips static analyzers. Clarity-only fix - replace with:
+	 *     if (!read(fd, &len, tlen)) return false;
+	 */
 	int i = 10;
 	for ( ; i > 0 ; --i) {
 		if (!read(fd,&len,tlen)) {
