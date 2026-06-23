@@ -437,60 +437,63 @@ class Connection(api.Connection):
                           entity_type_id=None, entity_instance_id=None,
                           severity=None, event_log_type=None, start=None,
                           end=None, limit=None, evtType="ALL", include_suppress=False):
-        query = model_query(models.EventLog, read_deleted="no")
-        query = query.order_by(desc(models.EventLog.timestamp))
-        if uuid is not None:
-            query = query.filter_by(uuid=uuid)
+        with _session_for_read() as session:
+            query = model_query(models.EventLog, session=session,
+                                read_deleted="no")
+            query = query.order_by(desc(models.EventLog.timestamp))
+            if uuid is not None:
+                query = query.filter_by(uuid=uuid)
 
-        query = self._addEventTypeToQuery(query, evtType)
+            query = self._addEventTypeToQuery(query, evtType)
 
-        if event_log_id is not None:
-            query = query.filter(models.EventLog.event_log_id.contains(
-                event_log_id))
-        if entity_type_id is not None:
-            query = query.filter(models.EventLog.entity_type_id.contains(
-                entity_type_id))
-        if entity_instance_id is not None:
-            query = query.filter(models.EventLog.entity_instance_id.contains(
-                entity_instance_id))
-        if severity is not None:
-            query = query.filter(models.EventLog.severity.contains(severity))
+            if event_log_id is not None:
+                query = query.filter(models.EventLog.event_log_id.contains(
+                    event_log_id))
+            if entity_type_id is not None:
+                query = query.filter(models.EventLog.entity_type_id.contains(
+                    entity_type_id))
+            if entity_instance_id is not None:
+                query = query.filter(models.EventLog.entity_instance_id.contains(
+                    entity_instance_id))
+            if severity is not None:
+                query = query.filter(models.EventLog.severity.contains(severity))
 
-        if event_log_type is not None:
-            query = query.filter_by(event_log_type=event_log_type)
-        if start is not None:
-            query = query.filter(models.EventLog.timestamp >= start)
-        if end is not None:
-            query = query.filter(models.EventLog.timestamp <= end)
-        if include_suppress is not None:
-            query = add_event_log_filter_by_event_suppression(query,
-                                                              include_suppress)
-        if limit is not None:
-            query = query.limit(limit)
+            if event_log_type is not None:
+                query = query.filter_by(event_log_type=event_log_type)
+            if start is not None:
+                query = query.filter(models.EventLog.timestamp >= start)
+            if end is not None:
+                query = query.filter(models.EventLog.timestamp <= end)
+            if include_suppress is not None:
+                query = add_event_log_filter_by_event_suppression(query,
+                                                                  include_suppress)
+            if limit is not None:
+                query = query.limit(limit)
 
-        hist_list = []
-        try:
-            result = query.all()
-            for hist in result:
-                event = hist[0]
-                event.suppression_status = hist[1]
-                hist_list.append(event)
-        except UnicodeDecodeError:
-            LOG.error("UnicodeDecodeError occurred, "
-                      "return an empty event log list.")
-        return hist_list
+            hist_list = []
+            try:
+                result = query.all()
+                for hist in result:
+                    event = hist[0]
+                    event.suppression_status = hist[1]
+                    hist_list.append(event)
+            except UnicodeDecodeError:
+                LOG.error("UnicodeDecodeError occurred, "
+                          "return an empty event log list.")
+            return hist_list
 
     @objects.objectify(objects.event_log)
     def event_log_get_list(self, limit=None, marker=None,
                            sort_key=None, sort_dir=None, evtType="ALL",
                            include_suppress=False):
-        query = model_query(models.EventLog)
-        query = self._addEventTypeToQuery(query, evtType)
-        query = add_event_log_filter_by_event_suppression(query,
-                                                          include_suppress)
+        with _session_for_read() as session:
+            query = model_query(models.EventLog, session=session)
+            query = self._addEventTypeToQuery(query, evtType)
+            query = add_event_log_filter_by_event_suppression(query,
+                                                              include_suppress)
 
-        return _paginate_query(models.EventLog, limit, marker,
-                               sort_key, sort_dir, query)
+            return _paginate_query(models.EventLog, limit, marker,
+                                   sort_key, sort_dir, query)
 
     @objects.objectify(objects.event_suppression)
     def event_suppression_get(self, id):
