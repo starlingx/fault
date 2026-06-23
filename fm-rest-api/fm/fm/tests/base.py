@@ -83,7 +83,16 @@ class TestCase(testtools.TestCase):
 
         global _DB_CACHE
         if not _DB_CACHE:
-            migration.db_sync()
+            # On Trixie, alembic migrations require PostgreSQL. For
+            # SQLite test DBs, create tables from ORM models instead.
+            from fm.common.utils import get_debian_codename
+            from fm.common import constants
+            if get_debian_codename() != constants.OS_DEBIAN_BULLSEYE:
+                from fm.db.sqlalchemy import models
+                from fm.db.sqlalchemy.api import get_engine
+                models.Base.metadata.create_all(get_engine())
+            else:
+                migration.db_sync()
 
     def tearDown(self):
         super(TestCase, self).tearDown()
