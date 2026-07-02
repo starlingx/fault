@@ -1,7 +1,7 @@
 ---
 
 #
-# Copyright (c) 2013-2024 Wind River Systems, Inc.
+# Copyright (c) 2013-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -487,6 +487,8 @@
         <hostname> GNSS satellite count below threshold
         OR
         <hostname> GNSS signal quality dB below threshold
+        OR
+        <hostname> SyncE source loss; DPLL not locked
     Entity_Instance_ID: |-
         host=<hostname>.instance=<instance>.ptp
         OR
@@ -519,7 +521,9 @@
         host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-satellite-count
         OR
         host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-signal-quality-db
-    Severity: [major, minor, warning]
+        OR
+        host=<hostname>.synce.interface=<interface>.synce=source-loss
+    Severity: [critical, major, minor, warning]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action: none
     Inhibit_Alarms:
