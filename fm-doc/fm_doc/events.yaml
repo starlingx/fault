@@ -489,6 +489,8 @@
         <hostname> GNSS signal quality dB below threshold
         OR
         <hostname> SyncE source loss; DPLL not locked
+        OR
+        <hostname> SyncE service is enabled but not running
     Entity_Instance_ID: |-
         host=<hostname>.instance=<instance>.ptp
         OR
@@ -523,6 +525,8 @@
         host=<hostname>.gnss-monitor=<instance>.device_path=<path>.ptp=GNSS-signal-quality-db
         OR
         host=<hostname>.synce.interface=<interface>.synce=source-loss
+        OR
+        host=<hostname>.synce.instance=<instance>.synce=not-running
     Severity: [critical, major, minor, warning]
     Proposed_Repair_Action: "Monitor and if condition persists, contact next level of support."
     Maintenance_Action: none
