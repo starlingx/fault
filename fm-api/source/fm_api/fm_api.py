@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2025 Wind River Systems, Inc.
+# Copyright (c) 2013-2026 Wind River Systems, Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -295,6 +295,42 @@ class FaultAPIs(FaultAPIsBase):
             except (RuntimeError, SystemError, TypeError):
                 pass
             return None
+
+    def get_faults_strict(self, entity_instance_id):
+        """Same as get_faults but returns False on FM communication error
+        instead of None. Allows callers to distinguish 'not found' from
+        'FM failure'."""
+        with fm_api_lock:
+            try:
+                resp = fm_core.get_by_eid(entity_instance_id)
+                if resp is False:
+                    return False  # Error
+                if resp:
+                    data = []  # Non-empty list = found
+                    for i in resp:
+                        data.append(self._str_to_alarm(i))
+                    return data
+            except (RuntimeError, SystemError, TypeError):
+                return False  # Error
+            return None  # None OR empty list = not found
+
+    def get_faults_by_id_strict(self, alarm_id):
+        """Same as get_faults_by_id but returns False on FM communication
+        error instead of None. Allows callers to distinguish 'not found'
+        from 'FM failure'."""
+        with fm_api_lock:
+            try:
+                resp = fm_core.get_by_aid(alarm_id)
+                if resp is False:
+                    return False  # Error
+                if resp:
+                    data = []  # Non-empty list = found
+                    for i in resp:
+                        data.append(self._str_to_alarm(i))
+                    return data
+            except (RuntimeError, SystemError, TypeError):
+                return False  # Error
+            return None  # None OR empty list = not found
 
 
 class FaultAPIsV2(FaultAPIsBase):
