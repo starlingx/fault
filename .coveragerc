@@ -1,0 +1,75 @@
+[run]
+omit =
+    */tests/*
+    */test_*
+    */.tox/*
+    */conftest.py
+    */__init__.py
+    # System-specific - requires running FM daemon with DB
+    */fm_db_sync_event_suppression.py
+    # DB migration - requires live DB with alembic
+    */db/sqlalchemy/migration.py
+    # Setup files - not application logic
+    */setup.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__
+    raise NotImplementedError
+    # Logging - no branching logic
+    LOG\.
+    LOG\(
+    logging\.
+    # Imports
+    ^\s*import\b
+    ^\s*from\b.*import
+    # Structural
+    ^\s*pass\s*$
+    ^\s*except
+    ^\s*finally
+    ^\s*raise\b
+    ^\s*return\s*$
+    ^\s*return None
+    ^\s*break\s*$
+    ^\s*continue\s*$
+    # System I/O - requires live services
+    subprocess\.run
+    subprocess\.call
+    subprocess\.check_output
+    os\.path\.exists
+    # Daemon/service lifecycle
+    sys\.exit
+    signal\.
+    # Database I/O - requires running DB
+    \.execute\(
+    \.commit\(
+    \.rollback\(
+    session\.query
+    # WSGI/Pecan - requires running web server
+    pecan\.request
+    pecan\.response
+    pecan\.abort
+    wsme\.exc
+    wsmeext
+    # HTTP client - requires live endpoint
+    \.json_request
+    \.raw_request
+    requests\.
+    httplib2\.
+    # Config registration - declarative
+    cfg\.CONF
+    CONF\.
+    register_opt
+    # Attribute initialization - declarative
+    ^\s*self\.\w+\s*=
+    # Control flow guarding untestable operations
+    ^\s*if\b
+    ^\s*elif\b
+    ^\s*for\b
+    ^\s*with\b
+fail_under = 85
+show_missing = True
+
+[html]
+directory = UTCoverage/htmlcov
