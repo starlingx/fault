@@ -3546,6 +3546,32 @@
     Degrade_Affecting_Severity: none
     Context: starlingx
 
+850.003:
+    Type: Alarm
+    Description: |-
+        Etcd cluster is degraded; one or more members are unavailable or not voting.
+        A member that is not healthy stays a learner and does not count towards quorum.
+             MAJOR   @ quorum lost
+             WARNING @ quorum held, one or more members degraded
+    Entity_Instance_ID: kubernetes=etcd-cluster-health
+    Severity: [major, warning]
+    Proposed_Repair_Action: "Check the etcd service on each controller. If a
+                             controller is locked or rebooting, wait for it to
+                             return to service. A member reported as a learner
+                             replicates but does not vote, and must be promoted
+                             before it counts towards quorum. Avoid locking
+                             another controller while this alarm is active.
+                             If problem persists, contact next level of support."
+    Maintenance_Action:
+    Inhibit_Alarms:
+    Alarm_Type: processing-error
+    Probable_Cause: underlying-resource-unavailable
+    Service_Affecting: True
+    Suppression: False
+    Management_Affecting_Severity: major
+    Degrade_Affecting_Severity: none
+    Context: starlingx
+
 #---------------------------------------------------------------------------
 #   SOFTWARE
 #---------------------------------------------------------------------------
